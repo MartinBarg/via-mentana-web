@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "brand": "Studio Via Mentana"
+  },
+  "hero": {
+    "title": "Studio in Rome",
+    "subtitle": "A unique experience in the heart of the eternal city",
+    "cta": "Book on Airbnb"
+  },
+  "description": {
+    "title": "The Studio",
+    "body": "An elegant studio apartment located in the heart of Rome, just steps away from the city's main attractions. The studio has been tastefully renovated, blending classic Roman elements with modern comforts. Ideal for couples or solo travelers who want to experience Rome like a local.",
+    "amenities_title": "What's included",
+    "amenities": {
+      "kitchen": "Full kitchen",
+      "fridge": "Refrigerator",
+      "bathroom": "Private bathroom",
+      "wifi": "High-speed WiFi",
+      "ac": "Air conditioning",
+      "washing": "Washing machine"
+    }
+  },
+  "location": {
+    "title": "Location",
+    "subtitle": "In the heart of Rome, Esquilino district",
+    "description": "The studio is located in one of Rome's most vibrant and authentic neighborhoods, just a few minutes' walk from the Colosseum and Termini Station. The area has everything you need: local markets, traditional restaurants, and excellent public transport connections.",
+    "categories": {
+      "pizza": "Pizza places",
+      "coffee": "Coffee shops",
+      "library": "Libraries",
+      "metro": "Metro",
+      "bus": "Bus"
+    },
+    "places": {
+      "pizza1": "Pizzarium Bonci",
+      "pizza2": "Da Remo",
+      "pizza3": "Pizzeria Ai Marmi",
+      "coffee1": "Caffè Sant'Eustachio",
+      "coffee2": "Bar San Calisto",
+      "library1": "National Central Library",
+      "library2": "Library of Modern History",
+      "metro1": "Metro B – Termini",
+      "metro2": "Metro A – Repubblica",
+      "bus1": "Line 40 – Historic Center",
+      "bus2": "Line 64 – Vatican"
+    }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "subtitle": "What our guests say",
+    "rating_label": "out of 5"
+  },
+  "cta": {
+    "title": "Ready to experience Rome?",
+    "subtitle": "Book your stay at Studio Via Mentana and discover the eternal city like a local.",
+    "button": "Book on Airbnb"
+  },
+  "footer": {
+    "tagline": "An authentic experience in the heart of Rome",
+    "links": {
+      "airbnb": "Airbnb",
+      "top": "Back to top"
+    },
+    "credits": "Crafted with passion for Rome"
+  }
+}

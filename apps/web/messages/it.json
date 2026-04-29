@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "brand": "Studio Via Mentana"
+  },
+  "hero": {
+    "title": "Studio a Roma",
+    "subtitle": "Un'esperienza unica nel cuore della città eterna",
+    "cta": "Prenota su Airbnb"
+  },
+  "description": {
+    "title": "Lo Studio",
+    "body": "Un elegante monolocale situato nel cuore di Roma, a pochi passi dalle principali attrazioni della città. Lo studio è stato ristrutturato con gusto, combinando elementi classici romani con comfort moderni. Ideale per coppie o viaggiatori solitari che desiderano vivere Roma come un locale.",
+    "amenities_title": "Cosa è incluso",
+    "amenities": {
+      "kitchen": "Cucina completa",
+      "fridge": "Frigorifero",
+      "bathroom": "Bagno privato",
+      "wifi": "WiFi alta velocità",
+      "ac": "Aria condizionata",
+      "washing": "Lavatrice"
+    }
+  },
+  "location": {
+    "title": "La Posizione",
+    "subtitle": "Nel cuore di Roma, quartiere Esquilino",
+    "description": "Lo studio si trova in una delle zone più vivaci e autentiche di Roma, a pochi minuti a piedi dal Colosseo e dalla Stazione Termini. Il quartiere offre tutto il necessario: mercati locali, ristoranti tipici e ottimi collegamenti con il trasporto pubblico.",
+    "categories": {
+      "pizza": "Pizzerie",
+      "coffee": "Caffè",
+      "library": "Biblioteche",
+      "metro": "Metro",
+      "bus": "Autobus"
+    },
+    "places": {
+      "pizza1": "Pizzarium Bonci",
+      "pizza2": "Da Remo",
+      "pizza3": "Pizzeria Ai Marmi",
+      "coffee1": "Caffè Sant'Eustachio",
+      "coffee2": "Bar San Calisto",
+      "library1": "Biblioteca Nazionale Centrale",
+      "library2": "Biblioteca di Storia Moderna",
+      "metro1": "Metro B – Termini",
+      "metro2": "Metro A – Repubblica",
+      "bus1": "Linea 40 – Centro Storico",
+      "bus2": "Linea 64 – Vaticano"
+    }
+  },
+  "reviews": {
+    "title": "Recensioni",
+    "subtitle": "Cosa dicono i nostri ospiti",
+    "rating_label": "su 5"
+  },
+  "cta": {
+    "title": "Pronto a vivere Roma?",
+    "subtitle": "Prenota il tuo soggiorno nello Studio Via Mentana e scopri la città eterna come un locale.",
+    "button": "Prenota su Airbnb"
+  },
+  "footer": {
+    "tagline": "Un'esperienza autentica nel cuore di Roma",
+    "links": {
+      "airbnb": "Airbnb",
+      "top": "Torna su"
+    },
+    "credits": "Sviluppato con passione per Roma"
+  }
+}

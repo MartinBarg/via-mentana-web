@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "brand": "Studio Via Mentana"
+  },
+  "hero": {
+    "title": "Studio in Rom",
+    "subtitle": "Ein einzigartiges Erlebnis im Herzen der ewigen Stadt",
+    "cta": "Auf Airbnb buchen"
+  },
+  "description": {
+    "title": "Das Studio",
+    "body": "Ein elegantes Studioapartment im Herzen Roms, nur wenige Schritte von den wichtigsten Sehenswürdigkeiten der Stadt entfernt. Das Studio wurde geschmackvoll renoviert und verbindet klassische römische Elemente mit modernem Komfort. Ideal für Paare oder Alleinreisende, die Rom wie ein Einheimischer erleben möchten.",
+    "amenities_title": "Was enthalten ist",
+    "amenities": {
+      "kitchen": "Voll ausgestattete Küche",
+      "fridge": "Kühlschrank",
+      "bathroom": "Privates Badezimmer",
+      "wifi": "Schnelles WLAN",
+      "ac": "Klimaanlage",
+      "washing": "Waschmaschine"
+    }
+  },
+  "location": {
+    "title": "Lage",
+    "subtitle": "Im Herzen Roms, Viertel Esquilino",
+    "description": "Das Studio befindet sich in einem der lebendigsten und authentischsten Viertel Roms, nur wenige Gehminuten vom Kolosseum und dem Bahnhof Termini entfernt. Die Gegend bietet alles, was man braucht: lokale Märkte, typische Restaurants und ausgezeichnete Anbindung an öffentliche Verkehrsmittel.",
+    "categories": {
+      "pizza": "Pizzerien",
+      "coffee": "Cafés",
+      "library": "Bibliotheken",
+      "metro": "U-Bahn",
+      "bus": "Bus"
+    },
+    "places": {
+      "pizza1": "Pizzarium Bonci",
+      "pizza2": "Da Remo",
+      "pizza3": "Pizzeria Ai Marmi",
+      "coffee1": "Caffè Sant'Eustachio",
+      "coffee2": "Bar San Calisto",
+      "library1": "Nationalbibliothek",
+      "library2": "Bibliothek für Neuere Geschichte",
+      "metro1": "U-Bahn B – Termini",
+      "metro2": "U-Bahn A – Repubblica",
+      "bus1": "Linie 40 – Historisches Zentrum",
+      "bus2": "Linie 64 – Vatikan"
+    }
+  },
+  "reviews": {
+    "title": "Bewertungen",
+    "subtitle": "Was unsere Gäste sagen",
+    "rating_label": "von 5"
+  },
+  "cta": {
+    "title": "Bereit, Rom zu erleben?",
+    "subtitle": "Buchen Sie Ihren Aufenthalt im Studio Via Mentana und entdecken Sie die ewige Stadt wie ein Einheimischer.",
+    "button": "Auf Airbnb buchen"
+  },
+  "footer": {
+    "tagline": "Ein authentisches Erlebnis im Herzen Roms",
+    "links": {
+      "airbnb": "Airbnb",
+      "top": "Nach oben"
+    },
+    "credits": "Mit Leidenschaft für Rom entwickelt"
+  }
+}
