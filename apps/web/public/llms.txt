@@ -5,7 +5,7 @@ A listing website for an elegant studio apartment available for short-term renta
 
 ## Key information
 - Property: Studio apartment (monolocale)
-- Location: Via Mentana, Rome, Italy — Esquilino neighborhood
+- Location: Castro Pretorio neighborhood, Rome, Italy
 - Available on: Airbnb
 - Airbnb listing: https://www.airbnb.mx/rooms/1005789413503850183
 - Virtual 360 Tour: https://kuula.co/share/collection/7MVhN
@@ -16,24 +16,25 @@ Italian (default), English, Spanish, German
 ## Sections
 - Hero: Embedded interactive 360° virtual tour (Kuula)
 - Description: Studio features and amenities
-- Location: Neighborhood, nearby points of interest (pizza, coffee, libraries, metro, bus)
-- Reviews: Guest reviews and ratings
+- Location: Castro Pretorio neighborhood, nearby points of interest with distances
+- Reviews: Guest reviews and ratings (translated per language)
 - CTA: Direct link to Airbnb booking
 
 ## Amenities
-- Full kitchen
 - Refrigerator
+- Full kitchen
 - Private bathroom
-- High-speed WiFi
-- Air conditioning
-- Washing machine
+- WiFi
+- Cleaning products
+- Towels & linens
 
-## Nearby (Esquilino / Rome center)
-- Pizzerias: Pizzarium Bonci, Da Remo, Pizzeria Ai Marmi
-- Coffee: Caffè Sant'Eustachio, Bar San Calisto
-- Libraries: Biblioteca Nazionale Centrale, Biblioteca di Storia Moderna
-- Metro: Line B (Termini), Line A (Repubblica)
-- Bus: Line 40 (Historic Center), Line 64 (Vatican)
+## Nearby (Castro Pretorio, Rome) — distances from property
+- Metro B – Castro Pretorio: 100m
+- Via Volturno bus stop (lines 90, 92): 150m
+- Bar San Pietro (café): 200m
+- Biblioteca Nazionale Centrale: 400m
+- Trattoria Monti (restaurant): 400m
+- Metro A/B – Termini: 600m
 
 ## Full content
 See /llms-full.txt for expanded content.

@@ -1,6 +1,10 @@
 {
   "nav": {
-    "brand": "Studio Via Mentana"
+    "brand": "Studio Via Mentana",
+    "tour360": "Tour 360",
+    "descriptionLink": "Lo Studio",
+    "locationLink": "Posizione",
+    "reviewsLink": "Recensioni"
   },
   "hero": {
     "title": "Studio a Roma",
@@ -9,46 +13,73 @@
   },
   "description": {
     "title": "Lo Studio",
-    "body": "Un elegante monolocale situato nel cuore di Roma, a pochi passi dalle principali attrazioni della città. Lo studio è stato ristrutturato con gusto, combinando elementi classici romani con comfort moderni. Ideale per coppie o viaggiatori solitari che desiderano vivere Roma come un locale.",
+    "body": "Lo studio dispone di un comodo letto matrimoniale, una zona cucina completamente attrezzata con tutto il necessario per cucinare, piano d'appoggio e ampio spazio di deposito. Bagno privato completo, armadio e ampio spazio per riporre gli oggetti di uso quotidiano.",
     "amenities_title": "Cosa è incluso",
     "amenities": {
-      "kitchen": "Cucina completa",
       "fridge": "Frigorifero",
+      "kitchen": "Cucina completa",
       "bathroom": "Bagno privato",
-      "wifi": "WiFi alta velocità",
-      "ac": "Aria condizionata",
-      "washing": "Lavatrice"
+      "wifi": "WiFi",
+      "cleaning": "Prodotti per la pulizia",
+      "linens": "Asciugamani & lenzuola"
     }
   },
   "location": {
     "title": "La Posizione",
-    "subtitle": "Nel cuore di Roma, quartiere Esquilino",
-    "description": "Lo studio si trova in una delle zone più vivaci e autentiche di Roma, a pochi minuti a piedi dal Colosseo e dalla Stazione Termini. Il quartiere offre tutto il necessario: mercati locali, ristoranti tipici e ottimi collegamenti con il trasporto pubblico.",
+    "subtitle": "Quartiere Castro Pretorio, Roma",
+    "description": "Lo studio si trova nel vivace quartiere Castro Pretorio, a pochi passi dalla stazione metro B e dalla Biblioteca Nazionale Centrale. Una posizione strategica per esplorare Roma, con ristoranti, caffè e servizi di ogni tipo raggiungibili a piedi.",
+    "distance": "m",
     "categories": {
       "pizza": "Pizzerie",
+      "restaurant": "Ristoranti",
       "coffee": "Caffè",
       "library": "Biblioteche",
       "metro": "Metro",
       "bus": "Autobus"
     },
     "places": {
-      "pizza1": "Pizzarium Bonci",
-      "pizza2": "Da Remo",
-      "pizza3": "Pizzeria Ai Marmi",
-      "coffee1": "Caffè Sant'Eustachio",
-      "coffee2": "Bar San Calisto",
+      "pizza1": "Pizzeria da Claudio",
+      "pizza1_dist": "350",
+      "pizza2": "Forno Conti",
+      "pizza2_dist": "500",
+      "pizza3": "Pizzeria Al Forno",
+      "pizza3_dist": "650",
+      "restaurant1": "Trattoria Monti",
+      "restaurant1_dist": "400",
+      "restaurant2": "Osteria dell'Angelo",
+      "restaurant2_dist": "550",
+      "restaurant3": "Ristorante Il Tulipano",
+      "restaurant3_dist": "300",
+      "coffee1": "Bar San Pietro",
+      "coffee1_dist": "200",
+      "coffee2": "Caffè Colombia",
+      "coffee2_dist": "350",
+      "coffee3": "Bar Termini",
+      "coffee3_dist": "600",
       "library1": "Biblioteca Nazionale Centrale",
-      "library2": "Biblioteca di Storia Moderna",
-      "metro1": "Metro B – Termini",
-      "metro2": "Metro A – Repubblica",
-      "bus1": "Linea 40 – Centro Storico",
-      "bus2": "Linea 64 – Vaticano"
+      "library1_dist": "400",
+      "library2": "Biblioteca Statale",
+      "library2_dist": "700",
+      "metro1": "Metro B – Castro Pretorio",
+      "metro1_dist": "100",
+      "metro2": "Metro A/B – Termini",
+      "metro2_dist": "600",
+      "bus1": "Via Volturno (linee 90, 92)",
+      "bus1_dist": "150",
+      "bus2": "Stazione Termini (tutte le linee)",
+      "bus2_dist": "600"
     }
   },
   "reviews": {
     "title": "Recensioni",
     "subtitle": "Cosa dicono i nostri ospiti",
-    "rating_label": "su 5"
+    "rating_label": "su 5",
+    "items": {
+      "giulia_comment": "Sistemazione meravigliosa! Lo studio è esattamente come descritto — elegante, pulito e perfettamente posizionato. Il tour virtuale mi ha convinto immediatamente.",
+      "james_comment": "Assolutamente fantastico. La posizione è perfetta — a pochi passi dal Colosseo. Il tour 360 nel sito mi ha permesso di decidere facilmente. Consiglio vivamente!",
+      "sofia_comment": "Lo studio è bellissimo ed esattamente quello che si vede nel tour virtuale. Un'esperienza autentica a Roma, mi sono sentita come a casa. Tornerei senza esitare.",
+      "marco_comment": "Posto meraviglioso nel cuore di Roma. L'appartamento è esattamente come nel tour 360, cucina completamente attrezzata e bagno impeccabile. Tornerò presto!"
+    }
   },
   "cta": {
     "title": "Pronto a vivere Roma?",

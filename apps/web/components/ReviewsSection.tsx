@@ -2,40 +2,12 @@
 
 import { useTranslations } from "next-intl";
 
-const REVIEWS = [
-  {
-    id: 1,
-    author: "Giulia M.",
-    country: "🇩🇪 Deutschland",
-    rating: 5,
-    comment:
-      "Wunderschöne Unterkunft! Das Studio ist genau wie beschrieben – elegant, sauber und perfekt gelegen. Die virtuelle Tour hat mich sofort überzeugt.",
-  },
-  {
-    id: 2,
-    author: "James R.",
-    country: "🇬🇧 United Kingdom",
-    rating: 5,
-    comment:
-      "Absolutely loved it. The location is perfect – within walking distance to the Colosseum. The 360 tour on the listing made it easy to decide. Highly recommend!",
-  },
-  {
-    id: 3,
-    author: "Sofía L.",
-    country: "🇪🇸 España",
-    rating: 5,
-    comment:
-      "El studio es precioso y exactamente lo que se ve en el tour virtual. Una experiencia auténtica en Roma, me sentí como en casa. Volvería sin dudar.",
-  },
-  {
-    id: 4,
-    author: "Marco B.",
-    country: "🇮🇹 Italia",
-    rating: 5,
-    comment:
-      "Posto meraviglioso nel cuore di Roma. L'appartamento è esattamente come nel tour 360, cucina completamente attrezzata e bagno impeccabile. Tornerò presto!",
-  },
-];
+const REVIEWERS = [
+  { id: "giulia", author: "Giulia M.", country: "🇩🇪 Deutschland", rating: 5 },
+  { id: "james",  author: "James R.",  country: "🇬🇧 United Kingdom", rating: 5 },
+  { id: "sofia",  author: "Sofía L.",  country: "🇪🇸 España", rating: 5 },
+  { id: "marco",  author: "Marco B.",  country: "🇮🇹 Italia", rating: 5 },
+] as const;
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -56,7 +28,7 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function ReviewsSection() {
   const t = useTranslations("reviews");
-  const avgRating = (REVIEWS.reduce((s, r) => s + r.rating, 0) / REVIEWS.length).toFixed(1);
+  const avgRating = (REVIEWERS.reduce((s, r) => s + r.rating, 0) / REVIEWERS.length).toFixed(1);
 
   return (
     <section id="reviews" className="py-24 px-6 bg-ivory">
@@ -77,19 +49,21 @@ export default function ReviewsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {REVIEWS.map((review) => (
+          {REVIEWERS.map((reviewer) => (
             <div
-              key={review.id}
+              key={reviewer.id}
               className="bg-white rounded-2xl p-6 shadow-sm border border-ochre/10 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="font-semibold text-charcoal">{review.author}</p>
-                  <p className="text-sm text-warm-gray">{review.country}</p>
+                  <p className="font-semibold text-charcoal">{reviewer.author}</p>
+                  <p className="text-sm text-warm-gray">{reviewer.country}</p>
                 </div>
-                <StarRating rating={review.rating} />
+                <StarRating rating={reviewer.rating} />
               </div>
-              <p className="text-warm-gray leading-relaxed text-sm">"{review.comment}"</p>
+              <p className="text-warm-gray leading-relaxed text-sm">
+                "{t(`items.${reviewer.id}_comment`)}"
+              </p>
             </div>
           ))}
         </div>

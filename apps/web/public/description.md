@@ -1,12 +1,12 @@
 # Studio Via Mentana — Description
 
-An elegant studio apartment in the heart of Rome, tastefully renovated to blend classic Roman
-elements with modern comforts. Ideal for couples or solo travelers.
+The studio features a comfortable double bed, a fully equipped kitchen area with everything you need
+to cook, ample counter space and storage. Full private bathroom, wardrobe and space for everyday essentials.
 
 ## Amenities
-- ✓ Full kitchen
 - ✓ Refrigerator
+- ✓ Full kitchen
 - ✓ Private bathroom
-- ✓ High-speed WiFi
-- ✓ Air conditioning
-- ✓ Washing machine
+- ✓ WiFi
+- ✓ Cleaning products
+- ✓ Towels & linens

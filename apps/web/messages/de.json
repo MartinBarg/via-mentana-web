@@ -1,6 +1,10 @@
 {
   "nav": {
-    "brand": "Studio Via Mentana"
+    "brand": "Studio Via Mentana",
+    "tour360": "360° Tour",
+    "descriptionLink": "Das Studio",
+    "locationLink": "Lage",
+    "reviewsLink": "Bewertungen"
   },
   "hero": {
     "title": "Studio in Rom",
@@ -9,46 +13,73 @@
   },
   "description": {
     "title": "Das Studio",
-    "body": "Ein elegantes Studioapartment im Herzen Roms, nur wenige Schritte von den wichtigsten Sehenswürdigkeiten der Stadt entfernt. Das Studio wurde geschmackvoll renoviert und verbindet klassische römische Elemente mit modernem Komfort. Ideal für Paare oder Alleinreisende, die Rom wie ein Einheimischer erleben möchten.",
+    "body": "Das Studio verfügt über ein komfortables Doppelbett, einen voll ausgestatteten Küchenbereich mit allem Nötigen zum Kochen, Arbeitsfläche und großzügigem Stauraum. Privates Vollbad, Kleiderschrank und Platz für den täglichen Bedarf.",
     "amenities_title": "Was enthalten ist",
     "amenities": {
-      "kitchen": "Voll ausgestattete Küche",
       "fridge": "Kühlschrank",
+      "kitchen": "Voll ausgestattete Küche",
       "bathroom": "Privates Badezimmer",
-      "wifi": "Schnelles WLAN",
-      "ac": "Klimaanlage",
-      "washing": "Waschmaschine"
+      "wifi": "WLAN",
+      "cleaning": "Reinigungsprodukte",
+      "linens": "Handtücher & Bettwäsche"
     }
   },
   "location": {
     "title": "Lage",
-    "subtitle": "Im Herzen Roms, Viertel Esquilino",
-    "description": "Das Studio befindet sich in einem der lebendigsten und authentischsten Viertel Roms, nur wenige Gehminuten vom Kolosseum und dem Bahnhof Termini entfernt. Die Gegend bietet alles, was man braucht: lokale Märkte, typische Restaurants und ausgezeichnete Anbindung an öffentliche Verkehrsmittel.",
+    "subtitle": "Viertel Castro Pretorio, Rom",
+    "description": "Das Studio befindet sich im lebhaften Viertel Castro Pretorio, nur wenige Schritte von der U-Bahn B und der Nationalbibliothek entfernt. Eine strategische Lage zur Erkundung Roms, mit Restaurants, Cafés und Einrichtungen aller Art in Gehweite.",
+    "distance": "m",
     "categories": {
       "pizza": "Pizzerien",
+      "restaurant": "Restaurants",
       "coffee": "Cafés",
       "library": "Bibliotheken",
       "metro": "U-Bahn",
       "bus": "Bus"
     },
     "places": {
-      "pizza1": "Pizzarium Bonci",
-      "pizza2": "Da Remo",
-      "pizza3": "Pizzeria Ai Marmi",
-      "coffee1": "Caffè Sant'Eustachio",
-      "coffee2": "Bar San Calisto",
+      "pizza1": "Pizzeria da Claudio",
+      "pizza1_dist": "350",
+      "pizza2": "Forno Conti",
+      "pizza2_dist": "500",
+      "pizza3": "Pizzeria Al Forno",
+      "pizza3_dist": "650",
+      "restaurant1": "Trattoria Monti",
+      "restaurant1_dist": "400",
+      "restaurant2": "Osteria dell'Angelo",
+      "restaurant2_dist": "550",
+      "restaurant3": "Ristorante Il Tulipano",
+      "restaurant3_dist": "300",
+      "coffee1": "Bar San Pietro",
+      "coffee1_dist": "200",
+      "coffee2": "Caffè Colombia",
+      "coffee2_dist": "350",
+      "coffee3": "Bar Termini",
+      "coffee3_dist": "600",
       "library1": "Nationalbibliothek",
-      "library2": "Bibliothek für Neuere Geschichte",
-      "metro1": "U-Bahn B – Termini",
-      "metro2": "U-Bahn A – Repubblica",
-      "bus1": "Linie 40 – Historisches Zentrum",
-      "bus2": "Linie 64 – Vatikan"
+      "library1_dist": "400",
+      "library2": "Staatsbibliothek",
+      "library2_dist": "700",
+      "metro1": "U-Bahn B – Castro Pretorio",
+      "metro1_dist": "100",
+      "metro2": "U-Bahn A/B – Termini",
+      "metro2_dist": "600",
+      "bus1": "Via Volturno (Linien 90, 92)",
+      "bus1_dist": "150",
+      "bus2": "Bahnhof Termini (alle Linien)",
+      "bus2_dist": "600"
     }
   },
   "reviews": {
     "title": "Bewertungen",
     "subtitle": "Was unsere Gäste sagen",
-    "rating_label": "von 5"
+    "rating_label": "von 5",
+    "items": {
+      "giulia_comment": "Wunderschöner Ort! Das Studio ist genau wie beschrieben — elegant, sauber und perfekt gelegen. Die virtuelle Tour hat mich sofort überzeugt.",
+      "james_comment": "Absolut geliebt. Die Lage ist perfekt — nur wenige Gehminuten vom Kolosseum entfernt. Der 360-Tour im Inserat hat die Entscheidung leicht gemacht. Sehr empfehlenswert!",
+      "sofia_comment": "Das Studio ist wunderschön und genau das, was man im virtuellen Rundgang sieht. Ein authentisches Erlebnis in Rom, ich fühlte mich wie zu Hause. Würde jederzeit wiederkommen.",
+      "marco_comment": "Ein wunderbarer Ort im Herzen Roms. Die Wohnung ist genau wie im 360-Tour, voll ausgestattete Küche und makellose Badezimmer. Ich komme bald wieder!"
+    }
   },
   "cta": {
     "title": "Bereit, Rom zu erleben?",

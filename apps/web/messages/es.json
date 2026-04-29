@@ -1,6 +1,10 @@
 {
   "nav": {
-    "brand": "Studio Via Mentana"
+    "brand": "Studio Via Mentana",
+    "tour360": "Tour 360",
+    "descriptionLink": "El Studio",
+    "locationLink": "Ubicación",
+    "reviewsLink": "Reseñas"
   },
   "hero": {
     "title": "Studio en Roma",
@@ -9,46 +13,73 @@
   },
   "description": {
     "title": "El Studio",
-    "body": "Un elegante monoambiente ubicado en el corazón de Roma, a pocos pasos de las principales atracciones de la ciudad. El studio ha sido renovado con gusto, combinando elementos romanos clásicos con comodidades modernas. Ideal para parejas o viajeros solos que quieran vivir Roma como un local.",
+    "body": "El studio cuenta con una cómoda cama doble, una zona de cocina completamente equipada con todo lo necesario para cocinar, espacio de apoyo y amplio lugar de guardado. Baño completo privado, placard y espacio para guardar elementos de uso cotidiano.",
     "amenities_title": "Qué incluye",
     "amenities": {
-      "kitchen": "Cocina completa",
       "fridge": "Heladera",
+      "kitchen": "Cocina completa",
       "bathroom": "Baño privado",
-      "wifi": "WiFi de alta velocidad",
-      "ac": "Aire acondicionado",
-      "washing": "Lavarropas"
+      "wifi": "WiFi",
+      "cleaning": "Productos de limpieza",
+      "linens": "Toallas & sábanas"
     }
   },
   "location": {
     "title": "Ubicación",
-    "subtitle": "En el corazón de Roma, barrio Esquilino",
-    "description": "El studio se encuentra en uno de los barrios más vibrantes y auténticos de Roma, a pocos minutos a pie del Coliseo y la Estación Termini. La zona tiene todo lo necesario: mercados locales, restaurantes típicos y excelentes conexiones de transporte público.",
+    "subtitle": "Barrio Castro Pretorio, Roma",
+    "description": "El studio se encuentra en el animado barrio Castro Pretorio, a pocos pasos del Metro B y la Biblioteca Nacional Central. Una posición estratégica para explorar Roma, con restaurantes, cafés y servicios de todo tipo a distancia caminando.",
+    "distance": "m",
     "categories": {
       "pizza": "Pizzerías",
+      "restaurant": "Restaurantes",
       "coffee": "Cafés",
       "library": "Bibliotecas",
       "metro": "Metro",
       "bus": "Colectivos"
     },
     "places": {
-      "pizza1": "Pizzarium Bonci",
-      "pizza2": "Da Remo",
-      "pizza3": "Pizzeria Ai Marmi",
-      "coffee1": "Caffè Sant'Eustachio",
-      "coffee2": "Bar San Calisto",
+      "pizza1": "Pizzeria da Claudio",
+      "pizza1_dist": "350",
+      "pizza2": "Forno Conti",
+      "pizza2_dist": "500",
+      "pizza3": "Pizzeria Al Forno",
+      "pizza3_dist": "650",
+      "restaurant1": "Trattoria Monti",
+      "restaurant1_dist": "400",
+      "restaurant2": "Osteria dell'Angelo",
+      "restaurant2_dist": "550",
+      "restaurant3": "Ristorante Il Tulipano",
+      "restaurant3_dist": "300",
+      "coffee1": "Bar San Pietro",
+      "coffee1_dist": "200",
+      "coffee2": "Caffè Colombia",
+      "coffee2_dist": "350",
+      "coffee3": "Bar Termini",
+      "coffee3_dist": "600",
       "library1": "Biblioteca Nacional Central",
-      "library2": "Biblioteca de Historia Moderna",
-      "metro1": "Metro B – Termini",
-      "metro2": "Metro A – Repubblica",
-      "bus1": "Línea 40 – Centro Histórico",
-      "bus2": "Línea 64 – Vaticano"
+      "library1_dist": "400",
+      "library2": "Biblioteca Estatal",
+      "library2_dist": "700",
+      "metro1": "Metro B – Castro Pretorio",
+      "metro1_dist": "100",
+      "metro2": "Metro A/B – Termini",
+      "metro2_dist": "600",
+      "bus1": "Via Volturno (líneas 90, 92)",
+      "bus1_dist": "150",
+      "bus2": "Estación Termini (todas las líneas)",
+      "bus2_dist": "600"
     }
   },
   "reviews": {
     "title": "Reseñas",
     "subtitle": "Lo que dicen nuestros huéspedes",
-    "rating_label": "de 5"
+    "rating_label": "de 5",
+    "items": {
+      "giulia_comment": "¡Lugar maravilloso! El studio es exactamente como se describe — elegante, limpio y perfectamente ubicado. El tour virtual me convenció de inmediato.",
+      "james_comment": "Me encantó absolutamente. La ubicación es perfecta — a poca distancia del Coliseo. El tour 360 del listado me facilitó la decisión. ¡Lo recomiendo muchísimo!",
+      "sofia_comment": "El studio es precioso y exactamente lo que se ve en el tour virtual. Una experiencia auténtica en Roma, me sentí como en casa. Volvería sin dudar.",
+      "marco_comment": "Un lugar maravilloso en el corazón de Roma. El apartamento es exactamente como en el tour 360, cocina completamente equipada y baño impecable. ¡Vuelvo pronto!"
+    }
   },
   "cta": {
     "title": "¿Listo para vivir Roma?",
