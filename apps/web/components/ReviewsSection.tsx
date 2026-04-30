@@ -3,10 +3,10 @@
 import { useTranslations } from "next-intl";
 
 const REVIEWERS = [
-  { id: "giulia", author: "Giulia M.", country: "🇩🇪 Deutschland", rating: 5 },
-  { id: "james",  author: "James R.",  country: "🇬🇧 United Kingdom", rating: 5 },
-  { id: "sofia",  author: "Sofía L.",  country: "🇪🇸 España", rating: 5 },
-  { id: "marco",  author: "Marco B.",  country: "🇮🇹 Italia", rating: 5 },
+  { id: "giulia", author: "Giulia M.", country: "Deutschland", rating: 5 },
+  { id: "james",  author: "James R.",  country: "United Kingdom", rating: 5 },
+  { id: "sofia",  author: "Sofía L.",  country: "España", rating: 5 },
+  { id: "marco",  author: "Marco B.",  country: "Italia", rating: 5 },
 ] as const;
 
 function StarRating({ rating }: { rating: number }) {

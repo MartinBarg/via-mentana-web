@@ -2,13 +2,13 @@
 
 import { useTranslations } from "next-intl";
 
-const AMENITIES = [
-  { key: "fridge", icon: "🧊" },
-  { key: "kitchen", icon: "🍳" },
-  { key: "bathroom", icon: "🚿" },
-  { key: "wifi", icon: "📶" },
-  { key: "cleaning", icon: "🧹" },
-  { key: "linens", icon: "🛏️" },
+const AMENITY_KEYS = [
+  "fridge",
+  "kitchen",
+  "bathroom",
+  "wifi",
+  "cleaning",
+  "linens",
 ] as const;
 
 export default function DescriptionSection() {
@@ -18,6 +18,8 @@ export default function DescriptionSection() {
     <section id="description" className="py-24 px-6 bg-ivory">
       <div className="max-w-5xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-start">
+
+          {/* Texto */}
           <div>
             <h2
               className="text-4xl md:text-5xl text-charcoal mb-6"
@@ -30,25 +32,26 @@ export default function DescriptionSection() {
             </p>
           </div>
 
+          {/* Amenities */}
           <div>
-            <h3 className="text-sm text-ochre mb-6 font-medium tracking-widest uppercase">
+            <h3 className="text-xs text-ochre mb-4 font-medium tracking-widest uppercase">
               {t("amenities_title")}
             </h3>
-            <ul className="grid grid-cols-1 gap-3">
-              {AMENITIES.map(({ key, icon }) => (
+            <ul className="divide-y divide-ochre/10">
+              {AMENITY_KEYS.map((key) => (
                 <li
                   key={key}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white border border-ochre/10 shadow-sm"
+                  className="flex items-center justify-between py-2.5"
                 >
-                  <span className="text-2xl">{icon}</span>
-                  <span className="text-charcoal font-medium">
+                  <span className="text-charcoal text-sm">
                     {t(`amenities.${key}`)}
                   </span>
-                  <span className="ml-auto text-terracotta font-bold text-lg">✓</span>
+                  <span className="text-terracotta text-sm font-medium">✓</span>
                 </li>
               ))}
             </ul>
           </div>
+
         </div>
       </div>
     </section>
