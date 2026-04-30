@@ -12,7 +12,7 @@ export default function HeroSection() {
     <section className="relative w-full" style={{ height: "100svh" }}>
       {/* Kuula 360 iframe */}
       <iframe
-        src="https://kuula.co/share/collection/7MVhN?logo=1&info=1&fs=1&vr=0&sd=1&autorotate=0.16&autop=10&thumbs=-1"
+        src="https://kuula.co/share/collection/7MVhN?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0"
         width="100%"
         height="100%"
         frameBorder="0"
