@@ -62,7 +62,7 @@ export default function ReviewsSection() {
                 <StarRating rating={reviewer.rating} />
               </div>
               <p className="text-warm-gray leading-relaxed text-sm">
-                "{t(`items.${reviewer.id}_comment`)}"
+                &ldquo;{t(`items.${reviewer.id}_comment`)}&rdquo;
               </p>
             </div>
           ))}
