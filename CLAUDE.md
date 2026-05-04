@@ -80,8 +80,43 @@ Tipografía: **Playfair Display** (headings) + **Inter** (body), cargadas desde 
 - **Variables de entorno:** no hay `.env` — todo el contenido es estático.
 - **API routes:** no hay ninguna en `/app/api/`.
 
-## Convenciones
+## Convenciones de código
 
 - Un componente por sección, sin lógica compartida compleja entre ellos
 - Los textos siempre vienen de `messages/<locale>.json` — nunca hardcodeados en componentes
 - Estilos con clases Tailwind directamente en JSX, sin CSS modules
+
+## Workflow de Git
+
+**Nunca commitear directamente a `master`.** Toda funcionalidad se trabaja en su propia rama.
+
+### Nomenclatura de ramas
+
+| Prefijo | Cuándo usarlo |
+|---------|--------------|
+| `feature/<descripcion>` | Nueva funcionalidad |
+| `fix/<descripcion>` | Corrección de bug |
+| `hotfix/<descripcion>` | Fix urgente en producción |
+| `docs/<descripcion>` | Solo documentación |
+| `refactor/<descripcion>` | Refactor sin cambio funcional |
+| `chore/<descripcion>` | Mantenimiento, dependencias, config |
+
+Referencia: [Branch naming best practices](https://gist.github.com/kmilodenisglez/19640d4131a92a3dd53c215af31d55ee)
+
+### Commits
+
+Usar [Conventional Commits](https://www.conventionalcommits.org/):
+```
+tipo: qué se hizo y para qué se hizo
+```
+Ejemplos: `feat: add contact form to capture leads`, `fix: correct mobile menu z-index blocking CTA`
+
+### Flujo típico
+
+```bash
+git checkout -b feature/mi-funcionalidad
+# ... cambios ...
+git commit -m "feat: descripción del cambio y su propósito"
+git push origin feature/mi-funcionalidad
+# Crear PR hacia master desde GitHub
+```
