@@ -35,7 +35,7 @@ export default function LocationSection() {
         {/* Mapa — Castro Pretorio metro station */}
         <div className="mb-16 rounded-2xl overflow-hidden border border-white/10">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.3!2d12.497299!3d41.902449!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61a30bb10b65%3A0xe49a8f14a3f6f52c!2sCastro%20Pretorio%20(Metro%20B)!5e0!3m2!1sit!2sit!4v1"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.3!2d12.4993!3d41.9042!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61a30bb10b65%3A0xe49a8f14a3f6f52c!2sCastro%20Pretorio%20(Metro%20B)!5e0!3m2!1sit!2sit!4v1"
             width="100%"
             height="300"
             style={{ border: 0 }}
