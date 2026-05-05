@@ -1,18 +1,20 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { PropertyConfig } from "@/lib/types/client";
+import { loc } from "@/lib/utils";
 
-const AMENITY_KEYS = [
-  "fridge",
-  "kitchen",
-  "bathroom",
-  "wifi",
-  "cleaning",
-  "linens",
-] as const;
+interface DescriptionSectionProps {
+  property: PropertyConfig;
+  locale: string;
+}
 
-export default function DescriptionSection() {
+export default function DescriptionSection({ property, locale }: DescriptionSectionProps) {
   const t = useTranslations("description");
+
+  if (!property.description) return null;
+
+  const { title, body, amenityKeys } = property.description;
 
   return (
     <section id="description" className="py-24 px-6 bg-ivory">
@@ -25,10 +27,10 @@ export default function DescriptionSection() {
               className="text-4xl md:text-5xl text-charcoal mb-6"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
-              {t("title")}
+              {loc(title, locale)}
             </h2>
             <p className="text-warm-gray text-lg leading-relaxed">
-              {t("body")}
+              {loc(body, locale)}
             </p>
           </div>
 
@@ -38,7 +40,7 @@ export default function DescriptionSection() {
               {t("amenities_title")}
             </h3>
             <ul className="divide-y divide-ochre/10">
-              {AMENITY_KEYS.map((key) => (
+              {amenityKeys.map((key) => (
                 <li
                   key={key}
                   className="flex items-center justify-between py-2.5"

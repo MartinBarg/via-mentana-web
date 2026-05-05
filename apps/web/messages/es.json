@@ -1,19 +1,11 @@
 {
   "nav": {
-    "brand": "Studio Via Mentana",
     "tour360": "Tour 360",
     "descriptionLink": "El Studio",
     "locationLink": "Ubicación",
     "reviewsLink": "Reseñas"
   },
-  "hero": {
-    "title": "Studio en Roma",
-    "subtitle": "Una experiencia única en el corazón de la ciudad eterna",
-    "cta": "Reservar en Airbnb"
-  },
   "description": {
-    "title": "El Studio",
-    "body": "El studio cuenta con una cómoda cama doble, una zona de cocina completamente equipada con todo lo necesario para cocinar, espacio de apoyo y amplio lugar de guardado. Baño completo privado, placard y espacio para guardar elementos de uso cotidiano.",
     "amenities_title": "Qué incluye",
     "amenities": {
       "fridge": "Heladera",
@@ -25,69 +17,15 @@
     }
   },
   "location": {
-    "title": "Ubicación",
-    "subtitle": "Barrio Castro Pretorio, Roma",
-    "description": "El studio se encuentra en el animado barrio Castro Pretorio, a pocos pasos del Metro B y la Biblioteca Nacional Central. Una posición estratégica para explorar Roma, con restaurantes, cafés y servicios de todo tipo a distancia caminando.",
-    "distance": "m",
-    "categories": {
-      "pizza": "Pizzerías",
-      "restaurant": "Restaurantes",
-      "coffee": "Cafés",
-      "library": "Bibliotecas",
-      "metro": "Metro",
-      "bus": "Colectivos"
-    },
-    "places": {
-      "pizza1": "Pizzeria da Claudio",
-      "pizza1_dist": "350",
-      "pizza2": "Forno Conti",
-      "pizza2_dist": "500",
-      "pizza3": "Pizzeria Al Forno",
-      "pizza3_dist": "650",
-      "restaurant1": "Trattoria Monti",
-      "restaurant1_dist": "400",
-      "restaurant2": "Osteria dell'Angelo",
-      "restaurant2_dist": "550",
-      "restaurant3": "Ristorante Il Tulipano",
-      "restaurant3_dist": "300",
-      "coffee1": "Bar San Pietro",
-      "coffee1_dist": "200",
-      "coffee2": "Caffè Colombia",
-      "coffee2_dist": "350",
-      "coffee3": "Bar Termini",
-      "coffee3_dist": "600",
-      "library1": "Biblioteca Nacional Central",
-      "library1_dist": "400",
-      "library2": "Biblioteca Estatal",
-      "library2_dist": "700",
-      "metro1": "Metro B – Castro Pretorio",
-      "metro1_dist": "100",
-      "metro2": "Metro A/B – Termini",
-      "metro2_dist": "600",
-      "bus1": "Via Volturno (líneas 90, 92)",
-      "bus1_dist": "150",
-      "bus2": "Estación Termini (todas las líneas)",
-      "bus2_dist": "600"
-    }
+    "distance": "m"
   },
   "reviews": {
-    "title": "Reseñas",
-    "subtitle": "Lo que dicen nuestros huéspedes",
-    "rating_label": "de 5",
-    "items": {
-      "giulia_comment": "¡Lugar maravilloso! El studio es exactamente como se describe — elegante, limpio y perfectamente ubicado. El tour virtual me convenció de inmediato.",
-      "james_comment": "Me encantó absolutamente. La ubicación es perfecta — a poca distancia del Coliseo. El tour 360 del listado me facilitó la decisión. ¡Lo recomiendo muchísimo!",
-      "sofia_comment": "El studio es precioso y exactamente lo que se ve en el tour virtual. Una experiencia auténtica en Roma, me sentí como en casa. Volvería sin dudar.",
-      "marco_comment": "Un lugar maravilloso en el corazón de Roma. El apartamento es exactamente como en el tour 360, cocina completamente equipada y baño impecable. ¡Vuelvo pronto!"
-    }
+    "rating_label": "de 5"
   },
   "cta": {
-    "title": "¿Listo para vivir Roma?",
-    "subtitle": "Reservá tu estadía en Studio Via Mentana y descubrí la ciudad eterna como un local.",
     "button": "Reservar en Airbnb"
   },
   "footer": {
-    "tagline": "Una experiencia auténtica en el corazón de Roma",
     "links": {
       "airbnb": "Airbnb",
       "top": "Volver arriba"
