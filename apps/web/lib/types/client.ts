@@ -1,7 +1,7 @@
 export type SupportedLocale = "it" | "en" | "es" | "de";
 export type LocalizedString = Record<SupportedLocale, string>;
 
-export interface ReviewerConfig {
+interface ReviewerConfig {
   id: string;
   author: string;
   country: string;
@@ -9,12 +9,12 @@ export interface ReviewerConfig {
   comment: LocalizedString;
 }
 
-export interface POIPlace {
+interface POIPlace {
   name: LocalizedString;
   distance: string;
 }
 
-export interface POICategory {
+interface POICategory {
   key: string;
   label: LocalizedString;
   places: POIPlace[];
