@@ -1,13 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { PropertyConfig } from "@/lib/types/client";
+import { loc } from "@/lib/utils";
 
-const REVIEWERS = [
-  { id: "giulia", author: "Giulia M.", country: "Deutschland", rating: 5 },
-  { id: "james",  author: "James R.",  country: "United Kingdom", rating: 5 },
-  { id: "sofia",  author: "Sofía L.",  country: "España", rating: 5 },
-  { id: "marco",  author: "Marco B.",  country: "Italia", rating: 5 },
-] as const;
+interface ReviewsSectionProps {
+  property: PropertyConfig;
+  locale: string;
+}
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -26,9 +26,13 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export default function ReviewsSection() {
+export default function ReviewsSection({ property, locale }: ReviewsSectionProps) {
   const t = useTranslations("reviews");
-  const avgRating = (REVIEWERS.reduce((s, r) => s + r.rating, 0) / REVIEWERS.length).toFixed(1);
+
+  if (!property.reviews) return null;
+
+  const { title, subtitle, items } = property.reviews;
+  const avgRating = (items.reduce((s, r) => s + r.rating, 0) / items.length).toFixed(1);
 
   return (
     <section id="reviews" className="py-24 px-6 bg-ivory">
@@ -38,9 +42,9 @@ export default function ReviewsSection() {
             className="text-4xl md:text-5xl text-charcoal mb-3"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
-            {t("title")}
+            {loc(title, locale)}
           </h2>
-          <p className="text-warm-gray mb-4">{t("subtitle")}</p>
+          <p className="text-warm-gray mb-4">{loc(subtitle, locale)}</p>
           <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-sm border border-ochre/10">
             <StarRating rating={5} />
             <span className="text-2xl font-bold text-charcoal">{avgRating}</span>
@@ -49,7 +53,7 @@ export default function ReviewsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {REVIEWERS.map((reviewer) => (
+          {items.map((reviewer) => (
             <div
               key={reviewer.id}
               className="bg-white rounded-2xl p-6 shadow-sm border border-ochre/10 hover:shadow-md transition-shadow"
@@ -62,7 +66,7 @@ export default function ReviewsSection() {
                 <StarRating rating={reviewer.rating} />
               </div>
               <p className="text-warm-gray leading-relaxed text-sm">
-                &ldquo;{t(`items.${reviewer.id}_comment`)}&rdquo;
+                &ldquo;{loc(reviewer.comment, locale)}&rdquo;
               </p>
             </div>
           ))}

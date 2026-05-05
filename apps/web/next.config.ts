@@ -5,6 +5,11 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "flagcdn.com" },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);

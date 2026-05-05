@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { getClientConfig } from "@/lib/config";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -14,17 +15,24 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Studio Via Mentana – Roma",
-  description: "Elegant studio apartment in the heart of Rome. Book your stay and experience the eternal city like a local.",
-  keywords: ["studio Roma", "affitto Roma", "Airbnb Roma", "Via Mentana", "appartamento Roma centro"],
-  openGraph: {
-    title: "Studio Via Mentana – Roma",
-    description: "Elegant studio apartment in the heart of Rome.",
-    locale: "it_IT",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getClientConfig();
+  const primary = config.properties[0];
+  const title = `${config.brandName} – Roma`;
+  const description = primary?.description?.body["en"] ?? config.brandName;
+
+  return {
+    title,
+    description,
+    keywords: [config.brandName, "Airbnb Roma", ...config.properties.map((p) => p.id)],
+    openGraph: {
+      title,
+      description: primary?.hero.subtitle["en"] ?? description,
+      locale: "it_IT",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

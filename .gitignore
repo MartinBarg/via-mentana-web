@@ -1,2 +1,7 @@
 node_modules
 .claude/
+
+# env files — nunca commitear credenciales
+.env
+.env.local
+.env.*.local

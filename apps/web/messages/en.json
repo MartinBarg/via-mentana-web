@@ -1,19 +1,11 @@
 {
   "nav": {
-    "brand": "Studio Via Mentana",
     "tour360": "360 Tour",
     "descriptionLink": "The Studio",
     "locationLink": "Location",
     "reviewsLink": "Reviews"
   },
-  "hero": {
-    "title": "Studio in Rome",
-    "subtitle": "A unique experience in the heart of the eternal city",
-    "cta": "Book on Airbnb"
-  },
   "description": {
-    "title": "The Studio",
-    "body": "The studio features a comfortable double bed, a fully equipped kitchen area with everything you need to cook, ample counter space and storage. Full private bathroom, wardrobe and space for everyday essentials.",
     "amenities_title": "What's included",
     "amenities": {
       "fridge": "Refrigerator",
@@ -25,69 +17,15 @@
     }
   },
   "location": {
-    "title": "Location",
-    "subtitle": "Castro Pretorio neighborhood, Rome",
-    "description": "The studio is located in the vibrant Castro Pretorio neighborhood, steps away from Metro B and the National Central Library. A strategic position to explore Rome, with restaurants, cafés and services all within walking distance.",
-    "distance": "m",
-    "categories": {
-      "pizza": "Pizza places",
-      "restaurant": "Restaurants",
-      "coffee": "Coffee shops",
-      "library": "Libraries",
-      "metro": "Metro",
-      "bus": "Bus"
-    },
-    "places": {
-      "pizza1": "Pizzeria da Claudio",
-      "pizza1_dist": "350",
-      "pizza2": "Forno Conti",
-      "pizza2_dist": "500",
-      "pizza3": "Pizzeria Al Forno",
-      "pizza3_dist": "650",
-      "restaurant1": "Trattoria Monti",
-      "restaurant1_dist": "400",
-      "restaurant2": "Osteria dell'Angelo",
-      "restaurant2_dist": "550",
-      "restaurant3": "Ristorante Il Tulipano",
-      "restaurant3_dist": "300",
-      "coffee1": "Bar San Pietro",
-      "coffee1_dist": "200",
-      "coffee2": "Caffè Colombia",
-      "coffee2_dist": "350",
-      "coffee3": "Bar Termini",
-      "coffee3_dist": "600",
-      "library1": "National Central Library",
-      "library1_dist": "400",
-      "library2": "State Library",
-      "library2_dist": "700",
-      "metro1": "Metro B – Castro Pretorio",
-      "metro1_dist": "100",
-      "metro2": "Metro A/B – Termini",
-      "metro2_dist": "600",
-      "bus1": "Via Volturno (lines 90, 92)",
-      "bus1_dist": "150",
-      "bus2": "Termini Station (all lines)",
-      "bus2_dist": "600"
-    }
+    "distance": "m"
   },
   "reviews": {
-    "title": "Reviews",
-    "subtitle": "What our guests say",
-    "rating_label": "out of 5",
-    "items": {
-      "giulia_comment": "Wonderful place! The studio is exactly as described — elegant, clean and perfectly located. The virtual tour convinced me straight away.",
-      "james_comment": "Absolutely loved it. The location is perfect — within walking distance to the Colosseum. The 360 tour on the listing made it easy to decide. Highly recommend!",
-      "sofia_comment": "The studio is beautiful and exactly what you see in the virtual tour. An authentic experience in Rome, I felt right at home. Would go back without hesitation.",
-      "marco_comment": "A wonderful place in the heart of Rome. The apartment is exactly as shown in the 360 tour, fully equipped kitchen and impeccable bathroom. I'll be back soon!"
-    }
+    "rating_label": "out of 5"
   },
   "cta": {
-    "title": "Ready to experience Rome?",
-    "subtitle": "Book your stay at Studio Via Mentana and discover the eternal city like a local.",
     "button": "Book on Airbnb"
   },
   "footer": {
-    "tagline": "An authentic experience in the heart of Rome",
     "links": {
       "airbnb": "Airbnb",
       "top": "Back to top"

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { useTransition, useState } from "react";
@@ -11,13 +12,16 @@ const LANGUAGES = [
   { code: "de", countryCode: "de", label: "Deutsch" },
 ] as const;
 
+interface NavbarProps {
+  brandName: string;
+}
+
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
   return (
-    <img
+    <Image
       src={`https://flagcdn.com/24x18/${countryCode}.png`}
-      srcSet={`https://flagcdn.com/48x36/${countryCode}.png 2x`}
-      width="24"
-      height="18"
+      width={24}
+      height={18}
       alt={label}
       className="rounded-sm object-cover"
     />
@@ -33,7 +37,7 @@ function scrollToSection(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Navbar() {
+export default function Navbar({ brandName }: NavbarProps) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
@@ -71,7 +75,7 @@ export default function Navbar() {
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           onClick={() => handleNavClick("top")}
         >
-          Studio Via Mentana
+          {brandName}
         </span>
 
         {/* Nav links — desktop */}
