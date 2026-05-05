@@ -20,7 +20,7 @@ export default async function HomePage({ params }: PageProps) {
   );
 
   const primary = config.properties[0];
-  const primaryAirbnbUrl = primary?.airbnbUrl ?? "#";
+  const primaryAirbnbUrl = primary?.airbnbUrl;
   const ctaTitle = primary?.cta ? loc(primary.cta.title, locale) : "";
   const ctaSubtitle = primary?.cta ? loc(primary.cta.subtitle, locale) : "";
   const footerTagline = primary?.footerTagline ? loc(primary.footerTagline, locale) : "";
@@ -32,8 +32,10 @@ export default async function HomePage({ params }: PageProps) {
       {config.properties.map((property) => (
         <PropertySections key={property.id} property={property} locale={locale} />
       ))}
-      <CTASection airbnbUrl={primaryAirbnbUrl} title={ctaTitle} subtitle={ctaSubtitle} />
-      <Footer brandName={config.brandName} airbnbUrl={primaryAirbnbUrl} tagline={footerTagline} />
+      {primary?.cta && primaryAirbnbUrl && (
+        <CTASection airbnbUrl={primaryAirbnbUrl} title={ctaTitle} subtitle={ctaSubtitle} />
+      )}
+      <Footer brandName={config.brandName} airbnbUrl={primaryAirbnbUrl ?? ""} tagline={footerTagline} />
     </main>
   );
 }

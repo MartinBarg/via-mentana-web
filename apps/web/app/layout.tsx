@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { getClientConfig } from "@/lib/config";
+import { loc } from "@/lib/utils";
+import { routing } from "@/i18n/routing";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -17,9 +19,12 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await getClientConfig();
+  const defaultLocale = routing.defaultLocale;
   const primary = config.properties[0];
   const title = `${config.brandName} – Roma`;
-  const description = primary?.description?.body["en"] ?? config.brandName;
+  const description = primary?.description
+    ? loc(primary.description.body, defaultLocale)
+    : config.brandName;
 
   return {
     title,
@@ -27,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: [config.brandName, "Airbnb Roma", ...config.properties.map((p) => p.id)],
     openGraph: {
       title,
-      description: primary?.hero.subtitle["en"] ?? description,
+      description: loc(primary.hero.subtitle, defaultLocale),
       locale: "it_IT",
       type: "website",
     },

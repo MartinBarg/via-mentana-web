@@ -2,17 +2,20 @@ import "server-only";
 import { cache } from "react";
 import type { ClientConfig } from "./types/client";
 
-const KNOWN_CLIENTS = ["via-mentana"] as const;
+const CLIENT_LOADERS: Record<string, () => Promise<{ default: ClientConfig }>> = {
+  "via-mentana": () => import("../clients/via-mentana/config"),
+};
 
 export const getClientConfig = cache(async (): Promise<ClientConfig> => {
   const clientId = process.env.CLIENT_ID ?? "via-mentana";
+  const loader = CLIENT_LOADERS[clientId];
 
-  if (!KNOWN_CLIENTS.includes(clientId as (typeof KNOWN_CLIENTS)[number])) {
+  if (!loader) {
     throw new Error(
-      `Unknown CLIENT_ID: "${clientId}". Known clients: ${KNOWN_CLIENTS.join(", ")}`
+      `Unknown CLIENT_ID: "${clientId}". Known clients: ${Object.keys(CLIENT_LOADERS).join(", ")}`
     );
   }
 
-  const mod = await import(`../clients/${clientId}/config`);
-  return mod.default as ClientConfig;
+  const mod = await loader();
+  return mod.default;
 });

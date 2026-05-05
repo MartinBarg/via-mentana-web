@@ -57,6 +57,4 @@ export interface ClientConfig {
   brandName: string;
   heroToursCount?: number;
   properties: PropertyConfig[];
-  locales: SupportedLocale[];
-  defaultLocale: SupportedLocale;
 }

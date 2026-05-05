@@ -60,8 +60,8 @@ export default function LocationSection({ property, locale }: LocationSectionPro
                 {loc(cat.label, locale)}
               </h4>
               <ul className="space-y-2">
-                {cat.places.map((place, i) => (
-                  <li key={i} className="flex items-baseline justify-between gap-3">
+                {cat.places.map((place) => (
+                  <li key={place.name["en"]} className="flex items-baseline justify-between gap-3">
                     <span className="text-ivory/65 text-sm leading-tight">
                       {loc(place.name, locale)}
                     </span>

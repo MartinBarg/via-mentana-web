@@ -4,8 +4,6 @@ const config: ClientConfig = {
   id: "via-mentana",
   brandName: "Studio Via Mentana",
   heroToursCount: 1,
-  locales: ["it", "en", "es", "de"],
-  defaultLocale: "it",
 
   properties: [
     {
