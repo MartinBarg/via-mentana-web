@@ -35,7 +35,7 @@ export default async function HomePage({ params }: PageProps) {
       {primary?.cta && primaryAirbnbUrl && (
         <CTASection airbnbUrl={primaryAirbnbUrl} title={ctaTitle} subtitle={ctaSubtitle} />
       )}
-      <Footer brandName={config.brandName} airbnbUrl={primaryAirbnbUrl ?? ""} tagline={footerTagline} />
+      <Footer brandName={config.brandName} airbnbUrl={primaryAirbnbUrl} tagline={footerTagline} />
     </main>
   );
 }

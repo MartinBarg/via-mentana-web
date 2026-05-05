@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: [config.brandName, "Airbnb Roma", ...config.properties.map((p) => p.id)],
     openGraph: {
       title,
-      description: loc(primary.hero.subtitle, defaultLocale),
+      description: primary ? loc(primary.hero.subtitle, defaultLocale) : config.brandName,
       locale: "it_IT",
       type: "website",
     },
