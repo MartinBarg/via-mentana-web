@@ -126,11 +126,25 @@ Referencia: [Branch naming best practices](https://gist.github.com/kmilodenisgle
 
 ### Commits
 
-Usar [Conventional Commits](https://www.conventionalcommits.org/):
+Usar [Conventional Commits](https://www.conventionalcommits.org/). Formato:
+
 ```
-tipo: qué se hizo y para qué se hizo
+tipo: qué se hizo
+
+// para qué se hizo
 ```
-Ejemplos: `feat: add contact form to capture leads`, `fix: correct mobile menu z-index blocking CTA`
+
+Ejemplos:
+```
+feat: add tour visit tracking per property
+
+// para poder medir el engagement de usuarios en cada tour
+```
+```
+fix: correct mobile menu z-index
+
+// para que el botón CTA sea siempre accesible en mobile
+```
 
 ### Flujo típico
 
