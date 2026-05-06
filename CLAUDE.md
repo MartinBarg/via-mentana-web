@@ -109,69 +109,14 @@ Ver `.env.example` en la raíz del repo.
 
 ## Workflow de Git
 
-**Nunca commitear directamente a `master`.** Toda funcionalidad se trabaja en su propia rama.
+Ver convenciones globales en `~/.claude/CLAUDE.md`.
 
-### Nomenclatura de ramas
+### GitHub Actions (@claude)
 
-| Prefijo | Cuándo usarlo |
-|---------|--------------|
-| `feature/<descripcion>` | Nueva funcionalidad |
-| `fix/<descripcion>` | Corrección de bug |
-| `hotfix/<descripcion>` | Fix urgente en producción |
-| `docs/<descripcion>` | Solo documentación |
-| `refactor/<descripcion>` | Refactor sin cambio funcional |
-| `chore/<descripcion>` | Mantenimiento, dependencias, config |
-
-Referencia: [Branch naming best practices](https://gist.github.com/kmilodenisglez/19640d4131a92a3dd53c215af31d55ee)
-
-### Commits
-
-Usar [Conventional Commits](https://www.conventionalcommits.org/). Formato:
-
-```
-tipo: qué se hizo
-
-// para qué se hizo
-```
-
-Ejemplos:
-```
-feat: add tour visit tracking per property
-
-// para poder medir el engagement de usuarios en cada tour
-```
-```
-fix: correct mobile menu z-index
-
-// para que el botón CTA sea siempre accesible en mobile
-```
-
-### Flujo típico
-
-1. Crear rama y hacer los cambios
-2. Correr `/update-docs` — actualiza README.md, CLAUDE.md y decisiones-tomadas.md en la misma rama
-3. Commitear código + docs juntos
-4. Correr `/review` — revisar antes de abrir la PR
-5. Repetir 1-4 si hay correcciones
-6. Push y PR — el merge lo hace el usuario desde GitHub
-
-```bash
-git checkout -b feature/mi-funcionalidad
-# ... cambios de código ...
-# /update-docs (actualiza docs en la misma rama)
-git add .
-git commit -m "feat: qué se hizo
-
-// para qué se hizo"
-git push origin feature/mi-funcionalidad
-```
-
-### Flujo via GitHub Actions (@claude)
-
-Para cambios iniciados desde GitHub:
+Este repo tiene Claude Code integrado via GitHub Actions. Para disparar cambios automáticamente:
 1. Abrir issue con `@claude` describiendo el cambio
 2. Claude hace cambios, commitea, pushea y abre la PR — automático
 3. Comentar en la PR con `@claude` si hay correcciones
-4. Usuario corre `/review` desde Claude Code
-5. Usuario mergea
-6. Usuario corre `/update-docs` para documentar
+4. Correr `/review` desde Claude Code antes de mergear
+5. Mergear desde GitHub
+6. Correr `/update-docs` para documentar los cambios
