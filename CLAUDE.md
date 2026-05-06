@@ -148,10 +148,20 @@ fix: correct mobile menu z-index
 
 ### Flujo típico
 
+1. Crear rama y hacer los cambios
+2. Correr `/update-docs` para actualizar README.md, CLAUDE.md y decisiones-tomadas.md
+3. Commitear código + docs juntos en la misma rama
+4. Correr `/review` para revisar antes de abrir la PR
+5. Repetir 1-4 si hay correcciones
+6. Push y PR — el merge lo hace el usuario desde GitHub
+
 ```bash
 git checkout -b feature/mi-funcionalidad
-# ... cambios ...
-git commit -m "feat: descripción del cambio y su propósito"
+# ... cambios de código ...
+# /update-docs (actualiza docs)
+git add .
+git commit -m "feat: qué se hizo
+
+// para qué se hizo"
 git push origin feature/mi-funcionalidad
-# Crear PR hacia master desde GitHub
 ```
