@@ -29,15 +29,24 @@ La app corre en `apps/web/` pero los scripts del workspace raíz (`package.json`
 ```
 apps/web/
 ├── app/[locale]/         # Rutas dinámicas por idioma (page.tsx, layout.tsx)
+├── clients/              # Un directorio por cliente
+│   └── via-mentana/
+│       └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
 ├── components/           # Un componente por sección de la página
 │   ├── Navbar.tsx
 │   ├── HeroSection.tsx   # Embed 360° de Kuula
+│   ├── PropertySections.tsx  # Wrapper que renderiza secciones por propiedad
 │   ├── DescriptionSection.tsx
 │   ├── LocationSection.tsx
 │   ├── ReviewsSection.tsx
 │   ├── CTASection.tsx
 │   └── Footer.tsx
-├── messages/             # Traducciones: it.json, en.json, es.json, de.json
+├── lib/
+│   ├── config.ts         # Carga el config del cliente (server-only, usa CLIENT_ID)
+│   ├── utils.ts          # loc(str, locale) — resuelve textos multiidioma
+│   └── types/
+│       └── client.ts     # Tipos TypeScript: ClientConfig, PropertyConfig, etc.
+├── messages/             # Solo UI chrome: it.json, en.json, es.json, de.json
 ├── i18n/
 │   ├── routing.ts        # Define locales y defaultLocale
 │   └── request.ts        # Carga mensajes por locale
@@ -67,24 +76,36 @@ Definida en `app/globals.css` con variables Tailwind:
 
 Tipografía: **Playfair Display** (headings) + **Inter** (body), cargadas desde Google Fonts.
 
-## URLs externas hardcodeadas
+## URLs del cliente
 
-- **Airbnb:** enlace de reserva en `HeroSection.tsx` y `CTASection.tsx`
-- **Kuula:** embed 360° en `HeroSection.tsx`
-- **Google Maps:** embed en `LocationSection.tsx`
-- **Banderas:** CDN `flagcdn.com` en `Navbar.tsx`
+Las URLs ya no están hardcodeadas en componentes. Viven en `clients/<id>/config.ts`:
+
+- **Airbnb:** `property.airbnbUrl`
+- **Kuula:** `property.kuulaEmbedUrl`
+- **Google Maps:** `property.googleMapsEmbedUrl`
+- **Banderas:** CDN `flagcdn.com` en `Navbar.tsx` (esta sí es fija, es infraestructura)
+
+## Variables de entorno
+
+| Variable | Descripción | Requerida |
+|----------|-------------|-----------|
+| `CLIENT_ID` | Identificador del cliente a cargar (ej: `via-mentana`) | Sí (default: `via-mentana`) |
+
+Ver `.env.example` en la raíz del repo.
 
 ## Lo que NO existe aún
 
-- **Supabase:** hay un schema en `supabase/migrations/` pero no está conectado al frontend. Las reseñas son estáticas en `messages/*.json`.
-- **Variables de entorno:** no hay `.env` — todo el contenido es estático.
+- **Supabase:** hay un schema en `supabase/migrations/` pero no está conectado al frontend. Las reseñas son estáticas en `clients/<id>/config.ts`.
 - **API routes:** no hay ninguna en `/app/api/`.
 
 ## Convenciones de código
 
 - Un componente por sección, sin lógica compartida compleja entre ellos
-- Los textos siempre vienen de `messages/<locale>.json` — nunca hardcodeados en componentes
+- El **contenido** (títulos, descripciones, reseñas, URLs) viene de `clients/<id>/config.ts` via props
+- Los **textos de UI** (labels de botones, nav links, etiquetas fijas) vienen de `messages/<locale>.json`
+- Los componentes usan `loc(str, locale)` de `lib/utils.ts` para resolver textos multiidioma del config
 - Estilos con clases Tailwind directamente en JSX, sin CSS modules
+- Agregar un cliente nuevo = crear `clients/<nuevo-id>/config.ts` + agregar una línea en `lib/config.ts`
 
 ## Workflow de Git
 
