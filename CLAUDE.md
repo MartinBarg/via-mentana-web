@@ -11,6 +11,7 @@ Repo: https://github.com/MartinBarg/via-mentana-web
 - **React 19** + **TypeScript 5** (strict mode)
 - **Tailwind CSS 4** con `@theme` en `globals.css`
 - **next-intl 4** para internacionalización
+- **@vercel/analytics 2** para web analytics (cookieless, sin GDPR)
 - **Vercel** para deploy (automático en cada push a `master`)
 
 ## Comandos
