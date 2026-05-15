@@ -31,5 +31,10 @@
       "top": "Volver arriba"
     },
     "credits": "Hecho con pasión por Roma"
+  },
+  "hero": {
+    "filterLabel": "Ubicación",
+    "showAll": "Mostrar todas",
+    "filteredBadge": "Tours filtrados por zona"
   }
 }

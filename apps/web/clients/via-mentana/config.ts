@@ -5,9 +5,39 @@ const config: ClientConfig = {
   brandName: "Studio Via Mentana",
   heroToursCount: 1,
 
+  hero: {
+    tagline: {
+      it: "Fai una visita virtuale e prenota in base al tuo stile, con calma",
+      en: "Take a virtual tour and book according to your fit, stress-free",
+      es: "Hacé una visita virtual y alquilá acorde a tu fit tranquilo",
+      de: "Mach eine virtuelle Tour und buche passend zu deinem Stil, in Ruhe",
+    },
+    ctaLabel: {
+      it: "Prenota",
+      en: "Book",
+      es: "Alquila",
+      de: "Buchen",
+    },
+    ctaSingle: {
+      url: "https://www.airbnb.mx/rooms/1005789413503850183?guests=1&adults=1&s=67&unique_share_id=009d20fc-2d8f-4091-828b-b286785004ec",
+    },
+    zones: [
+      {
+        id: "castro-pretorio",
+        label: {
+          it: "Castro Pretorio",
+          en: "Castro Pretorio",
+          es: "Castro Pretorio",
+          de: "Castro Pretorio",
+        },
+      },
+    ],
+  },
+
   properties: [
     {
       id: "studio-via-mentana",
+      zone: "castro-pretorio",
       airbnbUrl:
         "https://www.airbnb.mx/rooms/1005789413503850183?guests=1&adults=1&s=67&unique_share_id=009d20fc-2d8f-4091-828b-b286785004ec",
       kuulaEmbedUrl:
@@ -17,10 +47,10 @@ const config: ClientConfig = {
 
       hero: {
         title: {
-          it: "Studio a Roma",
-          en: "Studio in Rome",
-          es: "Studio en Roma",
-          de: "Studio in Rom",
+          it: "Studio Via Mentana",
+          en: "Studio Via Mentana",
+          es: "Studio Via Mentana",
+          de: "Studio Via Mentana",
         },
         subtitle: {
           it: "Un'esperienza unica nel cuore della città eterna",

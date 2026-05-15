@@ -28,7 +28,7 @@ export default async function HomePage({ params }: PageProps) {
   return (
     <main>
       <Navbar brandName={config.brandName} brandLogoUrl={config.brandLogoUrl} />
-      <HeroSection properties={heroProperties} locale={locale} />
+      <HeroSection properties={heroProperties} hero={config.hero} locale={locale} />
       {config.properties.map((property) => (
         <PropertySections key={property.id} property={property} locale={locale} />
       ))}
