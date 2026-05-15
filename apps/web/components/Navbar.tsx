@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect, useRef } from "react";
 
 const LANGUAGES = [
   { code: "it", countryCode: "it", label: "Italiano" },
@@ -45,6 +45,18 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function switchLocale(nextLocale: string) {
     const segments = pathname.split("/");
@@ -129,25 +141,44 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
             )}
           </button>
 
-          {/* Language flags */}
-          <div className="flex items-center gap-1">
-            {LANGUAGES.map(({ code, countryCode, label }) => (
-              <button
-                key={code}
-                onClick={() => switchLocale(code)}
-                disabled={isPending}
-                title={label}
-                className={`
-                  p-1.5 rounded transition-all duration-200
-                  ${locale === code
-                    ? "ring-2 ring-terracotta ring-offset-1 scale-110"
-                    : "opacity-50 hover:opacity-100 hover:scale-105"
-                  }
-                `}
+          {/* Language dropdown */}
+          <div className="relative" ref={langRef}>
+            <button
+              onClick={() => setLangOpen((v) => !v)}
+              disabled={isPending}
+              className="flex items-center gap-1 p-1.5 rounded hover:bg-ochre/10 transition-colors"
+              aria-label="Cambiar idioma"
+            >
+              {(() => {
+                const current = LANGUAGES.find((l) => l.code === locale) ?? LANGUAGES[0];
+                return <FlagImage countryCode={current.countryCode} label={current.label} />;
+              })()}
+              <svg
+                className="w-3 h-3 text-warm-gray"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                viewBox="0 0 24 24"
               >
-                <FlagImage countryCode={countryCode} label={label} />
-              </button>
-            ))}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {langOpen && (
+              <div className="absolute right-0 top-full mt-1 bg-ivory border border-ochre/20 rounded shadow-md py-1 z-50">
+                {LANGUAGES.filter((l) => l.code !== locale).map(({ code, countryCode, label }) => (
+                  <button
+                    key={code}
+                    onClick={() => { switchLocale(code); setLangOpen(false); }}
+                    disabled={isPending}
+                    title={label}
+                    className="flex items-center justify-center w-full px-3 py-2 hover:bg-ochre/10 transition-colors"
+                  >
+                    <FlagImage countryCode={countryCode} label={label} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
