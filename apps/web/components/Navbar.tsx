@@ -5,6 +5,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { useTransition, useState, useEffect, useRef } from "react";
 
+export type NavCtaItem = { label: string; url: string };
+export type NavCtaConfig =
+  | { type: "single"; label: string; url: string }
+  | { type: "dropdown"; label: string; items: NavCtaItem[] };
+
 const LANGUAGES = [
   { code: "it", countryCode: "it", label: "Italiano" },
   { code: "en", countryCode: "gb", label: "English" },
@@ -15,7 +20,7 @@ const LANGUAGES = [
 interface NavbarProps {
   brandName: string;
   brandLogoUrl?: string;
-  ctaUrl?: string;
+  cta?: NavCtaConfig;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -39,17 +44,84 @@ function scrollToSection(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Navbar({ brandName, brandLogoUrl, ctaUrl }: NavbarProps) {
+function CtaButton({
+  cta,
+  heroVisible,
+  size,
+  open,
+  onToggle,
+}: {
+  cta: NavCtaConfig;
+  heroVisible: boolean;
+  size: "sm" | "md";
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const sizeClasses = size === "sm" ? "text-xs px-3.5 py-1.5" : "text-sm px-5 py-2";
+  const baseClasses = `inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold rounded-full shadow-md transition-all duration-300 flex-shrink-0 ${sizeClasses}`;
+  const visibilityClasses = heroVisible
+    ? "opacity-0 pointer-events-none scale-95"
+    : "opacity-100 pointer-events-auto scale-100";
+
+  if (cta.type === "single") {
+    return (
+      <a
+        href={cta.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClasses} ${visibilityClasses}`}
+      >
+        {cta.label}
+      </a>
+    );
+  }
+
+  return (
+    <>
+      <button
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className={`${baseClasses} ${visibilityClasses}`}
+      >
+        {cta.label}
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-2 w-56 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
+          {cta.items.map((item) => (
+            <a
+              key={item.url}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onToggle}
+              className="block px-5 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function Navbar({ brandName, brandLogoUrl, cta }: NavbarProps) {
   const t = useTranslations("nav");
-  const tCta = useTranslations("cta");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [ctaOpen, setCtaOpen] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
   const langRef = useRef<HTMLDivElement>(null);
+  const ctaDesktopRef = useRef<HTMLDivElement>(null);
+  const ctaMobileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -60,6 +132,18 @@ export default function Navbar({ brandName, brandLogoUrl, ctaUrl }: NavbarProps)
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!ctaOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+      if (!ctaDesktopRef.current?.contains(target) && !ctaMobileRef.current?.contains(target)) {
+        setCtaOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [ctaOpen]);
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -135,41 +219,33 @@ export default function Navbar({ brandName, brandLogoUrl, ctaUrl }: NavbarProps)
           ))}
         </div>
 
-        {/* CTA sticky button — desktop, appears when hero scrolls out */}
-        {ctaUrl && (
-          <a
-            href={ctaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`
-              hidden md:inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark
-              text-ivory font-semibold px-5 py-2 rounded-full shadow-md
-              transition-all duration-300 text-sm flex-shrink-0
-              ${heroVisible ? "opacity-0 pointer-events-none scale-95" : "opacity-100 pointer-events-auto scale-100"}
-            `}
-          >
-            {tCta("button")}
-          </a>
+        {/* CTA sticky — desktop, appears when hero scrolls out */}
+        {cta && (
+          <div ref={ctaDesktopRef} className="relative hidden md:block flex-shrink-0">
+            <CtaButton
+              cta={cta}
+              heroVisible={heroVisible}
+              size="md"
+              open={ctaOpen}
+              onToggle={() => setCtaOpen((o) => !o)}
+            />
+          </div>
         )}
 
         {/* Right side: hamburger (mobile) + language dropdown */}
         <div className="flex items-center gap-2 flex-shrink-0">
 
-          {/* CTA sticky button — mobile, appears when hero scrolls out */}
-          {ctaUrl && (
-            <a
-              href={ctaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`
-                md:hidden inline-flex items-center bg-terracotta hover:bg-terracotta-dark
-                text-ivory font-semibold px-3.5 py-1.5 rounded-full shadow-md
-                transition-all duration-300 text-xs flex-shrink-0
-                ${heroVisible ? "opacity-0 pointer-events-none scale-95" : "opacity-100 pointer-events-auto scale-100"}
-              `}
-            >
-              {tCta("button")}
-            </a>
+          {/* CTA sticky — mobile, appears when hero scrolls out */}
+          {cta && (
+            <div ref={ctaMobileRef} className="relative md:hidden">
+              <CtaButton
+                cta={cta}
+                heroVisible={heroVisible}
+                size="sm"
+                open={ctaOpen}
+                onToggle={() => setCtaOpen((o) => !o)}
+              />
+            </div>
           )}
 
           {/* Hamburger — mobile only */}
