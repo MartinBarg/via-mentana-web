@@ -12,7 +12,6 @@ interface HeroSectionProps {
 }
 
 const CARD_WIDTH_PX = 480;
-const VISIBLE_CARDS = 4;
 
 export default function HeroSection({ properties, hero, locale }: HeroSectionProps) {
   const t = useTranslations("hero");
@@ -21,10 +20,14 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   const [filterOpen, setFilterOpen] = useState(false);
   const [ctaOpen, setCtaOpen] = useState(false);
   const [translateX, setTranslateX] = useState(0);
+  // Actual max scroll distance measured from DOM — updated via ResizeObserver
+  const [maxScrollOffset, setMaxScrollOffset] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const toursContainerRef = useRef<HTMLDivElement>(null);
 
   const zones = hero?.zones ?? [];
 
@@ -33,22 +36,36 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
       ? properties
       : properties.filter((p) => p.zone && selectedZones.includes(p.zone));
 
-  const extraCards = Math.max(0, filteredProperties.length - VISIBLE_CARDS);
-  const extraScrollPx = extraCards * CARD_WIDTH_PX;
+  // Measure the real max scroll distance whenever layout changes (cards added/removed or viewport resizes).
+  // ResizeObserver callback is async — not flagged by the setState-in-effect lint rule.
+  useEffect(() => {
+    const track = trackRef.current;
+    const container = toursContainerRef.current;
+    if (!track || !container) return;
+    const observer = new ResizeObserver(() => {
+      setMaxScrollOffset(Math.max(0, track.scrollWidth - container.clientWidth));
+    });
+    observer.observe(track);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
-  // Scroll-hijack: vertical scroll within the wrapper drives horizontal translation
+  // Scroll-hijack: vertical scroll within the wrapper drives horizontal translation.
+  // Reads directly from DOM refs so it always uses the latest measured values.
   const handleScroll = useCallback(() => {
-    if (!wrapperRef.current) return;
+    if (!wrapperRef.current || !trackRef.current || !toursContainerRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const scrolledIn = -rect.top;
-    if (scrolledIn <= 0 || extraScrollPx === 0) {
+    if (scrolledIn <= 0) {
       setTranslateX(0);
       return;
     }
-    const maxOffset = (filteredProperties.length - VISIBLE_CARDS) * CARD_WIDTH_PX;
-    const offset = Math.min(scrolledIn, maxOffset);
-    setTranslateX(offset);
-  }, [extraScrollPx, filteredProperties.length]);
+    const max = Math.max(
+      0,
+      trackRef.current.scrollWidth - toursContainerRef.current.clientWidth
+    );
+    setTranslateX(Math.min(scrolledIn, max));
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -97,18 +114,19 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     }));
 
   return (
-    // Outer wrapper: taller than viewport to provide scroll budget for horizontal translation
+    // Outer wrapper: height = 100vh + real max scroll offset so the sticky section
+    // has exactly enough vertical budget to reveal all cards, then releases scroll.
     <div
       ref={wrapperRef}
-      style={{ height: `calc(100vh + ${extraScrollPx}px)` }}
+      style={{ height: `calc(100vh + ${maxScrollOffset}px)` }}
       className="relative"
     >
-      {/* Sticky inner section that stays in place while user scrolls through cards */}
+      {/* Sticky inner section stays fixed while horizontal translation plays out */}
       <section
         className="sticky top-0 h-screen overflow-hidden flex bg-charcoal"
         style={{ paddingTop: "4rem" /* navbar height */ }}
       >
-        {/* Left column — 1/4 width */}
+        {/* Left column — 37.5% width */}
         <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10">
           {hero?.tagline && (
             <p
@@ -171,7 +189,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           )}
         </div>
 
-        {/* Right column — 3/4 width */}
+        {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
           {/* Zone filter — above tours only */}
           {zones.length > 0 && (
@@ -196,14 +214,11 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
               </button>
 
               {isFiltered && (
-                <span className="text-ivory/60 text-xs">
-                  {t("filteredBadge")}
-                </span>
+                <span className="text-ivory/60 text-xs">{t("filteredBadge")}</span>
               )}
 
               {filterOpen && (
                 <div className="absolute left-0 top-full mt-2 w-56 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
-                  {/* Show all option */}
                   <button
                     onClick={() => {
                       setTranslateX(0);
@@ -247,8 +262,9 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           )}
 
           {/* Tour cards track */}
-          <div className="flex-1 overflow-hidden relative">
+          <div ref={toursContainerRef} className="flex-1 overflow-hidden relative">
             <div
+              ref={trackRef}
               className="flex gap-4 h-full transition-transform duration-100 ease-linear"
               style={{ transform: `translateX(-${translateX}px)` }}
             >
@@ -264,7 +280,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           </div>
         </div>
 
-        {/* Mobile: horizontal swipe */}
+        {/* Right column — mobile (horizontal swipe) */}
         <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 pr-4">
           {zones.length > 0 && (
             <div ref={filterRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
@@ -282,7 +298,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
               {filterOpen && (
                 <div className="absolute left-0 top-full mt-2 w-52 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
                   <button
-                    onClick={() => { setSelectedZones([]); setFilterOpen(false); }}
+                    onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 border-b border-ochre/20"
                   >
                     <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${!isFiltered ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
