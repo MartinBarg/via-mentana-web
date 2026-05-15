@@ -33,7 +33,7 @@
     "credits": "Mit Leidenschaft für Rom entwickelt"
   },
   "hero": {
-    "filterLabel": "Zone",
+    "filterLabel": "Standort",
     "showAll": "Alle anzeigen",
     "filteredBadge": "Touren nach Zone gefiltert"
   }

@@ -33,7 +33,7 @@
     "credits": "Sviluppato con passione per Roma"
   },
   "hero": {
-    "filterLabel": "Zona",
+    "filterLabel": "Posizione",
     "showAll": "Mostra tutte",
     "filteredBadge": "Tour filtrati per zona"
   }

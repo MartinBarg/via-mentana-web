@@ -130,7 +130,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
         <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10">
           {hero?.tagline && (
             <p
-              className="text-ivory text-xl md:text-2xl leading-snug mb-8"
+              className="text-ivory text-3xl md:text-5xl leading-tight mb-8"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               {loc(hero.tagline, locale)}
@@ -157,13 +157,13 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
                   >
                     {loc(hero.ctaLabel, locale)}
                     <svg
-                      className={`w-4 h-4 transition-transform duration-200 ${ctaOpen ? "rotate-180" : ""}`}
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       strokeWidth={2}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
 
@@ -202,15 +202,6 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
                 </svg>
                 {t("filterLabel")}
-                <svg
-                  className={`w-3 h-3 transition-transform duration-200 ${filterOpen ? "rotate-180" : ""}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
               </button>
 
               {isFiltered && (

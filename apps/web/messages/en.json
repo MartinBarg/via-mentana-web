@@ -33,7 +33,7 @@
     "credits": "Crafted with passion for Rome"
   },
   "hero": {
-    "filterLabel": "Zone",
+    "filterLabel": "Location",
     "showAll": "Show all",
     "filteredBadge": "Tours filtered by zone"
   }
