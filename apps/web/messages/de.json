@@ -31,5 +31,10 @@
       "top": "Nach oben"
     },
     "credits": "Mit Leidenschaft für Rom entwickelt"
+  },
+  "hero": {
+    "filterLabel": "Zone",
+    "showAll": "Alle anzeigen",
+    "filteredBadge": "Touren nach Zone gefiltert"
   }
 }

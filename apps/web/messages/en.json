@@ -31,5 +31,10 @@
       "top": "Back to top"
     },
     "credits": "Crafted with passion for Rome"
+  },
+  "hero": {
+    "filterLabel": "Zone",
+    "showAll": "Show all",
+    "filteredBadge": "Tours filtered by zone"
   }
 }

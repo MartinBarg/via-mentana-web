@@ -22,12 +22,15 @@ export interface POICategory {
 
 export interface PropertyConfig {
   id: string;
+  zone?: string;
   airbnbUrl?: string;
   kuulaEmbedUrl?: string;
   googleMapsEmbedUrl?: string;
   hero: {
     title: LocalizedString;
     subtitle: LocalizedString;
+    ctaLabel?: LocalizedString;
+    ctaUrl?: string;
   };
   description?: {
     title: LocalizedString;
@@ -52,10 +55,23 @@ export interface PropertyConfig {
   footerTagline?: LocalizedString;
 }
 
+export interface HeroZone {
+  id: string;
+  label: LocalizedString;
+}
+
+export interface ClientHeroConfig {
+  tagline: LocalizedString;
+  ctaLabel: LocalizedString;
+  zones?: HeroZone[];
+  ctaSingle?: { url: string };
+}
+
 export interface ClientConfig {
   id: string;
   brandName: string;
   brandLogoUrl?: string;
   heroToursCount?: number;
+  hero?: ClientHeroConfig;
   properties: PropertyConfig[];
 }
