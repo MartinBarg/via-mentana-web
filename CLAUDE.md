@@ -85,6 +85,7 @@ Las URLs ya no están hardcodeadas en componentes. Viven en `clients/<id>/config
 - **Kuula:** `property.kuulaEmbedUrl`
 - **Google Maps:** `property.googleMapsEmbedUrl`
 - **Banderas:** CDN `flagcdn.com` en `Navbar.tsx` (esta sí es fija, es infraestructura)
+- **Logo de marca:** `client.brandLogoUrl` (opcional) — ruta a imagen en `/public/`. Si ausente, el Navbar muestra un placeholder circular con iniciales en terracotta.
 
 ## Variables de entorno
 
