@@ -174,11 +174,11 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
       className="relative"
     >
       <section
-        className="sticky top-0 h-screen overflow-hidden flex bg-charcoal"
+        className="sticky top-0 h-screen overflow-hidden flex flex-col md:flex-row bg-charcoal"
         style={{ paddingTop: "4rem" }}
       >
         {/* Left column — 37.5% width */}
-        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10">
+        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10 h-[37.5vh] md:h-auto">
           {hero?.tagline && (
             <p
               className="text-ivory text-3xl md:text-5xl leading-tight mb-8"
