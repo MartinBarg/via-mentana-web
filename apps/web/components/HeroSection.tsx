@@ -55,11 +55,6 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Reset translation when filter changes
-  useEffect(() => {
-    setTranslateX(0);
-  }, [selectedZones]);
-
   // Close filter on outside click
   useEffect(() => {
     if (!filterOpen) return;
@@ -85,6 +80,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   }, [ctaOpen]);
 
   const toggleZone = (zoneId: string) => {
+    setTranslateX(0);
     setSelectedZones((prev) =>
       prev.includes(zoneId) ? prev.filter((z) => z !== zoneId) : [...prev, zoneId]
     );
@@ -210,6 +206,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
                   {/* Show all option */}
                   <button
                     onClick={() => {
+                      setTranslateX(0);
                       setSelectedZones([]);
                       setFilterOpen(false);
                     }}
