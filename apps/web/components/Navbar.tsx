@@ -15,6 +15,7 @@ const LANGUAGES = [
 interface NavbarProps {
   brandName: string;
   brandLogoUrl?: string;
+  ctaUrl?: string;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -38,14 +39,16 @@ function scrollToSection(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
+export default function Navbar({ brandName, brandLogoUrl, ctaUrl }: NavbarProps) {
   const t = useTranslations("nav");
+  const tCta = useTranslations("cta");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(true);
   const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,6 +59,17 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
 
   function switchLocale(nextLocale: string) {
@@ -121,8 +135,42 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
           ))}
         </div>
 
-        {/* Right side: hamburger (mobile) + flags */}
+        {/* CTA sticky button — desktop, appears when hero scrolls out */}
+        {ctaUrl && (
+          <a
+            href={ctaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`
+              hidden md:inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark
+              text-ivory font-semibold px-5 py-2 rounded-full shadow-md
+              transition-all duration-300 text-sm flex-shrink-0
+              ${heroVisible ? "opacity-0 pointer-events-none scale-95" : "opacity-100 pointer-events-auto scale-100"}
+            `}
+          >
+            {tCta("button")}
+          </a>
+        )}
+
+        {/* Right side: hamburger (mobile) + language dropdown */}
         <div className="flex items-center gap-2 flex-shrink-0">
+
+          {/* CTA sticky button — mobile, appears when hero scrolls out */}
+          {ctaUrl && (
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`
+                md:hidden inline-flex items-center bg-terracotta hover:bg-terracotta-dark
+                text-ivory font-semibold px-3.5 py-1.5 rounded-full shadow-md
+                transition-all duration-300 text-xs flex-shrink-0
+                ${heroVisible ? "opacity-0 pointer-events-none scale-95" : "opacity-100 pointer-events-auto scale-100"}
+              `}
+            >
+              {tCta("button")}
+            </a>
+          )}
 
           {/* Hamburger — mobile only */}
           <button

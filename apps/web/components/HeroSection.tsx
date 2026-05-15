@@ -168,6 +168,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
 
   return (
     <div
+      id="hero"
       ref={wrapperRef}
       style={{ height: `calc(100vh + ${maxScrollOffset}px)` }}
       className="relative"
