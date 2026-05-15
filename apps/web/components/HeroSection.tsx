@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import type { PropertyConfig, ClientHeroConfig } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
 
@@ -13,6 +13,28 @@ interface HeroSectionProps {
 
 const CARD_WIDTH_PX = 480;
 
+// Reusable funnel icon for the location filter button
+function FunnelIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
+    </svg>
+  );
+}
+
+// Reusable checkbox with checkmark for filter options
+function FilterCheckbox({ checked }: { checked: boolean }) {
+  return (
+    <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${checked ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
+      {checked && (
+        <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
 export default function HeroSection({ properties, hero, locale }: HeroSectionProps) {
   const t = useTranslations("hero");
 
@@ -20,24 +42,39 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   const [filterOpen, setFilterOpen] = useState(false);
   const [ctaOpen, setCtaOpen] = useState(false);
   const [translateX, setTranslateX] = useState(0);
-  // Actual max scroll distance measured from DOM — updated via ResizeObserver
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const filterRef = useRef<HTMLDivElement>(null);
+  // Separate refs for desktop/mobile filter — both exist in DOM simultaneously (one hidden via CSS)
+  const filterDesktopRef = useRef<HTMLDivElement>(null);
+  const filterMobileRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const toursContainerRef = useRef<HTMLDivElement>(null);
 
   const zones = hero?.zones ?? [];
 
-  const filteredProperties =
-    selectedZones.length === 0
-      ? properties
-      : properties.filter((p) => p.zone && selectedZones.includes(p.zone));
+  const filteredProperties = useMemo(
+    () =>
+      selectedZones.length === 0
+        ? properties
+        : properties.filter((p) => p.zone && selectedZones.includes(p.zone)),
+    [properties, selectedZones]
+  );
 
-  // Measure the real max scroll distance whenever layout changes (cards added/removed or viewport resizes).
-  // ResizeObserver callback is async — not flagged by the setState-in-effect lint rule.
+  // Memoize CTA items — derived from filtered properties and locale
+  const ctaItems = useMemo(
+    () =>
+      filteredProperties
+        .filter((p) => p.hero.ctaUrl ?? p.airbnbUrl)
+        .map((p) => ({
+          label: p.hero.ctaLabel ? loc(p.hero.ctaLabel, locale) : loc(p.hero.title, locale),
+          url: (p.hero.ctaUrl ?? p.airbnbUrl) as string,
+        })),
+    [filteredProperties, locale]
+  );
+
+  // Measure the real max scroll distance via ResizeObserver (async callback — no setState-in-effect issue)
   useEffect(() => {
     const track = trackRef.current;
     const container = toursContainerRef.current;
@@ -50,8 +87,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     return () => observer.disconnect();
   }, []);
 
-  // Scroll-hijack: vertical scroll within the wrapper drives horizontal translation.
-  // Reads directly from DOM refs so it always uses the latest measured values.
+  // Scroll-hijack: reads from DOM refs directly — no stale closures
   const handleScroll = useCallback(() => {
     if (!wrapperRef.current || !trackRef.current || !toursContainerRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
@@ -60,10 +96,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
       setTranslateX(0);
       return;
     }
-    const max = Math.max(
-      0,
-      trackRef.current.scrollWidth - toursContainerRef.current.clientWidth
-    );
+    const max = Math.max(0, trackRef.current.scrollWidth - toursContainerRef.current.clientWidth);
     setTranslateX(Math.min(scrolledIn, max));
   }, []);
 
@@ -72,13 +105,14 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Close filter on outside click
+  // Close filter on outside click — checks both desktop and mobile refs
   useEffect(() => {
     if (!filterOpen) return;
     const handler = (e: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setFilterOpen(false);
-      }
+      const target = e.target as Node;
+      const inDesktop = filterDesktopRef.current?.contains(target);
+      const inMobile = filterMobileRef.current?.contains(target);
+      if (!inDesktop && !inMobile) setFilterOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -106,25 +140,41 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   const isFiltered = selectedZones.length > 0;
   const isSingleCta = !!hero?.ctaSingle;
 
-  const ctaItems = filteredProperties
-    .filter((p) => p.hero.ctaUrl ?? p.airbnbUrl)
-    .map((p) => ({
-      label: p.hero.ctaLabel ? loc(p.hero.ctaLabel, locale) : loc(p.hero.title, locale),
-      url: (p.hero.ctaUrl ?? p.airbnbUrl) as string,
-    }));
+  // Shared filter dropdown content (used in both desktop and mobile)
+  const filterDropdown = (width: string) => (
+    <div className={`absolute left-0 top-full mt-2 ${width} bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50`}>
+      <button
+        onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
+        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
+      >
+        <FilterCheckbox checked={!isFiltered} />
+        {t("showAll")}
+      </button>
+      {zones.map((zone) => {
+        const checked = selectedZones.includes(zone.id);
+        return (
+          <button
+            key={zone.id}
+            onClick={() => toggleZone(zone.id)}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+          >
+            <FilterCheckbox checked={checked} />
+            {loc(zone.label, locale)}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
-    // Outer wrapper: height = 100vh + real max scroll offset so the sticky section
-    // has exactly enough vertical budget to reveal all cards, then releases scroll.
     <div
       ref={wrapperRef}
       style={{ height: `calc(100vh + ${maxScrollOffset}px)` }}
       className="relative"
     >
-      {/* Sticky inner section stays fixed while horizontal translation plays out */}
       <section
         className="sticky top-0 h-screen overflow-hidden flex bg-charcoal"
-        style={{ paddingTop: "4rem" /* navbar height */ }}
+        style={{ paddingTop: "4rem" }}
       >
         {/* Left column — 37.5% width */}
         <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10">
@@ -137,7 +187,6 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
             </p>
           )}
 
-          {/* CTA button */}
           {hero && (
             <div ref={ctaRef} className="relative">
               {isSingleCta ? (
@@ -153,16 +202,12 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
                 <>
                   <button
                     onClick={() => setCtaOpen((o) => !o)}
+                    aria-expanded={ctaOpen}
+                    aria-haspopup="listbox"
                     className="inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold px-7 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105 text-sm"
                   >
                     {loc(hero.ctaLabel, locale)}
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -191,16 +236,15 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
 
         {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
-          {/* Zone filter — above tours only */}
           {zones.length > 0 && (
-            <div ref={filterRef} className="relative flex items-center gap-3 mb-4 flex-shrink-0">
+            <div ref={filterDesktopRef} className="relative flex items-center gap-3 mb-4 flex-shrink-0">
               <button
                 onClick={() => setFilterOpen((o) => !o)}
+                aria-expanded={filterOpen}
+                aria-haspopup="listbox"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium px-4 py-2 rounded-full border border-white/20 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
-                </svg>
+                <FunnelIcon className="w-4 h-4" />
                 {t("filterLabel")}
               </button>
 
@@ -208,64 +252,19 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
                 <span className="text-ivory/60 text-xs">{t("filteredBadge")}</span>
               )}
 
-              {filterOpen && (
-                <div className="absolute left-0 top-full mt-2 w-56 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
-                  <button
-                    onClick={() => {
-                      setTranslateX(0);
-                      setSelectedZones([]);
-                      setFilterOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
-                  >
-                    <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${!isFiltered ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
-                      {!isFiltered && (
-                        <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </span>
-                    {t("showAll")}
-                  </button>
-
-                  {zones.map((zone) => {
-                    const checked = selectedZones.includes(zone.id);
-                    return (
-                      <button
-                        key={zone.id}
-                        onClick={() => toggleZone(zone.id)}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
-                      >
-                        <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${checked ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
-                          {checked && (
-                            <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </span>
-                        {loc(zone.label, locale)}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              {filterOpen && filterDropdown("w-56")}
             </div>
           )}
 
-          {/* Tour cards track */}
+          {/* Tour cards track — no CSS transition: scroll-driven animation must be instantaneous */}
           <div ref={toursContainerRef} className="flex-1 overflow-hidden relative">
             <div
               ref={trackRef}
-              className="flex gap-4 h-full transition-transform duration-100 ease-linear"
+              className="flex gap-4 h-full"
               style={{ transform: `translateX(-${translateX}px)` }}
             >
               {filteredProperties.map((property) => (
-                <TourCard
-                  key={property.id}
-                  property={property}
-                  locale={locale}
-                  cardWidthPx={CARD_WIDTH_PX}
-                />
+                <TourCard key={property.id} property={property} locale={locale} cardWidthPx={CARD_WIDTH_PX} />
               ))}
             </div>
           </div>
@@ -274,47 +273,24 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
         {/* Right column — mobile (horizontal swipe) */}
         <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 pr-4">
           {zones.length > 0 && (
-            <div ref={filterRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
+            <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
               <button
                 onClick={() => setFilterOpen((o) => !o)}
+                aria-expanded={filterOpen}
+                aria-haspopup="listbox"
                 className="flex items-center gap-2 bg-white/10 text-ivory text-xs font-medium px-3 py-1.5 rounded-full border border-white/20"
               >
+                <FunnelIcon className="w-3.5 h-3.5" />
                 {t("filterLabel")}
-                <svg className={`w-3 h-3 transition-transform ${filterOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
               </button>
               {isFiltered && <span className="text-ivory/60 text-xs">{t("filteredBadge")}</span>}
-
-              {filterOpen && (
-                <div className="absolute left-0 top-full mt-2 w-52 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
-                  <button
-                    onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 border-b border-ochre/20"
-                  >
-                    <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${!isFiltered ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
-                      {!isFiltered && <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                    </span>
-                    {t("showAll")}
-                  </button>
-                  {zones.map((zone) => {
-                    const checked = selectedZones.includes(zone.id);
-                    return (
-                      <button key={zone.id} onClick={() => toggleZone(zone.id)} className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10">
-                        <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${checked ? "bg-terracotta border-terracotta" : "border-warm-gray"}`}>
-                          {checked && <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
-                        </span>
-                        {loc(zone.label, locale)}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              {filterOpen && filterDropdown("w-52")}
             </div>
           )}
 
+          {/* scrollbarWidth hides scrollbar in Firefox; [&::-webkit-scrollbar]:hidden for Chrome/Safari */}
           <div
-            className="flex-1 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2"
+            className="flex-1 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none" }}
           >
             {filteredProperties.map((property) => (
@@ -359,7 +335,6 @@ function TourCard({
         <div className="absolute inset-0 bg-white/5" />
       )}
 
-      {/* Property title overlay at top */}
       <div className="absolute inset-x-0 top-0 px-5 pt-4 pb-8 bg-gradient-to-b from-charcoal/70 to-transparent pointer-events-none">
         <p
           className="text-ivory text-lg font-semibold drop-shadow"
