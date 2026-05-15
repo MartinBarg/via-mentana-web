@@ -28,3 +28,17 @@ Registro de decisiones arquitectónicas con su contexto y rationale. Útil para 
 
 **Alternativas descartadas:**
 - *Todo en messages JSON con prefijo por cliente* — contamina los archivos de i18n con contenido de negocio, hace difícil agregar un cliente sin tocar archivos globales.
+
+---
+
+## Config del hero a nivel cliente (`ClientHeroConfig`), separado de `PropertyConfig`
+**Fecha:** 2026-05-15
+**PR:** #21
+
+**Qué se decidió:** La configuración de la sección hero (tagline, CTA, zonas de filtro) vive en `ClientConfig.hero` como `ClientHeroConfig`, no dentro de cada `PropertyConfig`. Las propiedades solo declaran `zone` (id de zona) y opcionalmente `hero.ctaLabel` / `hero.ctaUrl` para sobreescribir su entrada en el dropdown multi-CTA.
+
+**Por qué:** El tagline, el botón CTA y las opciones de zona son conceptos del cliente como conjunto, no de una propiedad individual. Ponerlos en `ClientConfig` evita duplicar los mismos valores en cada propiedad y hace que agregar una nueva propiedad a un cliente existente no requiera tocar la configuración del hero.
+
+**Alternativas descartadas:**
+- *Tagline y CTA en `PropertyConfig`* — obliga a repetir los mismos valores en cada propiedad del mismo cliente; el filtro de zonas tampoco tiene sentido en una propiedad individual.
+- *CTA siempre como lista desplegable* — para clientes con una sola propiedad, un link directo es más simple y no requiere un menú. El modo `ctaSingle` / multi-CTA hace ambos casos sin bifurcaciones en el componente.

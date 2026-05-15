@@ -15,7 +15,7 @@ Template white-label para landing pages de Airbnb. El cliente activo se seleccio
 ## Características
 
 - **White-label multi-cliente** — `CLIENT_ID` env var selecciona qué cliente cargar; un repo, N proyectos Vercel
-- **Tour virtual 360°** — embed interactivo de Kuula para explorar el apartamento
+- **Hero con tour carousel** — carrusel horizontal de tours virtuales 360° (Kuula); scroll-hijack convierte scroll vertical en desplazamiento horizontal; filtro de zona y CTA configurable por cliente
 - **Multiidioma** — Italiano, Inglés, Español y Alemán con detección automática de ruta
 - **Diseño responsive** — mobile-first con menú hamburguesa en pantallas pequeñas
 - **Secciones modulares** — descripción, amenidades, ubicación, POIs, reseñas y CTA — todas opcionales por propiedad
