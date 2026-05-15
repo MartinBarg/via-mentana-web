@@ -44,6 +44,10 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   const [translateX, setTranslateX] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
 
+  // Mobile scrollbar state
+  const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 100 });
+  const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   // Separate refs for desktop/mobile filter — both exist in DOM simultaneously (one hidden via CSS)
   const filterDesktopRef = useRef<HTMLDivElement>(null);
@@ -51,6 +55,12 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
   const ctaRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const toursContainerRef = useRef<HTMLDivElement>(null);
+
+  // Mobile scrollbar refs
+  const mobileCarouselRef = useRef<HTMLDivElement>(null);
+  const scrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const dragStartScrollbarX = useRef(0);
+  const dragStartCarouselScroll = useRef(0);
 
   const zones = hero?.zones ?? [];
 
@@ -130,6 +140,66 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     return () => document.removeEventListener("mousedown", handler);
   }, [ctaOpen]);
 
+  // Sync mobile carousel scroll position → scrollbar thumb
+  useEffect(() => {
+    const el = mobileCarouselRef.current;
+    if (!el) return;
+    function updateScrollbar() {
+      const maxScroll = el!.scrollWidth - el!.clientWidth;
+      const widthPct = el!.scrollWidth > 0 ? (el!.clientWidth / el!.scrollWidth) * 100 : 100;
+      const leftPct = maxScroll > 0 ? (el!.scrollLeft / maxScroll) * (100 - widthPct) : 0;
+      setScrollbarThumb({ left: leftPct, width: widthPct });
+    }
+    updateScrollbar();
+    el.addEventListener("scroll", updateScrollbar, { passive: true });
+    const ro = new ResizeObserver(updateScrollbar);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollbar);
+      ro.disconnect();
+    };
+  }, []);
+
+  // Also update scrollbar when filtered properties change (carousel resets)
+  useEffect(() => {
+    const el = mobileCarouselRef.current;
+    if (!el) return;
+    el.scrollLeft = 0;
+    const widthPct = el.scrollWidth > 0 ? (el.clientWidth / el.scrollWidth) * 100 : 100;
+    setScrollbarThumb({ left: 0, width: widthPct });
+  }, [filteredProperties]);
+
+  function handleScrollbarPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    const el = mobileCarouselRef.current;
+    const track = scrollbarTrackRef.current;
+    if (!el || !track) return;
+    e.preventDefault();
+    const rect = track.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    el.scrollLeft = ratio * maxScroll;
+    setIsDraggingScrollbar(true);
+    dragStartScrollbarX.current = e.clientX;
+    dragStartCarouselScroll.current = el.scrollLeft;
+    track.setPointerCapture(e.pointerId);
+  }
+
+  function handleScrollbarPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!isDraggingScrollbar) return;
+    const el = mobileCarouselRef.current;
+    const track = scrollbarTrackRef.current;
+    if (!el || !track) return;
+    const dx = e.clientX - dragStartScrollbarX.current;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    // thumb travel maps 1:1 to scroll: dx on track → proportional scroll
+    const newScroll = dragStartCarouselScroll.current + (dx / track.clientWidth) * el.scrollWidth;
+    el.scrollLeft = Math.max(0, Math.min(maxScroll, newScroll));
+  }
+
+  function handleScrollbarPointerUp() {
+    setIsDraggingScrollbar(false);
+  }
+
   const toggleZone = (zoneId: string) => {
     setTranslateX(0);
     setSelectedZones((prev) =>
@@ -174,11 +244,11 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
       className="relative"
     >
       <section
-        className="sticky top-0 h-screen overflow-hidden flex flex-col md:flex-row bg-charcoal"
+        className="sticky top-0 h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row bg-charcoal"
         style={{ paddingTop: "4rem" }}
       >
-        {/* Left column — 37.5% width */}
-        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10 h-[37.5vh] md:h-auto">
+        {/* Left column — 37.5% width on desktop, 37.5svh height on mobile */}
+        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10 h-[37.5svh] md:h-auto">
           {hero?.tagline && (
             <p
               className="text-ivory text-3xl md:text-5xl leading-tight mb-8"
@@ -271,31 +341,55 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           </div>
         </div>
 
-        {/* Right column — mobile (horizontal swipe) */}
+        {/* Right column — mobile (horizontal swipe + custom scrollbar) */}
         <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 pr-4">
-          {zones.length > 0 && (
-            <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
+
+          {/* Filter button + tour scrollbar — same row */}
+          <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
+            {zones.length > 0 && (
               <button
                 onClick={() => setFilterOpen((o) => !o)}
                 aria-expanded={filterOpen}
                 aria-haspopup="listbox"
-                className="flex items-center gap-2 bg-white/10 text-ivory text-xs font-medium px-3 py-1.5 rounded-full border border-white/20"
+                className="flex items-center gap-2 bg-white/10 text-ivory text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 flex-shrink-0"
               >
                 <FunnelIcon className="w-3.5 h-3.5" />
                 {t("filterLabel")}
               </button>
-              {isFiltered && <span className="text-ivory/60 text-xs">{t("filteredBadge")}</span>}
-              {filterOpen && filterDropdown("w-52")}
-            </div>
-          )}
+            )}
+            {isFiltered && (
+              <span className="text-ivory/60 text-xs flex-shrink-0">{t("filteredBadge")}</span>
+            )}
 
+            {/* Tour position scrollbar — flex-1 so it shrinks when filter badge appears */}
+            <div
+              ref={scrollbarTrackRef}
+              className="flex-1 relative h-[1.75rem] rounded-full bg-white/10 border border-white/20 overflow-hidden touch-none cursor-pointer"
+              onPointerDown={handleScrollbarPointerDown}
+              onPointerMove={handleScrollbarPointerMove}
+              onPointerUp={handleScrollbarPointerUp}
+            >
+              <div
+                className="absolute top-1 bottom-1 rounded-full bg-ivory/60"
+                style={{
+                  left: `${scrollbarThumb.left}%`,
+                  width: `${scrollbarThumb.width}%`,
+                }}
+              />
+            </div>
+
+            {filterOpen && filterDropdown("w-52")}
+          </div>
+
+          {/* Tour carousel — 75vw cards with gap-5 so next card peeks */}
           {/* scrollbarWidth hides scrollbar in Firefox; [&::-webkit-scrollbar]:hidden for Chrome/Safari */}
           <div
-            className="flex-1 flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden"
+            ref={mobileCarouselRef}
+            className="flex-1 flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none" }}
           >
             {filteredProperties.map((property) => (
-              <div key={property.id} className="snap-start flex-shrink-0 w-[80vw] h-full">
+              <div key={property.id} className="snap-start flex-shrink-0 w-[75vw] h-full">
                 <TourCard property={property} locale={locale} cardWidthPx={undefined} />
               </div>
             ))}
