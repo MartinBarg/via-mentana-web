@@ -5,10 +5,37 @@ const config: ClientConfig = {
   brandName: "Nombre de cliente",
   heroToursCount: 2,
 
+  hero: {
+    tagline: {
+      it: "Fai una visita virtuale e prenota in base al tuo stile, con calma",
+      en: "Take a virtual tour and book according to your fit, stress-free",
+      es: "Hacé una visita virtual y alquilá acorde a tu fit tranquilo",
+      de: "Mach eine virtuelle Tour und buche passend zu deinem Stil, in Ruhe",
+    },
+    ctaLabel: {
+      it: "Prenota",
+      en: "Book",
+      es: "Alquila",
+      de: "Buchen",
+    },
+    zones: [
+      {
+        id: "castro-pretorio",
+        label: {
+          it: "Castro Pretorio",
+          en: "Castro Pretorio",
+          es: "Castro Pretorio",
+          de: "Castro Pretorio",
+        },
+      },
+    ],
+  },
+
   properties: [
     // ── Propiedad A: Studio Via Mentana ─────────────────────────────────────
     {
       id: "studio-via-mentana",
+      zone: "castro-pretorio",
       airbnbUrl:
         "https://es.airbnb.com/rooms/1005789413503850183",
       kuulaEmbedUrl:
@@ -207,6 +234,7 @@ const config: ClientConfig = {
     // ── Propiedad B: Residenza Nazionale ────────────────────────────────────
     {
       id: "residenza-nazionale",
+      zone: "castro-pretorio",
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7MCLL?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0",
       googleMapsEmbedUrl:

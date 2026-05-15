@@ -109,7 +109,7 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
         style={{ paddingTop: "4rem" /* navbar height */ }}
       >
         {/* Left column — 1/4 width */}
-        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-1/4 flex-shrink-0 z-10">
+        <div className="flex flex-col justify-center px-8 md:px-12 w-full md:w-[37.5%] flex-shrink-0 z-10">
           {hero?.tagline && (
             <p
               className="text-ivory text-xl md:text-2xl leading-snug mb-8"
