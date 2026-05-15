@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect, useRef } from "react";
 
 const LANGUAGES = [
   { code: "it", countryCode: "it", label: "Italiano" },
@@ -46,6 +46,17 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
   const [isPending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function switchLocale(nextLocale: string) {
     const segments = pathname.split("/");
@@ -131,7 +142,7 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
           </button>
 
           {/* Language dropdown */}
-          <div className="relative">
+          <div className="relative" ref={langRef}>
             <button
               onClick={() => setLangOpen((v) => !v)}
               disabled={isPending}
@@ -161,10 +172,9 @@ export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
                     onClick={() => { switchLocale(code); setLangOpen(false); }}
                     disabled={isPending}
                     title={label}
-                    className="flex items-center gap-2 w-full px-3 py-2 hover:bg-ochre/10 transition-colors text-sm text-warm-gray whitespace-nowrap"
+                    className="flex items-center justify-center w-full px-3 py-2 hover:bg-ochre/10 transition-colors"
                   >
                     <FlagImage countryCode={countryCode} label={label} />
-                    <span>{label}</span>
                   </button>
                 ))}
               </div>
