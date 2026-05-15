@@ -1,6 +1,6 @@
 import { getClientConfig } from "@/lib/config";
 import { loc } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
+import Navbar, { type NavCtaConfig } from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import PropertySections from "@/components/PropertySections";
 import CTASection from "@/components/CTASection";
@@ -25,9 +25,26 @@ export default async function HomePage({ params }: PageProps) {
   const ctaSubtitle = primary?.cta ? loc(primary.cta.subtitle, locale) : "";
   const footerTagline = primary?.footerTagline ? loc(primary.footerTagline, locale) : "";
 
+  let navCta: NavCtaConfig | undefined;
+  if (config.hero) {
+    if (config.hero.ctaSingle) {
+      navCta = { type: "single", label: loc(config.hero.ctaLabel, locale), url: config.hero.ctaSingle.url };
+    } else {
+      const items = heroProperties
+        .filter((p) => p.hero.ctaUrl ?? p.airbnbUrl)
+        .map((p) => ({
+          label: p.hero.ctaLabel ? loc(p.hero.ctaLabel, locale) : loc(p.hero.title, locale),
+          url: (p.hero.ctaUrl ?? p.airbnbUrl) as string,
+        }));
+      if (items.length > 0) {
+        navCta = { type: "dropdown", label: loc(config.hero.ctaLabel, locale), items };
+      }
+    }
+  }
+
   return (
     <main>
-      <Navbar brandName={config.brandName} brandLogoUrl={config.brandLogoUrl} />
+      <Navbar brandName={config.brandName} brandLogoUrl={config.brandLogoUrl} cta={navCta} />
       <HeroSection properties={heroProperties} hero={config.hero} locale={locale} />
       {config.properties.map((property) => (
         <PropertySections key={property.id} property={property} locale={locale} />
