@@ -35,7 +35,7 @@ apps/web/
 │       └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
 ├── components/           # Un componente por sección de la página
 │   ├── Navbar.tsx
-│   ├── HeroSection.tsx   # Embed 360° de Kuula
+│   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der)
 │   ├── PropertySections.tsx  # Wrapper que renderiza secciones por propiedad
 │   ├── DescriptionSection.tsx
 │   ├── LocationSection.tsx
@@ -46,8 +46,8 @@ apps/web/
 │   ├── config.ts         # Carga el config del cliente (server-only, usa CLIENT_ID)
 │   ├── utils.ts          # loc(str, locale) — resuelve textos multiidioma
 │   └── types/
-│       └── client.ts     # Tipos TypeScript: ClientConfig, PropertyConfig, etc.
-├── messages/             # Solo UI chrome: it.json, en.json, es.json, de.json
+│       └── client.ts     # Tipos TypeScript: ClientConfig, ClientHeroConfig, HeroZone, PropertyConfig, etc.
+├── messages/             # UI chrome: it.json, en.json, es.json, de.json — namespaces: nav, description, location, reviews, cta, footer, hero
 ├── i18n/
 │   ├── routing.ts        # Define locales y defaultLocale
 │   └── request.ts        # Carga mensajes por locale
@@ -108,6 +108,19 @@ Ver `.env.example` en la raíz del repo.
 - Los componentes usan `loc(str, locale)` de `lib/utils.ts` para resolver textos multiidioma del config
 - Estilos con clases Tailwind directamente en JSX, sin CSS modules
 - Agregar un cliente nuevo = crear `clients/<nuevo-id>/config.ts` + agregar una línea en `lib/config.ts`
+
+### Config del hero (`ClientHeroConfig`)
+
+El campo `hero` en `ClientConfig` (no en `PropertyConfig`) controla la sección hero a nivel cliente:
+
+- `hero.tagline` — texto grande a la izquierda (localizado)
+- `hero.ctaLabel` — texto del botón CTA (localizado)
+- `hero.ctaSingle` — si presente, el CTA es un link directo; si ausente, el CTA despliega una lista de opciones (una por propiedad filtrada)
+- `hero.zones` — lista explícita de zonas para el filtro (`id` + `label`). Los ids se referencian desde `property.zone`
+
+Cada `PropertyConfig` puede tener:
+- `zone` — id de zona para el filtro (debe coincidir con un `HeroZone.id` del cliente)
+- `hero.ctaLabel` / `hero.ctaUrl` — sobreescriben label y URL en el dropdown multi-CTA
 
 ## Workflow de Git
 
