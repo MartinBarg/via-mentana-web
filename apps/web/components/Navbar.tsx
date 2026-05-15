@@ -14,6 +14,7 @@ const LANGUAGES = [
 
 interface NavbarProps {
   brandName: string;
+  brandLogoUrl?: string;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -37,7 +38,7 @@ function scrollToSection(id: string) {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function Navbar({ brandName }: NavbarProps) {
+export default function Navbar({ brandName, brandLogoUrl }: NavbarProps) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
@@ -70,13 +71,30 @@ export default function Navbar({ brandName }: NavbarProps) {
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
         {/* Brand */}
-        <span
-          className="text-lg md:text-xl text-charcoal flex-shrink-0 cursor-pointer"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+        <div
+          className="flex items-center gap-2 flex-shrink-0 cursor-pointer"
           onClick={() => handleNavClick("top")}
         >
-          {brandName}
-        </span>
+          {brandLogoUrl ? (
+            <Image
+              src={brandLogoUrl}
+              alt={brandName}
+              width={28}
+              height={28}
+              className="rounded-full object-cover"
+            />
+          ) : (
+            <span className="w-7 h-7 rounded-full bg-terracotta flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+              VM
+            </span>
+          )}
+          <span
+            className="text-lg md:text-xl text-charcoal"
+            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+          >
+            {brandName}
+          </span>
+        </div>
 
         {/* Nav links — desktop */}
         <div className="hidden md:flex items-center gap-5 text-sm font-medium text-warm-gray">
