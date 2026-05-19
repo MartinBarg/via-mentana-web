@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { loc } from "@/lib/utils";
 import Navbar, { type NavCtaConfig } from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -13,10 +13,9 @@ interface PageBodyProps {
   config: ClientConfig;
   heroProperties: PropertyConfig[];
   locale: string;
-  navCta?: NavCtaConfig;
 }
 
-export default function PageBody({ config, heroProperties, locale, navCta }: PageBodyProps) {
+export default function PageBody({ config, heroProperties, locale }: PageBodyProps) {
   const [selectedPropertyId, setSelectedPropertyId] = useState(config.properties[0]?.id ?? "");
 
   const selectedProperty =
@@ -26,6 +25,16 @@ export default function PageBody({ config, heroProperties, locale, navCta }: Pag
     config.properties.length > 1 && selectedProperty
       ? loc(selectedProperty.hero.title, locale)
       : undefined;
+
+  const navCta = useMemo((): NavCtaConfig | undefined => {
+    if (!config.hero) return undefined;
+    if (config.hero.ctaSingle) {
+      return { type: "single", label: loc(config.hero.ctaLabel, locale), url: config.hero.ctaSingle.url };
+    }
+    const url = selectedProperty?.hero.ctaUrl ?? selectedProperty?.airbnbUrl;
+    if (!url) return undefined;
+    return { type: "single", label: loc(config.hero.ctaLabel, locale), url };
+  }, [config.hero, locale, selectedProperty]);
 
   const footerTagline = config.properties[0]?.footerTagline
     ? loc(config.properties[0].footerTagline, locale)
