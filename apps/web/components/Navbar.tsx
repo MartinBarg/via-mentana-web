@@ -21,6 +21,7 @@ interface NavbarProps {
   brandName: string;
   brandLogoUrl?: string;
   cta?: NavCtaConfig;
+  selectedPropertyLabel?: string;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -109,7 +110,7 @@ function CtaButton({
   );
 }
 
-export default function Navbar({ brandName, brandLogoUrl, cta }: NavbarProps) {
+export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyLabel }: NavbarProps) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
@@ -180,30 +181,41 @@ export default function Navbar({ brandName, brandLogoUrl, cta }: NavbarProps) {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-ivory/95 backdrop-blur-sm border-b border-ochre/20">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
-        {/* Brand */}
-        <div
-          className="flex items-center gap-2 flex-shrink-0 cursor-pointer"
-          onClick={() => handleNavClick("top")}
-        >
-          {brandLogoUrl ? (
-            <Image
-              src={brandLogoUrl}
-              alt={brandName}
-              width={28}
-              height={28}
-              className="rounded-full object-cover"
-            />
-          ) : (
-            <span className="w-7 h-7 rounded-full bg-terracotta flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-              VM
+        {/* Brand + selected property chip */}
+        <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
+          <div
+            className="flex items-center gap-2 cursor-pointer flex-shrink-0"
+            onClick={() => handleNavClick("top")}
+          >
+            {brandLogoUrl ? (
+              <Image
+                src={brandLogoUrl}
+                alt={brandName}
+                width={28}
+                height={28}
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <span className="w-7 h-7 rounded-full bg-terracotta flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                VM
+              </span>
+            )}
+            <span
+              className="text-lg md:text-xl text-charcoal"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              {brandName}
+            </span>
+          </div>
+          {selectedPropertyLabel && (
+            <span
+              className={`text-xs text-warm-gray bg-ochre/10 border border-ochre/20 px-2.5 py-1 rounded-full whitespace-nowrap transition-all duration-300 ${
+                heroVisible ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
+            >
+              {selectedPropertyLabel}
             </span>
           )}
-          <span
-            className="text-lg md:text-xl text-charcoal"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-          >
-            {brandName}
-          </span>
         </div>
 
         {/* Nav links — desktop */}

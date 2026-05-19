@@ -1,10 +1,7 @@
 import { getClientConfig } from "@/lib/config";
 import { loc } from "@/lib/utils";
-import Navbar, { type NavCtaConfig } from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import PropertySections from "@/components/PropertySections";
-import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
+import type { NavCtaConfig } from "@/components/Navbar";
+import PageBody from "@/components/PageBody";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -18,12 +15,6 @@ export default async function HomePage({ params }: PageProps) {
     0,
     config.heroToursCount ?? config.properties.length
   );
-
-  const primary = config.properties[0];
-  const primaryAirbnbUrl = primary?.airbnbUrl;
-  const ctaTitle = primary?.cta ? loc(primary.cta.title, locale) : "";
-  const ctaSubtitle = primary?.cta ? loc(primary.cta.subtitle, locale) : "";
-  const footerTagline = primary?.footerTagline ? loc(primary.footerTagline, locale) : "";
 
   let navCta: NavCtaConfig | undefined;
   if (config.hero) {
@@ -42,17 +33,5 @@ export default async function HomePage({ params }: PageProps) {
     }
   }
 
-  return (
-    <main>
-      <Navbar brandName={config.brandName} brandLogoUrl={config.brandLogoUrl} cta={navCta} />
-      <HeroSection properties={heroProperties} hero={config.hero} locale={locale} />
-      {config.properties.map((property) => (
-        <PropertySections key={property.id} property={property} locale={locale} />
-      ))}
-      {primary?.cta && primaryAirbnbUrl && (
-        <CTASection airbnbUrl={primaryAirbnbUrl} title={ctaTitle} subtitle={ctaSubtitle} />
-      )}
-      <Footer brandName={config.brandName} airbnbUrl={primaryAirbnbUrl} tagline={footerTagline} />
-    </main>
-  );
+  return <PageBody config={config} heroProperties={heroProperties} locale={locale} navCta={navCta} />;
 }

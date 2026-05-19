@@ -35,6 +35,8 @@
   "hero": {
     "filterLabel": "Standort",
     "showAll": "Alle anzeigen",
-    "filteredBadge": "Touren nach Zone gefiltert"
+    "filteredBadge": "Touren nach Zone gefiltert",
+    "select": "Auswählen",
+    "selected": "Ausgewählt"
   }
 }
