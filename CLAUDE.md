@@ -35,7 +35,7 @@ apps/web/
 │       └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
 ├── components/           # Un componente por sección de la página
 │   ├── Navbar.tsx
-│   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der)
+│   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der); mobile: scroll libre con scrollbar custom sincronizado (drag + click)
 │   ├── PropertySections.tsx  # Wrapper que renderiza secciones por propiedad
 │   ├── DescriptionSection.tsx
 │   ├── LocationSection.tsx
