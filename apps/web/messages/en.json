@@ -35,6 +35,8 @@
   "hero": {
     "filterLabel": "Location",
     "showAll": "Show all",
-    "filteredBadge": "Tours filtered by zone"
+    "filteredBadge": "Tours filtered by zone",
+    "select": "Select",
+    "selected": "Selected"
   }
 }

@@ -9,6 +9,8 @@ interface HeroSectionProps {
   properties: PropertyConfig[];
   hero?: ClientHeroConfig;
   locale: string;
+  selectedPropertyId: string;
+  onSelectProperty: (id: string) => void;
 }
 
 const CARD_WIDTH_PX = 480;
@@ -35,7 +37,7 @@ function FilterCheckbox({ checked }: { checked: boolean }) {
   );
 }
 
-export default function HeroSection({ properties, hero, locale }: HeroSectionProps) {
+export default function HeroSection({ properties, hero, locale, selectedPropertyId, onSelectProperty }: HeroSectionProps) {
   const t = useTranslations("hero");
 
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
@@ -168,6 +170,13 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
     const widthPct = el.scrollWidth > 0 ? (el.clientWidth / el.scrollWidth) * 100 : 100;
     setScrollbarThumb({ left: 0, width: widthPct });
   }, [filteredProperties]);
+
+  // Auto-select first visible property when the selected one is filtered out
+  useEffect(() => {
+    if (filteredProperties.length === 0) return;
+    const isVisible = filteredProperties.some((p) => p.id === selectedPropertyId);
+    if (!isVisible) onSelectProperty(filteredProperties[0].id);
+  }, [filteredProperties, selectedPropertyId, onSelectProperty]);
 
   function handleScrollbarPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     const el = mobileCarouselRef.current;
@@ -335,7 +344,17 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
               style={{ transform: `translateX(-${translateX}px)` }}
             >
               {filteredProperties.map((property) => (
-                <TourCard key={property.id} property={property} locale={locale} cardWidthPx={CARD_WIDTH_PX} />
+                <TourCard
+                    key={property.id}
+                    property={property}
+                    locale={locale}
+                    cardWidthPx={CARD_WIDTH_PX}
+                    isSelected={selectedPropertyId === property.id}
+                    onSelect={() => onSelectProperty(property.id)}
+                    showSelectButton={properties.length > 1}
+                    selectLabel={t("select")}
+                    selectedLabel={t("selected")}
+                  />
               ))}
             </div>
           </div>
@@ -392,7 +411,16 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           >
             {filteredProperties.map((property) => (
               <div key={property.id} className="flex-shrink-0 w-[75vw] h-full">
-                <TourCard property={property} locale={locale} cardWidthPx={undefined} />
+                <TourCard
+                    property={property}
+                    locale={locale}
+                    cardWidthPx={undefined}
+                    isSelected={selectedPropertyId === property.id}
+                    onSelect={() => onSelectProperty(property.id)}
+                    showSelectButton={properties.length > 1}
+                    selectLabel={t("select")}
+                    selectedLabel={t("selected")}
+                  />
               </div>
             ))}
           </div>
@@ -406,10 +434,20 @@ function TourCard({
   property,
   locale,
   cardWidthPx,
+  isSelected,
+  onSelect,
+  showSelectButton,
+  selectLabel,
+  selectedLabel,
 }: {
   property: PropertyConfig;
   locale: string;
   cardWidthPx: number | undefined;
+  isSelected: boolean;
+  onSelect: () => void;
+  showSelectButton: boolean;
+  selectLabel: string;
+  selectedLabel: string;
 }) {
   return (
     <div
@@ -432,13 +470,34 @@ function TourCard({
         <div className="absolute inset-0 bg-white/5" />
       )}
 
-      <div className="absolute inset-x-0 top-0 px-5 pt-4 pb-8 bg-gradient-to-b from-charcoal/70 to-transparent pointer-events-none">
+      {/* Gradient background — no pointer events so the 3D tour stays interactive */}
+      <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-charcoal/70 to-transparent pointer-events-none" />
+
+      {/* Title + select button */}
+      <div className="absolute inset-x-0 top-0 px-5 pt-4">
         <p
           className="text-ivory text-lg font-semibold drop-shadow"
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
           {loc(property.hero.title, locale)}
         </p>
+        {showSelectButton && (
+          <button
+            onClick={onSelect}
+            className={
+              isSelected
+                ? "mt-2 flex items-center gap-1.5 bg-terracotta text-ivory text-xs font-medium px-3 py-1 rounded-full"
+                : "mt-2 text-ivory border border-white/40 text-xs font-medium px-3 py-1 rounded-full hover:border-white/70 transition-colors"
+            }
+          >
+            {isSelected && (
+              <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+            {isSelected ? selectedLabel : selectLabel}
+          </button>
+        )}
       </div>
     </div>
   );
