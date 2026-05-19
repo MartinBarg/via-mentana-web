@@ -369,13 +369,15 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
               onPointerMove={handleScrollbarPointerMove}
               onPointerUp={handleScrollbarPointerUp}
             >
-              <div
-                className="absolute top-1 bottom-1 rounded-full bg-ivory/60"
-                style={{
-                  left: `${scrollbarThumb.left}%`,
-                  width: `${scrollbarThumb.width}%`,
-                }}
-              />
+              <div className="absolute inset-1">
+                <div
+                  className="absolute inset-y-0 rounded-full bg-ivory/60"
+                  style={{
+                    left: `${scrollbarThumb.left}%`,
+                    width: `${scrollbarThumb.width}%`,
+                  }}
+                />
+              </div>
             </div>
 
             {filterOpen && filterDropdown("w-52")}
@@ -385,11 +387,11 @@ export default function HeroSection({ properties, hero, locale }: HeroSectionPro
           {/* scrollbarWidth hides scrollbar in Firefox; [&::-webkit-scrollbar]:hidden for Chrome/Safari */}
           <div
             ref={mobileCarouselRef}
-            className="flex-1 flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden"
+            className="flex-1 flex gap-5 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none" }}
           >
             {filteredProperties.map((property) => (
-              <div key={property.id} className="snap-start flex-shrink-0 w-[75vw] h-full">
+              <div key={property.id} className="flex-shrink-0 w-[75vw] h-full">
                 <TourCard property={property} locale={locale} cardWidthPx={undefined} />
               </div>
             ))}
