@@ -244,10 +244,12 @@ const config: ClientConfig = {
     {
       id: "loft-at-rome",
       zone: "castro-pretorio",
+      airbnbUrl:
+        "https://es.airbnb.com/rooms/39883216",
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7MCLL?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0",
+        "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2969.1!2d12.4981!3d41.9030!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61a8b7a12345%3A0xabc123def456!2sBiblioteca+Nazionale+Centrale+di+Roma!5e0!3m2!1sit!2sit!4v1",
+        "https://www.google.com/maps?q=Via+Sapri,+6,+00185+Roma+RM&z=16&output=embed",
 
       hero: {
         title: {
