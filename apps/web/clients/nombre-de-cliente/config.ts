@@ -20,6 +20,15 @@ const config: ClientConfig = {
     },
     zones: [
       {
+        id: "roma",
+        label: {
+          it: "Roma",
+          en: "Rome",
+          es: "Roma",
+          de: "Rom",
+        },
+      },
+      {
         id: "castro-pretorio",
         label: {
           it: "Castro Pretorio",
@@ -35,7 +44,7 @@ const config: ClientConfig = {
     // ── Propiedad A: Studio Via Mentana ─────────────────────────────────────
     {
       id: "studio-via-mentana",
-      zone: "castro-pretorio",
+      zone: "roma",
       airbnbUrl:
         "https://es.airbnb.com/rooms/1005789413503850183",
       kuulaEmbedUrl:
