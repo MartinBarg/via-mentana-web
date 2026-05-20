@@ -2,7 +2,7 @@ import type { ClientConfig } from "../../lib/types/client";
 
 const config: ClientConfig = {
   id: "nombre-de-cliente",
-  brandName: "Nombre de cliente",
+  brandName: "Andrea's Properties",
   heroToursCount: 2,
 
   hero: {
@@ -244,10 +244,10 @@ const config: ClientConfig = {
 
       hero: {
         title: {
-          it: "Loft at Rome",
+          it: "Loft a Roma",
           en: "Loft at Rome",
-          es: "Loft at Rome",
-          de: "Loft at Rome",
+          es: "Loft en Roma",
+          de: "Loft in Rom",
         },
         subtitle: {
           it: "Un loft luminoso e moderno nel cuore di Roma",
