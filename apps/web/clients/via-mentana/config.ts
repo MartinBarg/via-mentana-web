@@ -39,7 +39,7 @@ const config: ClientConfig = {
       id: "studio-via-mentana",
       zone: "castro-pretorio",
       airbnbUrl:
-        "https://www.airbnb.mx/rooms/1005789413503850183?guests=1&adults=1&s=67&unique_share_id=009d20fc-2d8f-4091-828b-b286785004ec",
+        "https://es.airbnb.com/rooms/1005789413503850183",
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7MVhN?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0",
       googleMapsEmbedUrl:
