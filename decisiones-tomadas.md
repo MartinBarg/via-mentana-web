@@ -42,3 +42,21 @@ Registro de decisiones arquitectónicas con su contexto y rationale. Útil para 
 **Alternativas descartadas:**
 - *Tagline y CTA en `PropertyConfig`* — obliga a repetir los mismos valores en cada propiedad del mismo cliente; el filtro de zonas tampoco tiene sentido en una propiedad individual.
 - *CTA siempre como lista desplegable* — para clientes con una sola propiedad, un link directo es más simple y no requiere un menú. El modo `ctaSingle` / multi-CTA hace ambos casos sin bifurcaciones en el componente.
+
+---
+
+## Una sola instancia de cada sección; contenido reactivo a la propiedad seleccionada
+**Fecha:** 2026-05-20
+**PR:** #31
+
+**Qué se decidió:** La página tiene exactamente una instancia de cada sección (Hero → Detalles → Ubicación → Reseñas → CTA → Footer), sin importar cuántas propiedades tenga el cliente. El contenido de las secciones (descripción, ubicación, reseñas, CTA) se actualiza reactivamente cuando el usuario selecciona una propiedad distinta en el hero. El footer negro no tiene CTA — ese rol pertenece únicamente a `CTASection` (la sección beige antes del footer).
+
+**Por qué:** Renderizar una `PropertySections` por cada propiedad (el enfoque anterior) duplicaba las secciones en la página. La selección en el hero es una decisión de navegación, no de layout: el usuario elige qué propiedad ver, y el contenido abajo se actualiza en lugar de apilarse.
+
+El footer sin CTA evita redundancia: el usuario ya vio el botón de reserva en `CTASection` justo antes. El footer es navegación de cierre (volver arriba), no conversión.
+
+**Nota técnica:** `PropertySections` y sus hijos son stateless (sin `useState`). Por eso no se usa `key` para forzar remount al cambiar propiedad — React actualiza props in-place. Si algún hijo suma estado interno en el futuro, agregar `key={selectedProperty.id}` en `PageBody.tsx` para resetear ese estado al cambiar propiedad.
+
+**Alternativas descartadas:**
+- *Renderizar todas las propiedades y mostrar/ocultar con CSS* — deja todo el DOM montado, complica accesibilidad y scroll, y no escala bien con muchas propiedades.
+- *CTA en el footer* — genera dos llamados a la acción en pantallas cercanas; el footer queda sobrecargado y pierde su rol de cierre limpio.
