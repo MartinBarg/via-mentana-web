@@ -39,7 +39,7 @@ const config: ClientConfig = {
       airbnbUrl:
         "https://es.airbnb.com/rooms/1005789413503850183",
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7MVhN?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0",
+        "https://kuula.co/share/collection/7Mzpz?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.3!2d12.4993!3d41.9042!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61a30bb10b65%3A0xe49a8f14a3f6f52c!2sCastro%20Pretorio%20(Metro%20B)!5e0!3m2!1sit!2sit!4v1",
 
