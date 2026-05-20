@@ -242,7 +242,7 @@ const config: ClientConfig = {
 
     // ── Propiedad B: Residenza Nazionale ────────────────────────────────────
     {
-      id: "residenza-nazionale",
+      id: "loft-at-rome",
       zone: "castro-pretorio",
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7MCLL?logo=-1&info=0&fs=1&vr=1&sd=1&autorotate=0.16&thumbs=4&alpha=0.60&inst=0",
@@ -251,10 +251,10 @@ const config: ClientConfig = {
 
       hero: {
         title: {
-          it: "Residenza Nazionale",
-          en: "Residenza Nazionale",
-          es: "Residenza Nazionale",
-          de: "Residenza Nazionale",
+          it: "Loft at Rome",
+          en: "Loft at Rome",
+          es: "Loft at Rome",
+          de: "Loft at Rome",
         },
         subtitle: {
           it: "Eleganza e comfort nel cuore del quartiere accademico di Roma",
@@ -406,10 +406,10 @@ const config: ClientConfig = {
           de: "Bereit, im kulturellen Herzen Roms aufzuwachen?",
         },
         subtitle: {
-          it: "Prenota il tuo soggiorno alla Residenza Nazionale e vivi Roma come gli accademici di un tempo.",
-          en: "Book your stay at Residenza Nazionale and experience Rome like the scholars of old.",
-          es: "Reservá tu estadía en Residenza Nazionale y viví Roma como los académicos de antaño.",
-          de: "Buchen Sie Ihren Aufenthalt in der Residenza Nazionale und erleben Sie Rom wie die Gelehrten von einst.",
+          it: "Prenota il tuo soggiorno al Loft at Rome e vivi Roma come gli accademici di un tempo.",
+          en: "Book your stay at Loft at Rome and experience Rome like the scholars of old.",
+          es: "Reservá tu estadía en Loft at Rome y viví Roma como los académicos de antaño.",
+          de: "Buchen Sie Ihren Aufenthalt im Loft at Rome und erleben Sie Rom wie die Gelehrten von einst.",
         },
       },
 
