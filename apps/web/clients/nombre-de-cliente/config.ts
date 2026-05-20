@@ -250,10 +250,10 @@ const config: ClientConfig = {
           de: "Loft at Rome",
         },
         subtitle: {
-          it: "Eleganza e comfort nel cuore del quartiere accademico di Roma",
-          en: "Elegance and comfort in the heart of Rome's academic district",
-          es: "Elegancia y confort en el corazón del barrio académico de Roma",
-          de: "Eleganz und Komfort im Herzen des akademischen Viertels Roms",
+          it: "Un loft luminoso e moderno nel cuore di Roma",
+          en: "A bright, modern loft in the heart of Rome",
+          es: "Un loft luminoso y moderno en el corazón de Roma",
+          de: "Ein helles, modernes Loft im Herzen Roms",
         },
       },
 
@@ -287,10 +287,10 @@ const config: ClientConfig = {
           de: "Viertel Castro Pretorio, Rom",
         },
         description: {
-          it: "Lo studio si trova nel vivace quartiere Castro Pretorio, a pochi passi dalla stazione metro B e dalla Biblioteca Nazionale Centrale. Una posizione strategica per esplorare Roma, con ristoranti, caffè e servizi di ogni tipo raggiungibili a piedi.",
-          en: "The studio is located in the vibrant Castro Pretorio neighborhood, steps away from Metro B and the National Central Library. A strategic position to explore Rome, with restaurants, cafés and services all within walking distance.",
-          es: "El studio se encuentra en el animado barrio Castro Pretorio, a pocos pasos del Metro B y la Biblioteca Nacional Central. Una posición estratégica para explorar Roma, con restaurantes, cafés y servicios de todo tipo a distancia caminando.",
-          de: "Das Studio befindet sich im lebhaften Viertel Castro Pretorio, nur wenige Schritte von der U-Bahn B und der Nationalbibliothek entfernt. Eine strategische Lage zur Erkundung Roms, mit Restaurants, Cafés und Einrichtungen aller Art in Gehweite.",
+          it: "Il loft si trova nel vivace quartiere Castro Pretorio, a pochi passi dalla stazione metro B e dalla Biblioteca Nazionale Centrale. Una posizione strategica per esplorare Roma, con ristoranti, caffè e servizi di ogni tipo raggiungibili a piedi.",
+          en: "The loft is located in the vibrant Castro Pretorio neighborhood, steps away from Metro B and the National Central Library. A strategic position to explore Rome, with restaurants, cafés and services all within walking distance.",
+          es: "El loft se encuentra en el animado barrio Castro Pretorio, a pocos pasos del Metro B y la Biblioteca Nacional Central. Una posición estratégica para explorar Roma, con restaurantes, cafés y servicios de todo tipo a distancia caminando.",
+          de: "Das Loft befindet sich im lebhaften Viertel Castro Pretorio, nur wenige Schritte von der U-Bahn B und der Nationalbibliothek entfernt. Eine strategische Lage zur Erkundung Roms, mit Restaurants, Cafés und Einrichtungen aller Art in Gehweite.",
         },
         categories: [
           {
@@ -423,10 +423,10 @@ const config: ClientConfig = {
       },
 
       footerTagline: {
-        it: "Cultura, storia e comfort nel cuore universitario di Roma",
-        en: "Culture, history and comfort in the heart of Rome's academic district",
-        es: "Cultura, historia y confort en el corazón universitario de Roma",
-        de: "Kultur, Geschichte und Komfort im Herzen des akademischen Roms",
+        it: "Spazio, luce e comfort nel cuore della città eterna",
+        en: "Space, light and comfort in the heart of the eternal city",
+        es: "Espacio, luz y confort en el corazón de la ciudad eterna",
+        de: "Raum, Licht und Komfort im Herzen der ewigen Stadt",
       },
     },
   ],
