@@ -36,8 +36,8 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
     return { type: "single", label: loc(config.hero.ctaLabel, locale), url };
   }, [config.hero, locale, selectedProperty]);
 
-  const footerTagline = config.properties[0]?.footerTagline
-    ? loc(config.properties[0].footerTagline, locale)
+  const footerTagline = selectedProperty?.footerTagline
+    ? loc(selectedProperty.footerTagline, locale)
     : "";
 
   return (
@@ -55,16 +55,16 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         selectedPropertyId={selectedPropertyId}
         onSelectProperty={setSelectedPropertyId}
       />
+      {/* Sin key: todos los hijos son stateless. Si alguno suma useState en el futuro,
+          agregar key={selectedProperty.id} aquí para forzar remount al cambiar propiedad */}
       {selectedProperty && (
         <PropertySections
-          key={selectedProperty.id}
           property={selectedProperty}
           locale={locale}
         />
       )}
       {selectedProperty?.cta && selectedProperty.airbnbUrl && (
         <CTASection
-          key={selectedProperty.id}
           airbnbUrl={selectedProperty.airbnbUrl}
           title={loc(selectedProperty.cta.title, locale)}
           subtitle={loc(selectedProperty.cta.subtitle, locale)}
@@ -72,7 +72,6 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
       )}
       <Footer
         brandName={config.brandName}
-        airbnbUrl={config.properties[0]?.airbnbUrl}
         tagline={footerTagline}
       />
     </main>

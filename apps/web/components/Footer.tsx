@@ -4,11 +4,10 @@ import { useTranslations } from "next-intl";
 
 interface FooterProps {
   brandName: string;
-  airbnbUrl?: string;
   tagline: string;
 }
 
-export default function Footer({ brandName, airbnbUrl, tagline }: FooterProps) {
+export default function Footer({ brandName, tagline }: FooterProps) {
   const t = useTranslations("footer");
 
   return (
@@ -25,16 +24,6 @@ export default function Footer({ brandName, airbnbUrl, tagline }: FooterProps) {
         </div>
 
         <div className="flex items-center gap-6 text-sm">
-          {airbnbUrl && (
-            <a
-              href={airbnbUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-terracotta transition-colors"
-            >
-              {t("links.airbnb")}
-            </a>
-          )}
           <a
             href="#"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
