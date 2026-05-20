@@ -13,7 +13,10 @@
       "bathroom": "Private bathroom",
       "wifi": "WiFi",
       "cleaning": "Cleaning products",
-      "linens": "Towels & linens"
+      "linens": "Towels & linens",
+      "oven": "Electric oven",
+      "iron": "Iron",
+      "tv": "Flat-screen TV"
     }
   },
   "location": {
