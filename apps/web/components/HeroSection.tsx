@@ -45,10 +45,14 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const [ctaOpen, setCtaOpen] = useState(false);
   const [translateX, setTranslateX] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
 
   // Mobile scrollbar state
   const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 100 });
   const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
+
+  // Desktop scrollbar state
+  const [isDraggingDesktopScrollbar, setIsDraggingDesktopScrollbar] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   // Separate refs for desktop/mobile filter — both exist in DOM simultaneously (one hidden via CSS)
@@ -63,6 +67,11 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const scrollbarTrackRef = useRef<HTMLDivElement>(null);
   const dragStartScrollbarX = useRef(0);
   const dragStartCarouselScroll = useRef(0);
+
+  // Desktop scrollbar refs
+  const desktopScrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const dragStartDesktopScrollbarX = useRef(0);
+  const dragStartDesktopTranslateX = useRef(0);
 
   const zones = hero?.zones ?? [];
 
@@ -93,6 +102,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     if (!track || !container) return;
     const observer = new ResizeObserver(() => {
       setMaxScrollOffset(Math.max(0, track.scrollWidth - container.clientWidth));
+      setContainerWidth(container.clientWidth);
     });
     observer.observe(track);
     observer.observe(container);
@@ -209,6 +219,36 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     setIsDraggingScrollbar(false);
   }
 
+  function handleDesktopScrollbarPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    const track = desktopScrollbarTrackRef.current;
+    if (!track || !wrapperRef.current) return;
+    e.preventDefault();
+    const rect = track.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    const desiredTranslateX = Math.max(0, Math.min(maxScrollOffset, ratio * maxScrollOffset));
+    window.scrollTo({ top: wrapperRef.current.offsetTop + desiredTranslateX });
+    setIsDraggingDesktopScrollbar(true);
+    dragStartDesktopScrollbarX.current = e.clientX;
+    dragStartDesktopTranslateX.current = desiredTranslateX;
+    track.setPointerCapture(e.pointerId);
+  }
+
+  function handleDesktopScrollbarPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!isDraggingDesktopScrollbar) return;
+    const track = desktopScrollbarTrackRef.current;
+    if (!track || !wrapperRef.current || !trackRef.current) return;
+    const dx = e.clientX - dragStartDesktopScrollbarX.current;
+    const totalContentWidth = trackRef.current.scrollWidth;
+    const newTranslateX = Math.max(0, Math.min(maxScrollOffset,
+      dragStartDesktopTranslateX.current + (dx / track.clientWidth) * totalContentWidth
+    ));
+    window.scrollTo({ top: wrapperRef.current.offsetTop + newTranslateX });
+  }
+
+  function handleDesktopScrollbarPointerUp() {
+    setIsDraggingDesktopScrollbar(false);
+  }
+
   const toggleZone = (zoneId: string) => {
     setTranslateX(0);
     setSelectedZones((prev) =>
@@ -218,6 +258,14 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   const isFiltered = selectedZones.length > 0;
   const isSingleCta = !!hero?.ctaSingle;
+
+  // Desktop scrollbar thumb geometry
+  const desktopThumbWidth = containerWidth > 0 && maxScrollOffset > 0
+    ? (containerWidth / (containerWidth + maxScrollOffset)) * 100
+    : 100;
+  const desktopThumbLeft = maxScrollOffset > 0
+    ? (translateX / maxScrollOffset) * (100 - desktopThumbWidth)
+    : 0;
 
   // Shared filter dropdown content (used in both desktop and mobile)
   const filterDropdown = (width: string) => (
@@ -316,24 +364,48 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
         {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
-          {zones.length > 0 && (
-            <div ref={filterDesktopRef} className="relative flex items-center gap-3 mb-4 flex-shrink-0">
-              <button
-                onClick={() => setFilterOpen((o) => !o)}
-                aria-expanded={filterOpen}
-                aria-haspopup="listbox"
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium px-4 py-2 rounded-full border border-white/20 transition-colors"
+          {/* Filter button + desktop scrollbar row */}
+          {(zones.length > 0 || maxScrollOffset > 0) && (
+          <div className="relative flex items-center gap-3 mb-4 flex-shrink-0">
+            {zones.length > 0 && (
+              <div ref={filterDesktopRef} className="relative flex-shrink-0">
+                <button
+                  onClick={() => setFilterOpen((o) => !o)}
+                  aria-expanded={filterOpen}
+                  aria-haspopup="listbox"
+                  className="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium px-4 py-2 rounded-full border border-white/20 transition-colors"
+                >
+                  <FunnelIcon className="w-4 h-4" />
+                  {t("filterLabel")}
+                </button>
+                {filterOpen && filterDropdown("w-56")}
+              </div>
+            )}
+
+            {isFiltered && (
+              <span className="text-ivory/60 text-xs flex-shrink-0">{t("filteredBadge")}</span>
+            )}
+
+            {maxScrollOffset > 0 && (
+              <div
+                ref={desktopScrollbarTrackRef}
+                className="flex-1 relative h-[1.75rem] rounded-full bg-white/10 border border-white/20 overflow-hidden touch-none cursor-pointer"
+                onPointerDown={handleDesktopScrollbarPointerDown}
+                onPointerMove={handleDesktopScrollbarPointerMove}
+                onPointerUp={handleDesktopScrollbarPointerUp}
               >
-                <FunnelIcon className="w-4 h-4" />
-                {t("filterLabel")}
-              </button>
-
-              {isFiltered && (
-                <span className="text-ivory/60 text-xs">{t("filteredBadge")}</span>
-              )}
-
-              {filterOpen && filterDropdown("w-56")}
-            </div>
+                <div className="absolute inset-1">
+                  <div
+                    className="absolute inset-y-0 rounded-full bg-ivory/60"
+                    style={{
+                      left: `${desktopThumbLeft}%`,
+                      width: `${desktopThumbWidth}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
           )}
 
           {/* Tour cards track — no CSS transition: scroll-driven animation must be instantaneous */}
