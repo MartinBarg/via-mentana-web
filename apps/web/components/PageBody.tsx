@@ -55,6 +55,8 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         selectedPropertyId={selectedPropertyId}
         onSelectProperty={setSelectedPropertyId}
       />
+      {/* Sin key: todos los hijos son stateless. Si alguno suma useState en el futuro,
+          agregar key={selectedProperty.id} aquí para forzar remount al cambiar propiedad */}
       {selectedProperty && (
         <PropertySections
           property={selectedProperty}
