@@ -365,6 +365,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
           {/* Filter button + desktop scrollbar row */}
+          {(zones.length > 0 || maxScrollOffset > 0) && (
           <div className="relative flex items-center gap-3 mb-4 flex-shrink-0">
             {zones.length > 0 && (
               <div ref={filterDesktopRef} className="relative flex-shrink-0">
@@ -405,6 +406,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               </div>
             )}
           </div>
+          )}
 
           {/* Tour cards track — no CSS transition: scroll-driven animation must be instantaneous */}
           <div ref={toursContainerRef} className="flex-1 overflow-hidden relative">
