@@ -13,7 +13,10 @@
       "bathroom": "Bagno privato",
       "wifi": "WiFi",
       "cleaning": "Prodotti per la pulizia",
-      "linens": "Asciugamani & lenzuola"
+      "linens": "Asciugamani & lenzuola",
+      "oven": "Forno elettrico",
+      "iron": "Ferro da stiro",
+      "tv": "TV a schermo piatto"
     }
   },
   "location": {

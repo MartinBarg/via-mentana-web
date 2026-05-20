@@ -28,15 +28,6 @@ const config: ClientConfig = {
           de: "Rom",
         },
       },
-      {
-        id: "castro-pretorio",
-        label: {
-          it: "Castro Pretorio",
-          en: "Castro Pretorio",
-          es: "Castro Pretorio",
-          de: "Castro Pretorio",
-        },
-      },
     ],
   },
 
@@ -243,7 +234,7 @@ const config: ClientConfig = {
     // ── Propiedad B: Residenza Nazionale ────────────────────────────────────
     {
       id: "loft-at-rome",
-      zone: "castro-pretorio",
+      zone: "roma",
       airbnbUrl:
         "https://es.airbnb.com/rooms/39883216",
       kuulaEmbedUrl:
@@ -268,18 +259,18 @@ const config: ClientConfig = {
 
       description: {
         title: {
-          it: "La Residenza",
-          en: "The Residence",
-          es: "La Residencia",
-          de: "Die Residenz",
+          it: "Il Loft",
+          en: "The Loft",
+          es: "El Loft",
+          de: "Das Loft",
         },
         body: {
-          it: "La residenza offre un'ampia camera da letto con letto matrimoniale, soggiorno separato e cucina completamente attrezzata. Dispone di bagno privato con doccia, armadio a muro e balcone con vista sul giardino interno.",
-          en: "The residence offers a spacious bedroom with double bed, separate living area and fully equipped kitchen. It features a private bathroom with shower, built-in wardrobe and a balcony overlooking the inner garden.",
-          es: "La residencia ofrece un amplio dormitorio con cama matrimonial, sala de estar independiente y cocina totalmente equipada. Cuenta con baño privado con ducha, armario empotrado y balcón con vista al jardín interior.",
-          de: "Die Residenz bietet ein geräumiges Schlafzimmer mit Doppelbett, separaten Wohnbereich und voll ausgestattete Küche. Verfügt über Privatbad mit Dusche, Einbauschrank und Balkon mit Blick auf den Innengarten.",
+          it: "Un luminoso loft nel cuore di Roma, con soffitti alti e un'atmosfera moderna e accogliente. Dispone di un'ampia zona living con cucina aperta completamente attrezzata, letto matrimoniale confortevole e tutto il necessario per un soggiorno piacevole nella città eterna.",
+          en: "A bright loft in the heart of Rome, with high ceilings and a modern, welcoming atmosphere. Features a spacious living area with fully equipped open kitchen, comfortable double bed and everything you need for a wonderful stay in the eternal city.",
+          es: "Un luminoso loft en el corazón de Roma, con techos altos y una atmósfera moderna y acogedora. Cuenta con una amplia zona de estar con cocina abierta completamente equipada, cómoda cama matrimonial y todo lo necesario para una estadía placentera en la ciudad eterna.",
+          de: "Ein helles Loft im Herzen Roms mit hohen Decken und einer modernen, einladenden Atmosphäre. Verfügt über einen großzügigen Wohnbereich mit voll ausgestatteter offener Küche, komfortablem Doppelbett und allem, was Sie für einen angenehmen Aufenthalt in der ewigen Stadt benötigen.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "linens"],
+        amenityKeys: ["fridge", "kitchen", "oven", "wifi", "iron", "tv"],
       },
 
       location: {
@@ -290,54 +281,58 @@ const config: ClientConfig = {
           de: "Lage",
         },
         subtitle: {
-          it: "Viale Castro Pretorio, Roma",
-          en: "Viale Castro Pretorio, Rome",
-          es: "Viale Castro Pretorio, Roma",
-          de: "Viale Castro Pretorio, Rom",
+          it: "Quartiere Castro Pretorio, Roma",
+          en: "Castro Pretorio neighborhood, Rome",
+          es: "Barrio Castro Pretorio, Roma",
+          de: "Viertel Castro Pretorio, Rom",
         },
         description: {
-          it: "La residenza si trova di fronte alla Biblioteca Nazionale Centrale, nel tranquillo quartiere universitario di Castro Pretorio. A pochi metri dalla metro B e a breve distanza a piedi dai principali musei e attrazioni culturali di Roma.",
-          en: "The residence is located opposite the National Central Library, in the quiet university district of Castro Pretorio. Steps from Metro B and a short walk from Rome's main museums and cultural attractions.",
-          es: "La residencia se ubica frente a la Biblioteca Nazionale Centrale, en el tranquilo barrio universitario de Castro Pretorio. A metros del Metro B y a poca distancia caminando de los principales museos y atracciones culturales de Roma.",
-          de: "Die Residenz liegt gegenüber der Nationalbibliothek, im ruhigen Universitätsviertel Castro Pretorio. Wenige Meter von der U-Bahn B und einem kurzen Spaziergang von Roms wichtigsten Museen und Kulturattraktionen entfernt.",
+          it: "Lo studio si trova nel vivace quartiere Castro Pretorio, a pochi passi dalla stazione metro B e dalla Biblioteca Nazionale Centrale. Una posizione strategica per esplorare Roma, con ristoranti, caffè e servizi di ogni tipo raggiungibili a piedi.",
+          en: "The studio is located in the vibrant Castro Pretorio neighborhood, steps away from Metro B and the National Central Library. A strategic position to explore Rome, with restaurants, cafés and services all within walking distance.",
+          es: "El studio se encuentra en el animado barrio Castro Pretorio, a pocos pasos del Metro B y la Biblioteca Nacional Central. Una posición estratégica para explorar Roma, con restaurantes, cafés y servicios de todo tipo a distancia caminando.",
+          de: "Das Studio befindet sich im lebhaften Viertel Castro Pretorio, nur wenige Schritte von der U-Bahn B und der Nationalbibliothek entfernt. Eine strategische Lage zur Erkundung Roms, mit Restaurants, Cafés und Einrichtungen aller Art in Gehweite.",
         },
         categories: [
           {
             key: "pizza",
             label: { it: "Pizzerie", en: "Pizza places", es: "Pizzerías", de: "Pizzerien" },
             places: [
-              { name: { it: "Pizzeria Il Bibliofilo", en: "Pizzeria Il Bibliofilo", es: "Pizzeria Il Bibliofilo", de: "Pizzeria Il Bibliofilo" }, distance: "200" },
-              { name: { it: "Forno Castro", en: "Forno Castro", es: "Forno Castro", de: "Forno Castro" }, distance: "480" },
+              { name: { it: "Pizzeria da Claudio", en: "Pizzeria da Claudio", es: "Pizzeria da Claudio", de: "Pizzeria da Claudio" }, distance: "350" },
+              { name: { it: "Forno Conti", en: "Forno Conti", es: "Forno Conti", de: "Forno Conti" }, distance: "500" },
+              { name: { it: "Pizzeria Al Forno", en: "Pizzeria Al Forno", es: "Pizzeria Al Forno", de: "Pizzeria Al Forno" }, distance: "650" },
             ],
           },
           {
             key: "restaurant",
             label: { it: "Ristoranti", en: "Restaurants", es: "Restaurantes", de: "Restaurants" },
             places: [
-              { name: { it: "Trattoria Accademica", en: "Trattoria Accademica", es: "Trattoria Accademica", de: "Trattoria Accademica" }, distance: "300" },
-              { name: { it: "Osteria del Sapere", en: "Osteria del Sapere", es: "Osteria del Sapere", de: "Osteria del Sapere" }, distance: "520" },
+              { name: { it: "Trattoria Monti", en: "Trattoria Monti", es: "Trattoria Monti", de: "Trattoria Monti" }, distance: "400" },
+              { name: { it: "Osteria dell'Angelo", en: "Osteria dell'Angelo", es: "Osteria dell'Angelo", de: "Osteria dell'Angelo" }, distance: "550" },
+              { name: { it: "Ristorante Il Tulipano", en: "Ristorante Il Tulipano", es: "Ristorante Il Tulipano", de: "Ristorante Il Tulipano" }, distance: "300" },
             ],
           },
           {
             key: "coffee",
             label: { it: "Caffè", en: "Coffee shops", es: "Cafés", de: "Cafés" },
             places: [
-              { name: { it: "Caffè Nazionale", en: "Caffè Nazionale", es: "Caffè Nazionale", de: "Caffè Nazionale" }, distance: "150" },
-              { name: { it: "Bar Universitario", en: "Bar Universitario", es: "Bar Universitario", de: "Bar Universitario" }, distance: "350" },
+              { name: { it: "Bar San Pietro", en: "Bar San Pietro", es: "Bar San Pietro", de: "Bar San Pietro" }, distance: "200" },
+              { name: { it: "Caffè Colombia", en: "Caffè Colombia", es: "Caffè Colombia", de: "Caffè Colombia" }, distance: "350" },
+              { name: { it: "Bar Termini", en: "Bar Termini", es: "Bar Termini", de: "Bar Termini" }, distance: "600" },
             ],
           },
           {
             key: "library",
             label: { it: "Biblioteche", en: "Libraries", es: "Bibliotecas", de: "Bibliotheken" },
             places: [
-              { name: { it: "Biblioteca Nazionale Centrale", en: "National Central Library", es: "Biblioteca Nacional Central", de: "Nationalbibliothek" }, distance: "80" },
+              { name: { it: "Biblioteca Nazionale Centrale", en: "National Central Library", es: "Biblioteca Nacional Central", de: "Nationalbibliothek" }, distance: "400" },
+              { name: { it: "Biblioteca Statale", en: "State Library", es: "Biblioteca Estatal", de: "Staatsbibliothek" }, distance: "700" },
             ],
           },
           {
             key: "metro",
             label: { it: "Metro", en: "Metro", es: "Metro", de: "U-Bahn" },
             places: [
-              { name: { it: "Metro B – Castro Pretorio", en: "Metro B – Castro Pretorio", es: "Metro B – Castro Pretorio", de: "U-Bahn B – Castro Pretorio" }, distance: "120" },
+              { name: { it: "Metro B – Castro Pretorio", en: "Metro B – Castro Pretorio", es: "Metro B – Castro Pretorio", de: "U-Bahn B – Castro Pretorio" }, distance: "100" },
               { name: { it: "Metro A/B – Termini", en: "Metro A/B – Termini", es: "Metro A/B – Termini", de: "U-Bahn A/B – Termini" }, distance: "600" },
             ],
           },
@@ -345,7 +340,7 @@ const config: ClientConfig = {
             key: "bus",
             label: { it: "Autobus", en: "Bus", es: "Colectivos", de: "Bus" },
             places: [
-              { name: { it: "Via Castro Pretorio (linee 71, 492)", en: "Via Castro Pretorio (lines 71, 492)", es: "Via Castro Pretorio (líneas 71, 492)", de: "Via Castro Pretorio (Linien 71, 492)" }, distance: "100" },
+              { name: { it: "Via Volturno (linee 90, 92)", en: "Via Volturno (lines 90, 92)", es: "Via Volturno (líneas 90, 92)", de: "Via Volturno (Linien 90, 92)" }, distance: "150" },
               { name: { it: "Stazione Termini (tutte le linee)", en: "Termini Station (all lines)", es: "Estación Termini (todas las líneas)", de: "Bahnhof Termini (alle Linien)" }, distance: "600" },
             ],
           },
@@ -362,39 +357,51 @@ const config: ClientConfig = {
         },
         items: [
           {
-            id: "lucia",
-            author: "Lucía F.",
+            id: "anna",
+            author: "Anna P.",
+            country: "Italia",
+            rating: 5,
+            comment: {
+              it: "Loft spettacolare, spazioso e pieno di luce. La cucina era completamente attrezzata e il letto comodissimo. Una delle migliori sistemazioni che abbia mai avuto a Roma.",
+              en: "Spectacular loft, spacious and full of light. The kitchen was fully equipped and the bed super comfortable. One of the best places I've ever stayed in Rome.",
+              es: "Loft espectacular, amplio y lleno de luz. La cocina estaba completamente equipada y la cama comodísima. Una de las mejores estadías que he tenido en Roma.",
+              de: "Spektakuläres Loft, geräumig und lichtdurchflutet. Die Küche war voll ausgestattet und das Bett sehr bequem. Eine der besten Unterkünfte, die ich je in Rom hatte.",
+            },
+          },
+          {
+            id: "david",
+            author: "David M.",
+            country: "United States",
+            rating: 5,
+            comment: {
+              it: "Assolutamente fantastico. Il loft è moderno, pulito e in una posizione imbattibile. Il tour virtuale rispecchia perfettamente la realtà — nessuna sorpresa, solo piacevoli conferme.",
+              en: "Absolutely fantastic. The loft is modern, clean and in an unbeatable location. The virtual tour perfectly matches reality — no surprises, just pleasant confirmations.",
+              es: "Absolutamente fantástico. El loft es moderno, limpio y en una ubicación inmejorable. El tour virtual refleja perfectamente la realidad — sin sorpresas, solo confirmaciones agradables.",
+              de: "Absolut fantastisch. Das Loft ist modern, sauber und in unschlagbarer Lage. Der virtuelle Rundgang spiegelt die Realität perfekt wider — keine Überraschungen, nur angenehme Bestätigungen.",
+            },
+          },
+          {
+            id: "elena",
+            author: "Elena V.",
             country: "España",
             rating: 5,
             comment: {
-              it: "Appartamento spettacolare di fronte alla Biblioteca Nazionale. Silenzioso, moderno e ottimamente posizionato. Il balcone con vista sul giardino è un plus incredibile.",
-              en: "Spectacular apartment right across from the National Library. Quiet, modern and superbly located. The garden-view balcony is an incredible bonus.",
-              es: "Apartamento espectacular frente a la Biblioteca Nacional. Silencioso, moderno y muy bien ubicado. El balcón con vista al jardín es un plus increíble.",
-              de: "Spektakuläre Wohnung direkt gegenüber der Nationalbibliothek. Ruhig, modern und hervorragend gelegen. Der Balkon mit Gartenblick ist ein unglaubliches Highlight.",
+              it: "Soggiorno meraviglioso. Il loft è esattamente come nelle foto, con soffitti alti e tanta luce naturale. La televisione e la cucina completa sono stati un grande plus per il nostro soggiorno lungo.",
+              en: "Wonderful stay. The loft is exactly as in the photos, with high ceilings and lots of natural light. The TV and full kitchen were a great plus for our longer stay.",
+              es: "Estadía maravillosa. El loft es exactamente como en las fotos, con techos altos y mucha luz natural. La televisión y la cocina completa fueron un gran plus para nuestra estadía larga.",
+              de: "Wunderbarer Aufenthalt. Das Loft ist genau wie auf den Fotos, mit hohen Decken und viel Tageslicht. Der Fernseher und die voll ausgestattete Küche waren ein großes Plus für unseren längeren Aufenthalt.",
             },
           },
           {
-            id: "thomas",
-            author: "Thomas K.",
-            country: "Deutschland",
-            rating: 5,
-            comment: {
-              it: "Ottimo appartamento vicino ai principali musei e università di Roma. La cucina ben attrezzata e il letto comodissimo. Lo consiglio al 100%.",
-              en: "Excellent apartment near Rome's main museums and universities. Well-equipped kitchen and very comfortable bed. 100% recommended.",
-              es: "Excelente apartamento cerca de los principales museos y universidades de Roma. La cocina bien equipada y la cama muy cómoda. Recomiendo al 100%.",
-              de: "Ausgezeichnete Wohnung in der Nähe der wichtigsten Museen und Universitäten Roms. Gut ausgestattete Küche und sehr bequemes Bett. 100% empfehlenswert.",
-            },
-          },
-          {
-            id: "camille",
-            author: "Camille R.",
+            id: "pierre",
+            author: "Pierre L.",
             country: "France",
             rating: 5,
             comment: {
-              it: "Un soggiorno perfetto. Il quartiere è tranquillo ma centrale, ideale per esplorare Roma a piedi. Torneremmo senza dubbio.",
-              en: "A perfect stay. The neighborhood is quiet but central, ideal for exploring Rome on foot. We would definitely come back.",
-              es: "Una estancia perfecta. El barrio es tranquilo pero céntrico, ideal para explorar Roma a pie. Volveríamos sin duda.",
-              de: "Ein perfekter Aufenthalt. Das Viertel ist ruhig aber zentral, ideal um Rom zu Fuß zu erkunden. Wir würden definitiv wiederkommen.",
+              it: "Posizione perfetta per visitare Roma. Il loft è accogliente, silenzioso e dotato di tutto il necessario. Ci torneremmo senza esitazione.",
+              en: "Perfect location to visit Rome. The loft is welcoming, quiet and has everything you need. We would go back without hesitation.",
+              es: "Ubicación perfecta para visitar Roma. El loft es acogedor, silencioso y tiene todo lo necesario. Volveríamos sin dudarlo.",
+              de: "Perfekte Lage für einen Rombesuch. Das Loft ist einladend, ruhig und hat alles, was man braucht. Wir würden ohne zu zögern wiederkommen.",
             },
           },
         ],

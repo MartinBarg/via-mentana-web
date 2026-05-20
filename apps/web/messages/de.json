@@ -13,7 +13,10 @@
       "bathroom": "Privates Badezimmer",
       "wifi": "WLAN",
       "cleaning": "Reinigungsprodukte",
-      "linens": "Handtücher & Bettwäsche"
+      "linens": "Handtücher & Bettwäsche",
+      "oven": "Elektrischer Backofen",
+      "iron": "Bügeleisen",
+      "tv": "Flachbildfernseher"
     }
   },
   "location": {

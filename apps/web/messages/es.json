@@ -13,7 +13,10 @@
       "bathroom": "Baño privado",
       "wifi": "WiFi",
       "cleaning": "Productos de limpieza",
-      "linens": "Toallas & sábanas"
+      "linens": "Toallas & sábanas",
+      "oven": "Horno eléctrico",
+      "iron": "Plancha",
+      "tv": "Televisión de pantalla plana"
     }
   },
   "location": {
