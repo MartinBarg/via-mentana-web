@@ -60,3 +60,18 @@ El footer sin CTA evita redundancia: el usuario ya vio el botón de reserva en `
 **Alternativas descartadas:**
 - *Renderizar todas las propiedades y mostrar/ocultar con CSS* — deja todo el DOM montado, complica accesibilidad y scroll, y no escala bien con muchas propiedades.
 - *CTA en el footer* — genera dos llamados a la acción en pantallas cercanas; el footer queda sobrecargado y pierde su rol de cierre limpio.
+
+---
+
+## Lazy-load de iframes Kuula con unload al salir del viewport
+**Fecha:** 2026-06-05
+**PR:** #45
+
+**Qué se decidió:** Los iframes de Kuula en `TourCard` se cargan via `IntersectionObserver` con threshold 15%: el atributo `src` se setea cuando la card entra al viewport y se limpia (`undefined`) cuando sale. El threshold 15% se calculó a partir del layout real (`w-[75vw]`, `gap-5`, `pr-4` en el contenedor del carrusel mobile) y garantiza que nunca haya más de 2 iframes WebGL activos simultáneamente en ningún dispositivo mobile hasta 767px.
+
+**Por qué:** Con 3+ propiedades (cliente `andreas-properties`), todos los iframes arrancaban a la vez. Cada uno inicializa un contexto WebGL y carga texturas 3D. En iOS Safari el tercer iframe reventaba el límite de memoria del tab y el OS mataba la página con el error "ocurrió un problema varias veces".
+
+**Alternativas descartadas:**
+- *Lazy-load sin unload (solo cargar al entrar, nunca descargar)* — eventualmente los 3 iframes quedan activos al mismo tiempo cuando el usuario scrollea toda la lista. No resuelve el problema de fondo.
+- *Solo cargar la card seleccionada/activa* — funciona, pero implica que cada cambio de selección recarga el tour desde cero. En conexiones lentas el UX se degrada notablemente.
+- *Reemplazar con thumbnail estático en mobile* — elimina el problema pero también elimina el "wow factor" del tour 3D en mobile, que es parte del producto.
