@@ -3,7 +3,7 @@ import type { ClientConfig } from "../../lib/types/client";
 const config: ClientConfig = {
   id: "nombre-de-cliente",
   brandName: "Andrea's Properties",
-  heroToursCount: 2,
+  heroToursCount: 3,
 
   hero: {
     tagline: {
@@ -26,6 +26,15 @@ const config: ClientConfig = {
           en: "Rome",
           es: "Roma",
           de: "Rom",
+        },
+      },
+      {
+        id: "milan",
+        label: {
+          it: "Milano",
+          en: "Milan",
+          es: "Milán",
+          de: "Mailand",
         },
       },
     ],
@@ -427,6 +436,196 @@ const config: ClientConfig = {
         en: "Space, light and comfort in the heart of the eternal city",
         es: "Espacio, luz y confort en el corazón de la ciudad eterna",
         de: "Raum, Licht und Komfort im Herzen der ewigen Stadt",
+      },
+    },
+
+    // ── Propiedad C: Departamento Milán ─────────────────────────────────────
+    {
+      id: "departamento-milan",
+      zone: "milan",
+      airbnbUrl:
+        "https://www.airbnb.es/rooms/1578306128279972231",
+      kuulaEmbedUrl:
+        "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
+      googleMapsEmbedUrl:
+        "https://www.google.com/maps?q=Piazza+Firenze,+4,+20154+Milano&z=16&output=embed",
+
+      hero: {
+        title: {
+          it: "Appartamento a Milano",
+          en: "Apartment in Milan",
+          es: "Departamento en Milán",
+          de: "Wohnung in Mailand",
+        },
+        subtitle: {
+          it: "Stile e comfort nel cuore del quartiere Brera",
+          en: "Style and comfort in the heart of the Brera district",
+          es: "Estilo y confort en el corazón del barrio Brera",
+          de: "Stil und Komfort im Herzen des Brera-Viertels",
+        },
+      },
+
+      description: {
+        title: {
+          it: "L'Appartamento",
+          en: "The Apartment",
+          es: "El Departamento",
+          de: "Die Wohnung",
+        },
+        body: {
+          it: "L'appartamento dispone di un'ampia camera da letto matrimoniale con armadi a muro, comodini e aria condizionata, e di un luminoso soggiorno con cucina a vista completamente attrezzata con forno a gas, frigorifero con congelatore, macchinetta del caffè e bollitore. Il divano letto matrimoniale, la TV al plasma e le finestre affacciate su Piazza Firenze completano uno spazio moderno e funzionale. Il bagno finestrato è dotato di lavabo, bidet, doccia e tutti gli accessori necessari.",
+          en: "The apartment features a spacious double bedroom with built-in wardrobes, bedside tables and air conditioning, and a bright living room with open fully equipped kitchen including gas oven, fridge-freezer, coffee maker and kettle. A double sofa bed, plasma TV and windows overlooking Piazza Firenze complete a modern and functional space. The windowed bathroom comes with basin, bidet, shower and all the accessories you need.",
+          es: "El departamento cuenta con un amplio dormitorio doble con armarios empotrados, mesitas de noche y aire acondicionado, y un luminoso salón con cocina abierta totalmente equipada con horno de gas, nevera con congelador, cafetera y hervidor. Un cómodo sofá cama doble, televisor de plasma y ventanas con vistas a Piazza Firenze completan un espacio moderno y funcional. El baño con ventana incluye lavabo, bidé, ducha y todos los accesorios necesarios.",
+          de: "Die Wohnung verfügt über ein geräumiges Doppelschlafzimmer mit Einbauschränken, Nachttischen und Klimaanlage sowie ein helles Wohnzimmer mit offener, voll ausgestatteter Küche mit Gasherd, Kühl-Gefrier-Kombination, Kaffeemaschine und Wasserkocher. Ein Doppelschlafsofa, ein Plasma-TV und Fenster mit Blick auf die Piazza Firenze vervollständigen den modernen und funktionalen Raum. Das Fensterbad ist mit Waschbecken, Bidet, Dusche und allen notwendigen Accessoires ausgestattet.",
+        },
+        amenityKeys: ["fridge", "kitchen", "oven", "wifi", "iron", "tv"],
+      },
+
+      location: {
+        title: {
+          it: "La Posizione",
+          en: "Location",
+          es: "Ubicación",
+          de: "Lage",
+        },
+        subtitle: {
+          it: "Quartiere Brera, Milano",
+          en: "Brera neighborhood, Milan",
+          es: "Barrio Brera, Milán",
+          de: "Brera-Viertel, Mailand",
+        },
+        description: {
+          it: "L'appartamento si trova in Piazza Firenze, nel cuore del quartiere Brera — uno dei più ambiti di Milano, celebre per la Pinacoteca di Brera, le boutique di design e i locali dell'aperitivo. Un angolo di città autentico e raffinato, dove convivono arte, moda e vita quotidiana. Il tram 14, proprio davanti all'ingresso, collega direttamente al Duomo in pochi minuti, rendendo ogni spostamento semplice e senza pensieri.",
+          en: "The apartment is located on Piazza Firenze, in the heart of the Brera district — one of Milan's most sought-after neighborhoods, famous for the Pinacoteca di Brera, design boutiques and aperitivo bars. A refined and authentic corner of the city where art, fashion and everyday life come together. Tram 14, right at the entrance, connects directly to the Duomo in minutes, making every journey effortless.",
+          es: "El departamento se encuentra en Piazza Firenze, en el corazón del barrio Brera — uno de los más cotizados de Milán, famoso por la Pinacoteca di Brera, las boutiques de diseño y los bares de aperitivo. Un rincón auténtico y refinado de la ciudad donde conviven el arte, la moda y la vida cotidiana. El tranvía 14, justo en la puerta, conecta directamente con el Duomo en minutos, haciendo cada trayecto simple y sin complicaciones.",
+          de: "Die Wohnung befindet sich an der Piazza Firenze im Herzen des Brera-Viertels — einem der begehrtesten Stadtteile Mailands, bekannt für die Pinacoteca di Brera, Designboutiquen und Aperitivo-Bars. Eine authentische und elegante Ecke der Stadt, in der Kunst, Mode und Alltagsleben zusammenkommen. Die Straßenbahn 14, direkt vor dem Eingang, verbindet in wenigen Minuten mit dem Dom und macht jeden Weg mühelos.",
+        },
+        categories: [
+          {
+            key: "restaurant",
+            label: { it: "Ristoranti", en: "Restaurants", es: "Restaurantes", de: "Restaurants" },
+            places: [
+              { name: { it: "Osteria di Brera", en: "Osteria di Brera", es: "Osteria di Brera", de: "Osteria di Brera" }, distance: "250" },
+              { name: { it: "Trattoria Madonnina", en: "Trattoria Madonnina", es: "Trattoria Madonnina", de: "Trattoria Madonnina" }, distance: "400" },
+              { name: { it: "Ristorante Solferino", en: "Ristorante Solferino", es: "Ristorante Solferino", de: "Ristorante Solferino" }, distance: "500" },
+            ],
+          },
+          {
+            key: "coffee",
+            label: { it: "Caffè", en: "Coffee shops", es: "Cafés", de: "Cafés" },
+            places: [
+              { name: { it: "Bar Brera", en: "Bar Brera", es: "Bar Brera", de: "Bar Brera" }, distance: "150" },
+              { name: { it: "Caffè Vecchia Brera", en: "Caffè Vecchia Brera", es: "Caffè Vecchia Brera", de: "Caffè Vecchia Brera" }, distance: "300" },
+              { name: { it: "Pasticceria Marchesi", en: "Pasticceria Marchesi", es: "Pasticceria Marchesi", de: "Pasticceria Marchesi" }, distance: "600" },
+            ],
+          },
+          {
+            key: "museum",
+            label: { it: "Musei e cultura", en: "Museums & culture", es: "Museos y cultura", de: "Museen & Kultur" },
+            places: [
+              { name: { it: "Pinacoteca di Brera", en: "Pinacoteca di Brera", es: "Pinacoteca di Brera", de: "Pinacoteca di Brera" }, distance: "350" },
+              { name: { it: "Castello Sforzesco", en: "Castello Sforzesco", es: "Castello Sforzesco", de: "Castello Sforzesco" }, distance: "900" },
+              { name: { it: "Duomo di Milano", en: "Milan Cathedral", es: "Duomo de Milán", de: "Mailänder Dom" }, distance: "1800" },
+            ],
+          },
+          {
+            key: "metro",
+            label: { it: "Metro", en: "Metro", es: "Metro", de: "U-Bahn" },
+            places: [
+              { name: { it: "Moscova (M2)", en: "Moscova (M2)", es: "Moscova (M2)", de: "Moscova (M2)" }, distance: "400" },
+              { name: { it: "Lanza (M2)", en: "Lanza (M2)", es: "Lanza (M2)", de: "Lanza (M2)" }, distance: "550" },
+            ],
+          },
+          {
+            key: "bus",
+            label: { it: "Tram", en: "Tram", es: "Tranvía", de: "Straßenbahn" },
+            places: [
+              { name: { it: "Tram 14 – Piazza Firenze (→ Duomo)", en: "Tram 14 – Piazza Firenze (→ Duomo)", es: "Tranvía 14 – Piazza Firenze (→ Duomo)", de: "Tram 14 – Piazza Firenze (→ Dom)" }, distance: "0" },
+            ],
+          },
+        ],
+      },
+
+      reviews: {
+        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
+        subtitle: {
+          it: "Cosa dicono i nostri ospiti",
+          en: "What our guests say",
+          es: "Lo que dicen nuestros huéspedes",
+          de: "Was unsere Gäste sagen",
+        },
+        items: [
+          {
+            id: "chiara",
+            author: "Chiara F.",
+            country: "Italia",
+            rating: 5,
+            comment: {
+              it: "Appartamento meraviglioso nel quartiere più bello di Milano. Spazioso, luminoso e curatissimo. Il tram sotto casa è comodissimo e il tour virtuale rispecchia perfettamente la realtà. Tornerò senza dubbi.",
+              en: "Wonderful apartment in the most beautiful neighborhood in Milan. Spacious, bright and immaculately kept. The tram downstairs is super convenient and the virtual tour perfectly matches reality. I'll definitely be back.",
+              es: "Departamento maravilloso en el barrio más lindo de Milán. Amplio, luminoso y muy bien cuidado. El tranvía en la puerta es comodísimo y el tour virtual refleja perfectamente la realidad. Vuelvo sin dudarlo.",
+              de: "Wunderbare Wohnung im schönsten Viertel Mailands. Geräumig, hell und tadellos gepflegt. Die Straßenbahn direkt vor der Tür ist super praktisch und der virtuelle Rundgang spiegelt die Realität perfekt wider. Ich komme definitiv wieder.",
+            },
+          },
+          {
+            id: "lucas",
+            author: "Lucas B.",
+            country: "France",
+            rating: 5,
+            comment: {
+              it: "Posizione imbattibile a due passi dalla Pinacoteca di Brera. L'appartamento è moderno, pulito e dotato di tutto il necessario. La cucina completamente attrezzata e l'aria condizionata hanno reso il soggiorno perfetto.",
+              en: "Unbeatable location steps from the Pinacoteca di Brera. The apartment is modern, clean and has everything you need. The fully equipped kitchen and air conditioning made for a perfect stay.",
+              es: "Ubicación inmejorable a pasos de la Pinacoteca di Brera. El departamento es moderno, limpio y tiene todo lo necesario. La cocina completamente equipada y el aire acondicionado hicieron que la estadía fuera perfecta.",
+              de: "Unschlagbare Lage, nur wenige Schritte von der Pinacoteca di Brera entfernt. Die Wohnung ist modern, sauber und hat alles, was man braucht. Die voll ausgestattete Küche und die Klimaanlage haben den Aufenthalt perfekt gemacht.",
+            },
+          },
+          {
+            id: "marta",
+            author: "Marta G.",
+            country: "España",
+            rating: 5,
+            comment: {
+              it: "Milano come non l'avevo mai vissuta. Svegliarsi a Brera è un privilegio — tutto è a portata di mano, dall'aperitivo al museo. L'appartamento è esattamente come nel tour 360, nessuna sorpresa.",
+              en: "Milan like I'd never experienced it. Waking up in Brera is a privilege — everything is within reach, from aperitivo to the museum. The apartment is exactly as in the 360 tour, no surprises.",
+              es: "Milán como nunca lo había vivido. Despertar en Brera es un privilegio — todo está al alcance, desde el aperitivo hasta el museo. El departamento es exactamente como en el tour 360, sin sorpresas.",
+              de: "Mailand wie ich es noch nie erlebt hatte. In Brera aufzuwachen ist ein Privileg — alles ist in Reichweite, vom Aperitivo bis zum Museum. Die Wohnung ist genau wie im 360-Tour, keine Überraschungen.",
+            },
+          },
+          {
+            id: "thomas",
+            author: "Thomas K.",
+            country: "Deutschland",
+            rating: 5,
+            comment: {
+              it: "Soggiorno eccellente. L'appartamento è spazioso, curato e in una delle zone più vivaci della città. Il portiere mattutino ci ha fatto sentire sempre al sicuro. Consiglio vivamente a chiunque voglia vivere la Milano autentica.",
+              en: "Excellent stay. The apartment is spacious, well-kept and in one of the city's most vibrant areas. The morning concierge made us feel safe at all times. Highly recommend for anyone who wants to experience authentic Milan.",
+              es: "Estadía excelente. El departamento es amplio, bien cuidado y en una de las zonas más vibrantes de la ciudad. El conserje matutino nos hizo sentir seguros en todo momento. Lo recomiendo ampliamente a quienes quieran vivir el Milán auténtico.",
+              de: "Ausgezeichneter Aufenthalt. Die Wohnung ist geräumig, gepflegt und in einem der lebendigsten Viertel der Stadt. Der morgendliche Concierge hat uns immer das Gefühl der Sicherheit gegeben. Sehr empfehlenswert für alle, die das authentische Mailand erleben möchten.",
+            },
+          },
+        ],
+      },
+
+      cta: {
+        title: {
+          it: "Pronto a vivere Milano?",
+          en: "Ready to experience Milan?",
+          es: "¿Listo para vivir Milán?",
+          de: "Bereit, Mailand zu erleben?",
+        },
+        subtitle: {
+          it: "Prenota il tuo soggiorno al Brera Apartment e scopri la città della moda e del design come un locale.",
+          en: "Book your stay at the Brera Apartment and discover the city of fashion and design like a local.",
+          es: "Reservá tu estadía en el Brera Apartment y descubrí la ciudad de la moda y el diseño como un local.",
+          de: "Buchen Sie Ihren Aufenthalt im Brera Apartment und entdecken Sie die Stadt der Mode und des Designs wie ein Einheimischer.",
+        },
+      },
+
+      footerTagline: {
+        it: "Arte, design e vita autentica nel cuore di Brera",
+        en: "Art, design and authentic life in the heart of Brera",
+        es: "Arte, diseño y vida auténtica en el corazón de Brera",
+        de: "Kunst, Design und authentisches Leben im Herzen von Brera",
       },
     },
   ],
