@@ -42,7 +42,6 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [ctaOpen, setCtaOpen] = useState(false);
   const [translateX, setTranslateX] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -58,7 +57,6 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   // Separate refs for desktop/mobile filter — both exist in DOM simultaneously (one hidden via CSS)
   const filterDesktopRef = useRef<HTMLDivElement>(null);
   const filterMobileRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const toursContainerRef = useRef<HTMLDivElement>(null);
 
@@ -83,17 +81,10 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     [properties, selectedZones]
   );
 
-  // Memoize CTA items — derived from filtered properties and locale
-  const ctaItems = useMemo(
-    () =>
-      filteredProperties
-        .filter((p) => p.hero.ctaUrl ?? p.airbnbUrl)
-        .map((p) => ({
-          label: p.hero.ctaLabel ? loc(p.hero.ctaLabel, locale) : loc(p.hero.title, locale),
-          url: (p.hero.ctaUrl ?? p.airbnbUrl) as string,
-        })),
-    [filteredProperties, locale]
-  );
+  const selectedProperty = properties.find((p) => p.id === selectedPropertyId) ?? properties[0];
+  const ctaUrl = hero?.ctaSingle
+    ? hero.ctaSingle.url
+    : (selectedProperty?.hero.ctaUrl ?? selectedProperty?.airbnbUrl);
 
   // Measure the real max scroll distance via ResizeObserver (async callback — no setState-in-effect issue)
   useEffect(() => {
@@ -139,18 +130,6 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [filterOpen]);
-
-  // Close CTA dropdown on outside click
-  useEffect(() => {
-    if (!ctaOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (ctaRef.current && !ctaRef.current.contains(e.target as Node)) {
-        setCtaOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [ctaOpen]);
 
   // Sync mobile carousel scroll position → scrollbar thumb
   useEffect(() => {
@@ -257,7 +236,6 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   };
 
   const isFiltered = selectedZones.length > 0;
-  const isSingleCta = !!hero?.ctaSingle;
 
   // Desktop scrollbar thumb geometry
   const desktopThumbWidth = containerWidth > 0 && maxScrollOffset > 0
@@ -315,50 +293,20 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
             </p>
           )}
 
-          {hero && (
-            <div ref={ctaRef} className="relative">
-              {isSingleCta ? (
-                <a
-                  href={hero.ctaSingle!.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold px-7 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105 text-sm"
-                >
-                  {loc(hero.ctaLabel, locale)}
-                </a>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setCtaOpen((o) => !o)}
-                    aria-expanded={ctaOpen}
-                    aria-haspopup="listbox"
-                    className="inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold px-7 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105 text-sm"
-                  >
-                    {loc(hero.ctaLabel, locale)}
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-
-                  {ctaOpen && ctaItems.length > 0 && (
-                    <div className="absolute left-0 top-full mt-2 w-56 bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50">
-                      {ctaItems.map((item) => (
-                        <a
-                          key={item.url}
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setCtaOpen(false)}
-                          className="block px-5 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </>
+          {hero && ctaUrl && (
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="self-start inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold px-7 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105 text-sm"
+            >
+              {loc(hero.ctaLabel, locale)}
+              {!hero.ctaSingle && (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
               )}
-            </div>
+            </a>
           )}
         </div>
 
