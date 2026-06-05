@@ -48,7 +48,7 @@ const config: ClientConfig = {
       airbnbUrl:
         "https://es.airbnb.com/rooms/1005789413503850183",
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7Mzpz?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7Mzpz?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://www.google.com/maps?q=41.907142,12.503251&z=16&output=embed",
 
@@ -247,7 +247,7 @@ const config: ClientConfig = {
       airbnbUrl:
         "https://es.airbnb.com/rooms/39883216",
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=0&vr=0&sd=1&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://www.google.com/maps?q=Via+Sapri,+6,+00185+Roma+RM&z=16&output=embed",
 
