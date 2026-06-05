@@ -35,7 +35,7 @@ apps/web/
 │       └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
 ├── components/           # Un componente por sección de la página
 │   ├── Navbar.tsx
-│   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der); mobile: scroll libre con scrollbar custom sincronizado (drag + click). Los overlays sobre el iframe de Kuula tienen `pointer-events-none` en el contenedor y `pointer-events-auto` solo en los elementos interactivos.
+│   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der); mobile: scroll libre con scrollbar custom sincronizado (drag + click). Los overlays sobre el iframe de Kuula tienen `pointer-events-none` en el contenedor y `pointer-events-auto` solo en los elementos interactivos. Los iframes de Kuula se lazy-cargan via `IntersectionObserver` (threshold 15%): el `src` se setea solo cuando la card es ≥15% visible y se limpia al salir — máximo 2 iframes WebGL activos en simultáneo en mobile.
 │   ├── PropertySections.tsx  # Wrapper que renderiza secciones por propiedad
 │   ├── DescriptionSection.tsx
 │   ├── LocationSection.tsx
