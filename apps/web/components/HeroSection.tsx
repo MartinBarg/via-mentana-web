@@ -469,14 +469,29 @@ function TourCard({
   selectLabel: string;
   selectedLabel: string;
 }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [iframeActive, setIframeActive] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || !property.kuulaEmbedUrl) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIframeActive(entry.isIntersecting),
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [property.kuulaEmbedUrl]);
+
   return (
     <div
+      ref={cardRef}
       className="relative rounded-2xl overflow-hidden flex-shrink-0 h-full border border-white/10"
       style={cardWidthPx ? { width: cardWidthPx } : { width: "100%" }}
     >
       {property.kuulaEmbedUrl ? (
         <iframe
-          src={property.kuulaEmbedUrl}
+          src={iframeActive ? property.kuulaEmbedUrl : undefined}
           width="100%"
           height="100%"
           frameBorder="0"
