@@ -477,7 +477,7 @@ function TourCard({
     if (!el || !property.kuulaEmbedUrl) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIframeActive(entry.isIntersecting),
-      { threshold: 0.1 }
+      { threshold: 0.5 }
     );
     observer.observe(el);
     return () => observer.disconnect();
