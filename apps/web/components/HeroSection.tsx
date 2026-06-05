@@ -545,8 +545,8 @@ function TourCard({
       {/* Gradient background — no pointer events so the 3D tour stays interactive */}
       <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-charcoal/70 to-transparent pointer-events-none" />
 
-      {/* Title + select button */}
-      <div className="absolute inset-x-0 top-0 px-5 pt-4">
+      {/* Title + select button — pointer-events-none on container so Kuula's fullscreen button stays clickable */}
+      <div className="absolute inset-x-0 top-0 px-5 pt-4 pointer-events-none">
         <p
           className="text-ivory text-lg font-semibold drop-shadow"
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
@@ -556,11 +556,10 @@ function TourCard({
         {showSelectButton && (
           <button
             onClick={onSelect}
-            className={
-              isSelected
+            className={`pointer-events-auto ` + (isSelected
                 ? "mt-2 flex items-center gap-1.5 bg-terracotta text-ivory text-xs font-medium px-3 py-1 rounded-full"
                 : "mt-2 text-ivory border border-white/40 text-xs font-medium px-3 py-1 rounded-full hover:border-white/70 transition-colors"
-            }
+            )}
           >
             {isSelected && (
               <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
