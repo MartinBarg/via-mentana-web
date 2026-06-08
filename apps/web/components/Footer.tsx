@@ -11,7 +11,7 @@ export default function Footer({ brandName, tagline }: FooterProps) {
   const t = useTranslations("footer");
 
   return (
-    <footer className="bg-charcoal text-ivory/60 py-10 px-6">
+    <footer className="bg-charcoal text-ivory/60 py-5 px-6">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <p
@@ -34,7 +34,7 @@ export default function Footer({ brandName, tagline }: FooterProps) {
         </div>
 
         <p className="text-xs text-ivory/30">
-          © {new Date().getFullYear()} · {t("credits")}
+          © {new Date().getFullYear()}
         </p>
       </div>
     </footer>

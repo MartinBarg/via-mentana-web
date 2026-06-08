@@ -1,7 +1,7 @@
 {
   "nav": {
     "tour360": "Tour 360",
-    "descriptionLink": "Lo Studio",
+    "descriptionLink": "Descrizione",
     "locationLink": "Posizione",
     "reviewsLink": "Recensioni"
   },
@@ -32,7 +32,7 @@
     "links": {
       "top": "Torna su"
     },
-    "credits": "Sviluppato con passione per Roma"
+    "credits": ""
   },
   "hero": {
     "filterLabel": "Posizione",
