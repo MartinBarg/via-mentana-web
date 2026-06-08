@@ -5,6 +5,7 @@ import type { ClientConfig } from "./types/client";
 const CLIENT_LOADERS: Record<string, () => Promise<{ default: ClientConfig }>> = {
   "via-mentana": () => import("../clients/via-mentana/config"),
   "nombre-de-cliente": () => import("../clients/nombre-de-cliente/config"),
+  "finca-caballo-blanco": () => import("../clients/finca-caballo-blanco/config"),
 };
 
 export const getClientConfig = cache(async (): Promise<ClientConfig> => {
