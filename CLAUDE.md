@@ -31,8 +31,10 @@ La app corre en `apps/web/` pero los scripts del workspace raíz (`package.json`
 apps/web/
 ├── app/[locale]/         # Rutas dinámicas por idioma (page.tsx, layout.tsx)
 ├── clients/              # Un directorio por cliente
-│   └── via-mentana/
-│       └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
+│   ├── via-mentana/
+│   │   └── config.ts     # Config completo del cliente (textos en 4 idiomas, URLs, reseñas)
+│   └── finca-caballo-blanco/
+│       └── config.ts
 ├── components/           # Un componente por sección de la página
 │   ├── Navbar.tsx
 │   ├── HeroSection.tsx   # Layout dos columnas: tagline+CTA (izq) + tour cards con scroll-hijack y filtro de zona (der); mobile: scroll libre con scrollbar custom sincronizado (drag + click). Los overlays sobre el iframe de Kuula tienen `pointer-events-none` en el contenedor y `pointer-events-auto` solo en los elementos interactivos. Los iframes de Kuula se lazy-cargan via `IntersectionObserver` (threshold 15%): el `src` se setea solo cuando la card es ≥15% visible y se limpia al salir — máximo 2 iframes WebGL activos en simultáneo en mobile.
@@ -81,7 +83,7 @@ Tipografía: **Playfair Display** (headings) + **Inter** (body), cargadas desde 
 
 Las URLs ya no están hardcodeadas en componentes. Viven en `clients/<id>/config.ts`:
 
-- **Airbnb:** `property.airbnbUrl`
+- **Airbnb:** `property.airbnbUrl` — opcional; omitir si el cliente usa Booking.com u otra plataforma. El CTA principal siempre va en `hero.ctaSingle.url`
 - **Kuula:** `property.kuulaEmbedUrl`
 - **Google Maps:** `property.googleMapsEmbedUrl`
 - **Banderas:** CDN `flagcdn.com` en `Navbar.tsx` (esta sí es fija, es infraestructura)
