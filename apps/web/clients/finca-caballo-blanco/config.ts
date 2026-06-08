@@ -25,12 +25,11 @@ const config: ClientConfig = {
 
   properties: [
     {
-      id: "finca-caballo-blanco",
-      airbnbUrl: "https://www.booking.com/hotel/es/finca-caballo-blanco.html",
+      id: "habitacion-1",
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Finca+Caballo+Blanco,+Montu%C3%AFri,+Mallorca&output=embed",
+        "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2000!2d3.036855!3d39.561988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1",
 
       hero: {
         title: {
@@ -77,7 +76,7 @@ const config: ClientConfig = {
           de: "Montuïri, Mallorca",
         },
         description: {
-          it: "Situata nel comune di Montuïri, nel centro di Maiorca, la finca si trova in piena natura tra campi e silenzio. A pochi chilometri dalle principali attrazioni dell'isola — spiagge, borghi storici e mercati locali — con facile accesso in auto dall'aeropuerto e da Palma.",
+          it: "Situata nel comune di Montuïri, nel centro di Maiorca, la finca si trova in piena natura tra campi e silenzio. A pochi chilometri dalle principali attrazioni dell'isola — spiagge, borghi storici e mercati locali — con facile accesso in auto dall'aeroporto e da Palma.",
           en: "Located in the municipality of Montuïri, in central Mallorca, the finca sits in the middle of nature surrounded by fields and silence. Just a few kilometres from the island's main attractions — beaches, historic villages and local markets — with easy car access from the airport and Palma.",
           es: "Ubicada en el municipio de Montuïri, en el centro de Mallorca, la finca se encuentra en plena naturaleza entre campos y silencio. A pocos kilómetros de las principales atracciones de la isla — playas, pueblos históricos y mercados locales — con fácil acceso en coche desde el aeropuerto y Palma.",
           de: "Im Gemeindegebiet Montuïri, im Herzen Mallorcas gelegen, befindet sich die Finca mitten in der Natur zwischen Feldern und Stille. Nur wenige Kilometer von den Hauptattraktionen der Insel entfernt — Strände, historische Dörfer und lokale Märkte — mit einfachem Fahrzeugzugang vom Flughafen und Palma.",
@@ -187,7 +186,7 @@ const config: ClientConfig = {
               it: "È una casa di campagna con cavalli, hanno un'area comune molto bella, con piscina e zona prendisole.",
               en: "It's a country house with horses, they have a very nice common area, with a pool and a sunbathing spot.",
               es: "Es una casa de campo con caballos, tienen una zona común que está muy bien, con piscina, y zona para tomar el sol.",
-              de: "Es ist ein Landhaus mit Pferden, sie haben einen sehr schönen Gemeinschaftsbereich, mit Pool und Sonnentetrasse.",
+              de: "Es ist ein Landhaus mit Pferden, sie haben einen sehr schönen Gemeinschaftsbereich, mit Pool und Sonnenterrasse.",
             },
           },
           {
