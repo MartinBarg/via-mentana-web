@@ -3,6 +3,7 @@ import type { ClientConfig } from "../../lib/types/client";
 const config: ClientConfig = {
   id: "finca-caballo-blanco",
   brandName: "Finca Caballo Blanco",
+  brandLogoUrl: "/logo-finca-caballo-blanco.png",
   heroToursCount: 1,
 
   hero: {
