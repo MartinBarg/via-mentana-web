@@ -1,7 +1,7 @@
 {
   "nav": {
     "tour360": "360 Tour",
-    "descriptionLink": "The Studio",
+    "descriptionLink": "Description",
     "locationLink": "Location",
     "reviewsLink": "Reviews"
   },
@@ -32,7 +32,7 @@
     "links": {
       "top": "Back to top"
     },
-    "credits": "Crafted with passion for Rome"
+    "credits": ""
   },
   "hero": {
     "filterLabel": "Location",

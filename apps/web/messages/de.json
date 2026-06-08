@@ -1,7 +1,7 @@
 {
   "nav": {
     "tour360": "360° Tour",
-    "descriptionLink": "Das Studio",
+    "descriptionLink": "Beschreibung",
     "locationLink": "Lage",
     "reviewsLink": "Bewertungen"
   },
@@ -32,7 +32,7 @@
     "links": {
       "top": "Nach oben"
     },
-    "credits": "Mit Leidenschaft für Rom entwickelt"
+    "credits": ""
   },
   "hero": {
     "filterLabel": "Standort",

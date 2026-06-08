@@ -62,10 +62,10 @@ const config: ClientConfig = {
 
       description: {
         title: {
-          it: "Lo Studio",
-          en: "The Studio",
-          es: "El Studio",
-          de: "Das Studio",
+          it: "Descrizione",
+          en: "Description",
+          es: "Descripción",
+          de: "Beschreibung",
         },
         body: {
           it: "Lo studio dispone di un comodo letto matrimoniale, una zona cucina completamente attrezzata con tutto il necessario per cucinare, piano d'appoggio e ampio spazio di deposito. Bagno privato completo, armadio e ampio spazio per riporre gli oggetti di uso quotidiano.",

@@ -1,7 +1,7 @@
 {
   "nav": {
     "tour360": "Tour 360",
-    "descriptionLink": "El Studio",
+    "descriptionLink": "Descripción",
     "locationLink": "Ubicación",
     "reviewsLink": "Reseñas"
   },
@@ -32,7 +32,7 @@
     "links": {
       "top": "Volver arriba"
     },
-    "credits": "Hecho con pasión por Roma"
+    "credits": ""
   },
   "hero": {
     "filterLabel": "Ubicación",
