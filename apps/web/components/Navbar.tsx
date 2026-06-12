@@ -179,8 +179,11 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
   ] as const;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${transparent ? "bg-black/20" : "bg-ivory/95 border-b border-ochre/20"}`}>
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
+    <nav className={`fixed top-0 left-0 right-0 z-50 ${transparent ? "" : "bg-ivory/95 backdrop-blur-sm border-b border-ochre/20"}`}>
+      {transparent && (
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent pointer-events-none" />
+      )}
+      <div className="relative max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
         {/* Brand + selected property chip */}
         <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
