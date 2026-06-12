@@ -53,6 +53,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         brandLogoUrl={config.brandLogoUrl}
         cta={navCta}
         selectedPropertyLabel={selectedPropertyLabel}
+        transparent={config.transparentNav}
       />
       <HeroSection
         properties={heroProperties}

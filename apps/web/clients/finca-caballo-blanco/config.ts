@@ -5,6 +5,7 @@ const config: ClientConfig = {
   brandName: "Finca Caballo Blanco",
   brandLogoUrl: "/logo-finca-caballo-blanco.png",
   backgroundImageUrl: "/cabalgata.jpg",
+  transparentNav: true,
   heroToursCount: 1,
 
   hero: {

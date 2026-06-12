@@ -22,6 +22,7 @@ interface NavbarProps {
   brandLogoUrl?: string;
   cta?: NavCtaConfig;
   selectedPropertyLabel?: string;
+  transparent?: boolean;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -110,7 +111,7 @@ function CtaButton({
   );
 }
 
-export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyLabel }: NavbarProps) {
+export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyLabel, transparent }: NavbarProps) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
@@ -178,7 +179,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
   ] as const;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-ivory/95 backdrop-blur-sm border-b border-ochre/20">
+    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${transparent ? "bg-transparent border-b border-white/10" : "bg-ivory/95 border-b border-ochre/20"}`}>
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
         {/* Brand + selected property chip */}
@@ -201,7 +202,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
               </span>
             )}
             <span
-              className="text-lg md:text-xl text-charcoal"
+              className={`text-lg md:text-xl ${transparent ? "text-ivory" : "text-charcoal"}`}
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               {brandName}
@@ -209,7 +210,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
           </div>
           {selectedPropertyLabel && (
             <span
-              className={`text-xs text-warm-gray bg-ochre/10 border border-ochre/20 px-2.5 py-1 rounded-full whitespace-nowrap transition-all duration-300 ${
+              className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap transition-all duration-300 ${transparent ? "text-ivory/70 bg-white/10 border border-white/20" : "text-warm-gray bg-ochre/10 border border-ochre/20"} ${
                 heroVisible ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
@@ -219,7 +220,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
         </div>
 
         {/* Nav links — desktop */}
-        <div className="hidden md:flex items-center gap-5 text-sm font-medium text-warm-gray">
+        <div className={`hidden md:flex items-center gap-5 text-sm font-medium ${transparent ? "text-ivory/80" : "text-warm-gray"}`}>
           {NAV_LINKS.map(({ id, label }) => (
             <button
               key={id}
@@ -262,7 +263,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
 
           {/* Hamburger — mobile only */}
           <button
-            className="md:hidden p-2 text-charcoal hover:text-terracotta transition-colors"
+            className={`md:hidden p-2 transition-colors ${transparent ? "text-ivory hover:text-ivory/70" : "text-charcoal hover:text-terracotta"}`}
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Menu"
           >
@@ -282,7 +283,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
             <button
               onClick={() => setLangOpen((v) => !v)}
               disabled={isPending}
-              className="flex items-center gap-1 p-1.5 rounded hover:bg-ochre/10 transition-colors"
+              className={`flex items-center gap-1 p-1.5 rounded transition-colors ${transparent ? "hover:bg-white/10" : "hover:bg-ochre/10"}`}
               aria-label="Cambiar idioma"
             >
               {(() => {
@@ -290,7 +291,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
                 return <FlagImage countryCode={current.countryCode} label={current.label} />;
               })()}
               <svg
-                className="w-3 h-3 text-warm-gray"
+                className={`w-3 h-3 ${transparent ? "text-ivory/60" : "text-warm-gray"}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2.5}
@@ -301,7 +302,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
             </button>
 
             {langOpen && (
-              <div className="absolute right-0 top-full mt-1 bg-ivory border border-ochre/20 rounded shadow-md py-1 z-50">
+              <div className={`absolute right-0 top-full mt-1 rounded shadow-md py-1 z-50 border ${transparent ? "bg-charcoal/90 border-white/10" : "bg-ivory border-ochre/20"}`}>
                 {LANGUAGES.filter((l) => l.code !== locale).map(({ code, countryCode, label }) => (
                   <button
                     key={code}
@@ -321,12 +322,12 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
 
       {/* Mobile dropdown menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-ochre/10 bg-ivory/98">
+        <div className={`md:hidden border-t ${transparent ? "border-white/10 bg-charcoal/90" : "border-ochre/10 bg-ivory/98"}`}>
           {NAV_LINKS.map(({ id, label }) => (
             <button
               key={id}
               onClick={() => handleNavClick(id)}
-              className="block w-full text-left px-6 py-3.5 text-sm text-warm-gray hover:text-terracotta hover:bg-ochre/5 transition-colors border-b border-ochre/5 last:border-0"
+              className={`block w-full text-left px-6 py-3.5 text-sm transition-colors border-b last:border-0 ${transparent ? "text-ivory/80 hover:text-ivory hover:bg-white/5 border-white/5" : "text-warm-gray hover:text-terracotta hover:bg-ochre/5 border-ochre/5"}`}
             >
               {label}
             </button>
