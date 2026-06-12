@@ -4,6 +4,7 @@ const config: ClientConfig = {
   id: "finca-caballo-blanco",
   brandName: "Finca Caballo Blanco",
   brandLogoUrl: "/logo-finca-caballo-blanco.png",
+  backgroundImageUrl: "/cabalgata.jpg",
   heroToursCount: 1,
 
   hero: {

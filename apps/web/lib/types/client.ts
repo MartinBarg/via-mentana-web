@@ -71,6 +71,7 @@ export interface ClientConfig {
   id: string;
   brandName: string;
   brandLogoUrl?: string;
+  backgroundImageUrl?: string;
   heroToursCount?: number;
   hero?: ClientHeroConfig;
   properties: PropertyConfig[];
