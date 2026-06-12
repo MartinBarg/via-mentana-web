@@ -268,7 +268,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
             <FilterCheckbox checked={selectedGuests === null} />
             {t("showAll")}
           </button>
-          {[1, 2, 3].map((n) => (
+          {[1, 2, 3, 4, 5, 6].map((n) => (
             <button
               key={n}
               onClick={() => toggleGuests(n)}

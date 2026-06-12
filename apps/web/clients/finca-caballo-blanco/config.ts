@@ -247,7 +247,7 @@ const config: ClientConfig = {
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
+        "https://maps.google.com/maps?q=39.562008,3.036865&hl=es&z=15&output=embed",
 
       hero: {
         title: {
@@ -310,7 +310,7 @@ const config: ClientConfig = {
       guests: 3,
       imageUrl: "https://images.unsplash.com/photo-1691357249360-8dfa92dda58d?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
+        "https://maps.google.com/maps?q=39.562008,3.036865&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Suite del Giardino",
@@ -348,7 +348,7 @@ const config: ClientConfig = {
       guests: 4,
       imageUrl: "https://images.unsplash.com/photo-1631724953362-965648cc302c?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
+        "https://maps.google.com/maps?q=39.562008,3.036865&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Habitación del Patio",
@@ -386,7 +386,7 @@ const config: ClientConfig = {
       guests: 6,
       imageUrl: "https://images.unsplash.com/photo-1681038246005-b300835f0282?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
+        "https://maps.google.com/maps?q=39.562008,3.036865&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Villa Completa",
