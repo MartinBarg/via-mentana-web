@@ -23,6 +23,8 @@ export interface POICategory {
 export interface PropertyConfig {
   id: string;
   zone?: string;
+  guests?: number;
+  imageUrl?: string;
   airbnbUrl?: string;
   kuulaEmbedUrl?: string;
   googleMapsEmbedUrl?: string;
@@ -64,6 +66,7 @@ export interface ClientHeroConfig {
   tagline: LocalizedString;
   ctaLabel: LocalizedString;
   zones?: HeroZone[];
+  guestFilter?: boolean;
   ctaSingle?: { url: string };
 }
 

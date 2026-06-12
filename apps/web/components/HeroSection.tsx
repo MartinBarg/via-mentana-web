@@ -42,6 +42,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const t = useTranslations("hero");
 
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
+  const [selectedGuests, setSelectedGuests] = useState<number | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [translateX, setTranslateX] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
@@ -74,13 +75,16 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   const zones = hero?.zones ?? [];
 
-  const filteredProperties = useMemo(
-    () =>
-      selectedZones.length === 0
+  const filteredProperties = useMemo(() => {
+    if (hero?.guestFilter) {
+      return selectedGuests === null
         ? properties
-        : properties.filter((p) => p.zone && selectedZones.includes(p.zone)),
-    [properties, selectedZones]
-  );
+        : properties.filter((p) => p.guests !== undefined && p.guests >= selectedGuests);
+    }
+    return selectedZones.length === 0
+      ? properties
+      : properties.filter((p) => p.zone && selectedZones.includes(p.zone));
+  }, [properties, selectedZones, selectedGuests, hero?.guestFilter]);
 
   const selectedProperty = properties.find((p) => p.id === selectedPropertyId) ?? properties[0];
   const ctaUrl = hero?.ctaSingle
@@ -236,7 +240,12 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     );
   };
 
-  const isFiltered = selectedZones.length > 0;
+  const toggleGuests = (n: number) => {
+    setTranslateX(0);
+    setSelectedGuests((prev) => (prev === n ? null : n));
+  };
+
+  const isFiltered = hero?.guestFilter ? selectedGuests !== null : selectedZones.length > 0;
 
   // Desktop scrollbar thumb geometry
   const desktopThumbWidth = containerWidth > 0 && maxScrollOffset > 0
@@ -249,26 +258,47 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   // Shared filter dropdown content (used in both desktop and mobile)
   const filterDropdown = (width: string) => (
     <div className={`absolute left-0 top-full mt-2 ${width} bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50`}>
-      <button
-        onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
-        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
-      >
-        <FilterCheckbox checked={!isFiltered} />
-        {t("showAll")}
-      </button>
-      {zones.map((zone) => {
-        const checked = selectedZones.includes(zone.id);
-        return (
+      {hero?.guestFilter ? (
+        <>
           <button
-            key={zone.id}
-            onClick={() => toggleZone(zone.id)}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+            onClick={() => { setTranslateX(0); setSelectedGuests(null); setFilterOpen(false); }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
           >
-            <FilterCheckbox checked={checked} />
-            {loc(zone.label, locale)}
+            <FilterCheckbox checked={selectedGuests === null} />
+            {t("showAll")}
           </button>
-        );
-      })}
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <button
+              key={n}
+              onClick={() => toggleGuests(n)}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+            >
+              <FilterCheckbox checked={selectedGuests === n} />
+              {n}+
+            </button>
+          ))}
+        </>
+      ) : (
+        <>
+          <button
+            onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
+          >
+            <FilterCheckbox checked={!isFiltered} />
+            {t("showAll")}
+          </button>
+          {zones.map((zone) => (
+            <button
+              key={zone.id}
+              onClick={() => toggleZone(zone.id)}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+            >
+              <FilterCheckbox checked={selectedZones.includes(zone.id)} />
+              {loc(zone.label, locale)}
+            </button>
+          ))}
+        </>
+      )}
     </div>
   );
 
@@ -317,9 +347,9 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
           {/* Filter button + desktop scrollbar row */}
-          {(zones.length > 0 || maxScrollOffset > 0) && (
+          {(zones.length > 0 || hero?.guestFilter || maxScrollOffset > 0) && (
           <div className="relative flex items-center gap-3 mb-4 flex-shrink-0">
-            {zones.length > 0 && (
+            {(zones.length > 0 || hero?.guestFilter) && (
               <div ref={filterDesktopRef} className="relative flex-shrink-0">
                 <button
                   onClick={() => setFilterOpen((o) => !o)}
@@ -328,14 +358,18 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                   className="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium px-4 py-2 rounded-full border border-white/20 transition-colors"
                 >
                   <FunnelIcon className="w-4 h-4" />
-                  {t("filterLabel")}
+                  {hero?.guestFilter
+                    ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                    : t("filterLabel")}
                 </button>
-                {filterOpen && filterDropdown("w-56")}
+                {filterOpen && filterDropdown("w-44")}
               </div>
             )}
 
             {isFiltered && (
-              <span className="text-ivory/60 text-xs flex-shrink-0">{t("filteredBadge")}</span>
+              <span className="text-ivory/60 text-xs flex-shrink-0">
+                {hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
+              </span>
             )}
 
             {maxScrollOffset > 0 && (
@@ -389,7 +423,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
           {/* Filter button + tour scrollbar — same row */}
           <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
-            {zones.length > 0 && (
+            {(zones.length > 0 || hero?.guestFilter) && (
               <button
                 onClick={() => setFilterOpen((o) => !o)}
                 aria-expanded={filterOpen}
@@ -397,11 +431,15 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 className="flex items-center gap-2 bg-white/10 text-ivory text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 flex-shrink-0"
               >
                 <FunnelIcon className="w-3.5 h-3.5" />
-                {t("filterLabel")}
+                {hero?.guestFilter
+                  ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                  : t("filterLabel")}
               </button>
             )}
             {isFiltered && (
-              <span className="text-ivory/60 text-xs flex-shrink-0">{t("filteredBadge")}</span>
+              <span className="text-ivory/60 text-xs flex-shrink-0">
+                {hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
+              </span>
             )}
 
             {/* Tour position scrollbar — flex-1 so it shrinks when filter badge appears */}
@@ -504,6 +542,13 @@ function TourCard({
           scrolling="no"
           className="absolute inset-0 w-full h-full"
           style={{ touchAction: "none" }}
+        />
+      ) : property.imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={property.imageUrl}
+          alt={loc(property.hero.title, locale)}
+          className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (
         <div className="absolute inset-0 bg-white/5" />
