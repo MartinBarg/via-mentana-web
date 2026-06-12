@@ -44,7 +44,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
     <main>
       {config.backgroundImageUrl && (
         <div
-          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat bg-charcoal"
           style={{ backgroundImage: `url(${config.backgroundImageUrl})` }}
         />
       )}
