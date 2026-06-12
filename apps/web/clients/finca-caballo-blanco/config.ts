@@ -223,10 +223,10 @@ const config: ClientConfig = {
 
   hero: {
     tagline: {
-      it: "Scopri uno spazio dove il tempo si ferma tra cavalli e paesaggi mediterranei",
-      en: "Discover a space where time stands still among horses and Mediterranean landscapes",
-      es: "Descubrí un espacio donde el tiempo se detiene entre caballos y paisajes mediterráneos",
-      de: "Entdecke einen Ort, wo die Zeit zwischen Pferden und mediterranen Landschaften stillsteht",
+      it: "Scopri uno spazio dove il tempo si ferma",
+      en: "Discover a space where time stands still",
+      es: "Descubrí un espacio donde el tiempo se detiene",
+      de: "Entdecke einen Ort, wo die Zeit stillsteht",
     },
     ctaLabel: {
       it: "Prenota",
@@ -247,7 +247,7 @@ const config: ClientConfig = {
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
 
       hero: {
         title: {
@@ -266,22 +266,21 @@ const config: ClientConfig = {
 
       description: {
         title: {
-          it: "La Finca",
-          en: "The Finca",
-          es: "La Finca",
-          de: "Die Finca",
+          it: "Appartamento degli Ulivi",
+          en: "Olivares Apartment",
+          es: "Departamento Olivares",
+          de: "Olivenhain-Apartment",
         },
         body: {
-          it: "Finca Caballo Blanco è un autentico agriturismo nel cuore di Maiorca, circondato da natura, ulivi e cavalli al pascolo. Goditi la piscina, i giardini e la tranquillità della campagna maiorchina lontano dal caos della città. Un'esperienza unica per chi cerca pace, contatto con gli animali e la bellezza dell'isola.",
-          en: "Finca Caballo Blanco is an authentic rural retreat in the heart of Mallorca, surrounded by nature, olive trees and free-roaming horses. Enjoy the pool, the gardens and the tranquility of the Mallorcan countryside far from city noise. A unique experience for those seeking peace, connection with animals and the beauty of the island.",
-          es: "Finca Caballo Blanco es un retiro rural auténtico en el corazón de Mallorca, rodeado de naturaleza, olivos y caballos en libertad. Disfrutá de la piscina, los jardines y la tranquilidad del campo mallorquín lejos del ruido de la ciudad. Una experiencia única para quienes buscan paz, contacto con animales y la belleza de la isla.",
-          de: "Finca Caballo Blanco ist ein authentisches Landgut im Herzen Mallorcas, umgeben von Natur, Olivenbäumen und frei laufenden Pferden. Genießen Sie den Pool, die Gärten und die Ruhe der mallorquinischen Landschaft, fern vom Stadtlärm. Ein einzigartiges Erlebnis für alle, die Frieden, Tierkontakt und die Schönheit der Insel suchen.",
+          it: "Un nido intimo per due, con pareti in pietra calcarea e travi a vista che portano con sé secoli di storia mallorchina. La luce entra morbida dalla finestra con vista sugli ulivi. Tutto qui parla di semplicità e cura: lenzuola di lino bianco, pavimenti di terracotta, silenzio. Ideale per una fuga in coppia in piena natura.",
+          en: "An intimate nest for two, with limestone walls and exposed wooden beams that carry centuries of Mallorcan history. Light filters softly through the window overlooking the olive trees. Everything speaks of simplicity and care: white linen sheets, terracotta floors, silence. Ideal for a couples' escape in the heart of nature.",
+          es: "Un nido íntimo para dos, con paredes de piedra caliza y vigas de madera a la vista que llevan siglos de historia mallorquina. La luz entra suave por la ventana con vista a los olivos. Todo habla de simplicidad y cuidado: sábanas de lino blanco, pisos de terracota, silencio. Ideal para una escapada en pareja en plena naturaleza.",
+          de: "Ein intimes Nest für zwei, mit Kalksteinwänden und sichtbaren Holzbalken, die Jahrhunderte mallorquinischer Geschichte tragen. Das Licht fällt sanft durch das Fenster mit Blick auf die Olivenbäume. Alles spricht von Einfachheit und Sorgfalt: weiße Leinenbettwäsche, Terrakottaböden, Stille. Ideal für einen Paarurlaub inmitten der Natur.",
         },
         amenityKeys: ["wifi", "fridge", "kitchen", "bathroom"],
       },
 
       location: sharedLocation,
-
       reviews: sharedReviews,
 
       cta: {
@@ -309,9 +308,9 @@ const config: ClientConfig = {
     {
       id: "suite-jardin",
       guests: 3,
+      imageUrl: "https://images.unsplash.com/photo-1691357249360-8dfa92dda58d?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
-      imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=960&q=80",
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Suite del Giardino",
@@ -326,15 +325,30 @@ const config: ClientConfig = {
           de: "Privater Pool und Olivengarten",
         },
       },
+      description: {
+        title: {
+          it: "Suite del Giardino",
+          en: "Garden Suite",
+          es: "Suite del Jardín",
+          de: "Gartensuite",
+        },
+        body: {
+          it: "La suite più luminosa della finca, con accesso diretto al giardino degli ulivi e alla piscina. Perfetta per chi vuole svegliarsi con il profumo del Mediterraneo e fare il bagno mattutino tra i silenzi della campagna. Tre posti letto, una terrazza con tavolo in pietra e l'ombra degli ulivi centenari.",
+          en: "The brightest suite on the finca, with direct access to the olive garden and pool. Perfect for those who want to wake up to the scent of the Mediterranean and take a morning swim in the silence of the countryside. Three beds, a stone terrace and the shade of centuries-old olive trees.",
+          es: "La suite más luminosa de la finca, con acceso directo al jardín de olivos y a la piscina. Perfecta para quienes quieren despertarse con el aroma del Mediterráneo y darse un baño mañanero entre los silencios del campo. Tres camas, una terraza con mesa de piedra y la sombra de los olivos centenarios.",
+          de: "Die hellste Suite der Finca, mit direktem Zugang zum Olivengarten und Pool. Perfekt für alle, die mit dem Duft des Mittelmeers aufwachen und am Morgen im Schweigen des Landes schwimmen möchten. Drei Betten, eine Steinteasse und der Schatten jahrhundertealter Olivenbäume.",
+        },
+        amenityKeys: ["wifi", "fridge", "bathroom"],
+      },
       location: sharedLocation,
       reviews: sharedReviews,
     },
     {
       id: "habitacion-patio",
       guests: 4,
+      imageUrl: "https://images.unsplash.com/photo-1631724953362-965648cc302c?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
-      imageUrl: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=960&q=80",
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Habitación del Patio",
@@ -349,15 +363,30 @@ const config: ClientConfig = {
           de: "Authentischer Patio mit Bergblick",
         },
       },
+      description: {
+        title: {
+          it: "Habitación del Patio",
+          en: "Patio Room",
+          es: "Habitación del Patio",
+          de: "Patio-Zimmer",
+        },
+        body: {
+          it: "Quattro posti letto distribuiti in un ambiente autentico con accesso diretto al patio in pietra della finca. Le mattine qui iniziano con colazione all'aperto mentre le montagne di Maiorca si stagliano all'orizzonte e i cavalli pascolano liberi nei campi. La stanza ideale per famiglie o piccoli gruppi che vogliono vivere la finca nella sua dimensione più vera.",
+          en: "Four beds in an authentic room with direct access to the finca's stone patio. Mornings here start with breakfast outdoors while the Mallorcan mountains rise on the horizon and horses roam free in the fields. The ideal room for families or small groups who want to experience the finca at its most authentic.",
+          es: "Cuatro camas en un ambiente auténtico con acceso directo al patio de piedra de la finca. Las mañanas empiezan con desayuno al aire libre mientras las montañas de Mallorca se recortan en el horizonte y los caballos pastan en libertad. La habitación ideal para familias o grupos pequeños que quieren vivir la finca en su dimensión más real.",
+          de: "Vier Betten in einem authentischen Ambiente mit direktem Zugang zum Steinpatio der Finca. Die Morgen beginnen hier mit Frühstück im Freien, während die mallorquinischen Berge am Horizont aufsteigen und Pferde frei auf den Feldern grasen. Das ideale Zimmer für Familien oder kleine Gruppen, die die Finca in ihrer echtesten Form erleben wollen.",
+        },
+        amenityKeys: ["wifi", "fridge", "bathroom"],
+      },
       location: sharedLocation,
       reviews: sharedReviews,
     },
     {
       id: "villa-completa",
       guests: 6,
+      imageUrl: "https://images.unsplash.com/photo-1681038246005-b300835f0282?w=960&q=80",
       googleMapsEmbedUrl:
-        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
-      imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=960&q=80",
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Balearic+Islands&hl=es&z=15&output=embed",
       hero: {
         title: {
           it: "Villa Completa",
@@ -371,6 +400,21 @@ const config: ClientConfig = {
           es: "Toda la finca para tu grupo",
           de: "Die gesamte Finca für Ihre Gruppe",
         },
+      },
+      description: {
+        title: {
+          it: "Villa Completa",
+          en: "Full Villa",
+          es: "Villa Completa",
+          de: "Komplette Villa",
+        },
+        body: {
+          it: "Tutta la finca è vostra. Sei posti letto, piscina, patio, giardino degli ulivi, e i cavalli come vicini di casa. La scelta perfetta per gruppi di amici o famiglie allargate che vogliono vivere Maiorca in totale privacy, senza dividere spazi con nessuno. Notti stellate, barbecue al tramonto e la campagna mallorchina tutta per voi.",
+          en: "The entire finca is yours. Six beds, pool, patio, olive garden, and horses as neighbours. The perfect choice for groups of friends or extended families who want to experience Mallorca in total privacy, without sharing spaces with anyone. Starry nights, barbecues at sunset and the Mallorcan countryside all to yourselves.",
+          es: "Toda la finca es tuya. Seis camas, piscina, patio, jardín de olivos, y los caballos como vecinos. La elección perfecta para grupos de amigos o familias numerosas que quieren vivir Mallorca en total privacidad, sin compartir espacios con nadie. Noches estrelladas, asados al atardecer y el campo mallorquín todo para ustedes.",
+          de: "Die gesamte Finca gehört euch. Sechs Betten, Pool, Patio, Olivengarten und Pferde als Nachbarn. Die perfekte Wahl für Freundesgruppen oder große Familien, die Mallorca in völliger Privatsphäre erleben wollen, ohne Räume mit anderen zu teilen. Sternennächte, Grillabende bei Sonnenuntergang und die mallorquinische Landschaft ganz für euch.",
+        },
+        amenityKeys: ["wifi", "fridge", "kitchen", "bathroom"],
       },
       location: sharedLocation,
       reviews: sharedReviews,

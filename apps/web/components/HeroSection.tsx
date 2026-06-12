@@ -243,6 +243,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const toggleGuests = (n: number) => {
     setTranslateX(0);
     setSelectedGuests((prev) => (prev === n ? null : n));
+    setFilterOpen(false);
   };
 
   const isFiltered = hero?.guestFilter ? selectedGuests !== null : selectedZones.length > 0;
@@ -267,14 +268,14 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
             <FilterCheckbox checked={selectedGuests === null} />
             {t("showAll")}
           </button>
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3].map((n) => (
             <button
               key={n}
               onClick={() => toggleGuests(n)}
               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
             >
               <FilterCheckbox checked={selectedGuests === n} />
-              {n}+
+              {n}
             </button>
           ))}
         </>
@@ -357,7 +358,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 >
                   <FunnelIcon className="w-4 h-4" />
                   {hero?.guestFilter
-                    ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                    ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
                     : t("filterLabel")}
                 </button>
                 {filterOpen && filterDropdown("w-44")}
@@ -430,7 +431,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               >
                 <FunnelIcon className="w-3.5 h-3.5" />
                 {hero?.guestFilter
-                  ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                  ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
                   : t("filterLabel")}
               </button>
             )}
