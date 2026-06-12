@@ -42,6 +42,12 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
 
   return (
     <main>
+      {config.backgroundImageUrl && (
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${config.backgroundImageUrl})` }}
+        />
+      )}
       <Navbar
         brandName={config.brandName}
         brandLogoUrl={config.brandLogoUrl}
@@ -54,6 +60,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         locale={locale}
         selectedPropertyId={selectedPropertyId}
         onSelectProperty={setSelectedPropertyId}
+        backgroundImageUrl={config.backgroundImageUrl}
       />
       {/* Sin key: todos los hijos son stateless. Si alguno suma useState en el futuro,
           agregar key={selectedProperty.id} aquí para forzar remount al cambiar propiedad */}
@@ -61,6 +68,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         <PropertySections
           property={selectedProperty}
           locale={locale}
+          backgroundImageUrl={config.backgroundImageUrl}
         />
       )}
       {selectedProperty?.cta && selectedProperty.airbnbUrl && (

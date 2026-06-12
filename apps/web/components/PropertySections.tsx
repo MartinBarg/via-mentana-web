@@ -6,12 +6,13 @@ import ReviewsSection from "./ReviewsSection";
 interface PropertySectionsProps {
   property: PropertyConfig;
   locale: string;
+  backgroundImageUrl?: string;
 }
 
-export default function PropertySections({ property, locale }: PropertySectionsProps) {
+export default function PropertySections({ property, locale, backgroundImageUrl }: PropertySectionsProps) {
   return (
     <div id={property.id}>
-      <DescriptionSection property={property} locale={locale} />
+      <DescriptionSection property={property} locale={locale} backgroundImageUrl={backgroundImageUrl} />
       <LocationSection property={property} locale={locale} />
       <ReviewsSection property={property} locale={locale} />
     </div>
