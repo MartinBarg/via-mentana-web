@@ -165,6 +165,19 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     setScrollbarThumb({ left: 0, width: widthPct });
   }, [filteredProperties]);
 
+  // Recalculate desktop maxScrollOffset when filtered properties change — ResizeObserver
+  // only fires on element size changes, not scrollWidth changes caused by filtering
+  useEffect(() => {
+    const track = trackRef.current;
+    const container = toursContainerRef.current;
+    if (!track || !container) return;
+    const raf = requestAnimationFrame(() => {
+      setMaxScrollOffset(Math.max(0, track.scrollWidth - container.clientWidth));
+      setContainerWidth(container.clientWidth);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [filteredProperties]);
+
   // Auto-select first visible property when the selected one is filtered out
   useEffect(() => {
     if (filteredProperties.length === 0) return;
@@ -243,6 +256,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const toggleGuests = (n: number) => {
     setTranslateX(0);
     setSelectedGuests((prev) => (prev === n ? null : n));
+    setFilterOpen(false);
   };
 
   const isFiltered = hero?.guestFilter ? selectedGuests !== null : selectedZones.length > 0;
@@ -274,7 +288,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
             >
               <FilterCheckbox checked={selectedGuests === n} />
-              {n}+
+              {n}
             </button>
           ))}
         </>
@@ -335,11 +349,9 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               className="self-start inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold px-7 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105 text-sm"
             >
               {loc(hero.ctaLabel, locale)}
-              {!hero.ctaSingle && (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              )}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
             </a>
           )}
         </div>
@@ -359,7 +371,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 >
                   <FunnelIcon className="w-4 h-4" />
                   {hero?.guestFilter
-                    ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                    ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
                     : t("filterLabel")}
                 </button>
                 {filterOpen && filterDropdown("w-44")}
@@ -432,7 +444,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               >
                 <FunnelIcon className="w-3.5 h-3.5" />
                 {hero?.guestFilter
-                  ? (selectedGuests !== null ? `${selectedGuests}+` : t("guestsLabel"))
+                  ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
                   : t("filterLabel")}
               </button>
             )}
