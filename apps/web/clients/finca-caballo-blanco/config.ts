@@ -1,5 +1,218 @@
 import type { ClientConfig } from "../../lib/types/client";
 
+const sharedLocation = {
+  title: {
+    it: "La Posizione",
+    en: "Location",
+    es: "Ubicación",
+    de: "Lage",
+  },
+  subtitle: {
+    it: "Montuïri, Maiorca",
+    en: "Montuïri, Mallorca",
+    es: "Montuïri, Mallorca",
+    de: "Montuïri, Mallorca",
+  },
+  description: {
+    it: "Situata nel comune di Montuïri, nel centro di Maiorca, la finca si trova in piena natura tra campi e silenzio. A pochi chilometri dalle principali attrazioni dell'isola — spiagge, borghi storici e mercati locali — con facile accesso in auto dall'aeroporto e da Palma.",
+    en: "Located in the municipality of Montuïri, in central Mallorca, the finca sits in the middle of nature surrounded by fields and silence. Just a few kilometres from the island's main attractions — beaches, historic villages and local markets — with easy car access from the airport and Palma.",
+    es: "Ubicada en el municipio de Montuïri, en el centro de Mallorca, la finca se encuentra en plena naturaleza entre campos y silencio. A pocos kilómetros de las principales atracciones de la isla — playas, pueblos históricos y mercados locales — con fácil acceso en coche desde el aeropuerto y Palma.",
+    de: "Im Gemeindegebiet Montuïri, im Herzen Mallorcas gelegen, befindet sich die Finca mitten in der Natur zwischen Feldern und Stille. Nur wenige Kilometer von den Hauptattraktionen der Insel entfernt — Strände, historische Dörfer und lokale Märkte — mit einfachem Fahrzeugzugang vom Flughafen und Palma.",
+  },
+  categories: [
+    {
+      key: "restaurant",
+      label: {
+        it: "Ristoranti",
+        en: "Restaurants",
+        es: "Restaurantes",
+        de: "Restaurants",
+      },
+      places: [
+        {
+          name: {
+            it: "Es Cruce (incrocio Palma–Manacor)",
+            en: "Es Cruce (Palma–Manacor crossroads)",
+            es: "Es Cruce (cruce Palma–Manacor)",
+            de: "Es Cruce (Kreuzung Palma–Manacor)",
+          },
+          distance: "2500",
+        },
+        {
+          name: {
+            it: "Sa Placa Montuïri",
+            en: "Sa Placa Montuïri",
+            es: "Sa Placa Montuïri",
+            de: "Sa Placa Montuïri",
+          },
+          distance: "3200",
+        },
+        {
+          name: {
+            it: "Can Matevet (Montuïri)",
+            en: "Can Matevet (Montuïri)",
+            es: "Can Matevet (Montuïri)",
+            de: "Can Matevet (Montuïri)",
+          },
+          distance: "3500",
+        },
+      ],
+    },
+    {
+      key: "beach",
+      label: {
+        it: "Spiagge",
+        en: "Beaches",
+        es: "Playas",
+        de: "Strände",
+      },
+      places: [
+        {
+          name: {
+            it: "Platja de Sa Ràpita",
+            en: "Platja de Sa Ràpita",
+            es: "Platja de Sa Ràpita",
+            de: "Platja de Sa Ràpita",
+          },
+          distance: "18000",
+        },
+        {
+          name: {
+            it: "Platja d'Es Trenc",
+            en: "Platja d'Es Trenc",
+            es: "Platja d'Es Trenc",
+            de: "Platja d'Es Trenc",
+          },
+          distance: "20000",
+        },
+        {
+          name: {
+            it: "Platja de Cala Pi",
+            en: "Platja de Cala Pi",
+            es: "Platja de Cala Pi",
+            de: "Platja de Cala Pi",
+          },
+          distance: "22000",
+        },
+      ],
+    },
+    {
+      key: "coffee",
+      label: {
+        it: "Bar e caffè",
+        en: "Bars & coffee",
+        es: "Bares y cafés",
+        de: "Bars & Cafés",
+      },
+      places: [
+        {
+          name: {
+            it: "Bar Es Dau (Montuïri)",
+            en: "Bar Es Dau (Montuïri)",
+            es: "Bar Es Dau (Montuïri)",
+            de: "Bar Es Dau (Montuïri)",
+          },
+          distance: "3100",
+        },
+        {
+          name: {
+            it: "Bar Can Pieres (Montuïri)",
+            en: "Bar Can Pieres (Montuïri)",
+            es: "Bar Can Pieres (Montuïri)",
+            de: "Bar Can Pieres (Montuïri)",
+          },
+          distance: "3400",
+        },
+      ],
+    },
+    {
+      key: "bus",
+      label: {
+        it: "Autobus",
+        en: "Bus",
+        es: "Bus",
+        de: "Bus",
+      },
+      places: [
+        {
+          name: {
+            it: "TIB Linea 491 (Montuïri → Palma)",
+            en: "TIB Line 491 (Montuïri → Palma)",
+            es: "TIB Línea 491 (Montuïri → Palma)",
+            de: "TIB Linie 491 (Montuïri → Palma)",
+          },
+          distance: "3200",
+        },
+      ],
+    },
+  ],
+};
+
+const sharedReviews = {
+  title: {
+    it: "Recensioni",
+    en: "Reviews",
+    es: "Reseñas",
+    de: "Bewertungen",
+  },
+  subtitle: {
+    it: "Cosa dicono i nostri ospiti",
+    en: "What our guests say",
+    es: "Lo que dicen nuestros huéspedes",
+    de: "Was unsere Gäste sagen",
+  },
+  items: [
+    {
+      id: "silvia",
+      author: "Silvia",
+      country: "España",
+      rating: 5,
+      comment: {
+        it: "È una casa di campagna con cavalli, hanno un'area comune molto bella, con piscina e zona prendisole.",
+        en: "It's a country house with horses, they have a very nice common area, with a pool and a sunbathing spot.",
+        es: "Es una casa de campo con caballos, tienen una zona común que está muy bien, con piscina, y zona para tomar el sol.",
+        de: "Es ist ein Landhaus mit Pferden, sie haben einen sehr schönen Gemeinschaftsbereich, mit Pool und Sonnenterrasse.",
+      },
+    },
+    {
+      id: "sergiu",
+      author: "Sergiu",
+      country: "España",
+      rating: 4,
+      comment: {
+        it: "La finca è molto bella in generale, con cavalli, molta tranquillità, ideale per staccare dalla routine.",
+        en: "The finca is very beautiful overall, with horses, great tranquility, ideal for disconnecting.",
+        es: "La finca muy bonita en general, con caballos, mucha tranquilidad, ideal para desconectar.",
+        de: "Die Finca ist insgesamt sehr schön, mit Pferden, viel Ruhe, ideal um abzuschalten.",
+      },
+    },
+    {
+      id: "yhisleym",
+      author: "Yhisleym",
+      country: "Colombia",
+      rating: 5,
+      comment: {
+        it: "L'atmosfera rustica del posto, le luci nelle aree comuni di notte. L'attenzione fenomenale. Il convivere con altri cagnolini e vedere i cavalli. L'accoglienza di Jordi e Andrea dal primo giorno è stata calorosa, attenta, aperta e davvero piacevole.",
+        en: "The rustic feel of the place, the lighting in the common areas at night. The service was phenomenal. Being around other dogs and seeing the horses. Jordi and Andrea's hospitality from day one was welcoming, attentive, open and very pleasant.",
+        es: "Lo rústico del sitio, las luces en las áreas comunes en las noches. La atención fenomenal. El estar conviviendo con otros perritos y ver los caballos. La atención de Jordi y Andrea desde el día 1 fue acogedora, atenta, abierta y muy agradable.",
+        de: "Das rustikale Ambiente, die Beleuchtung der Gemeinschaftsbereiche abends. Die Betreuung war phänomenal. Das Zusammensein mit anderen Hunden und die Pferde beobachten. Jordi und Andreas Gastfreundschaft war vom ersten Tag an herzlich, aufmerksam, offen und sehr angenehm.",
+      },
+    },
+    {
+      id: "mercedes",
+      author: "Mercedes",
+      country: "Alemania",
+      rating: 4.5,
+      comment: {
+        it: "La camera era spaziosa e il letto molto comodo. C'era molto spazio nel patio comune per sedersi e passeggiare. Circondato dalla natura. Ci hanno fornito tutto il necessario in camera (asciugacapelli, ombrellone, asciugamani extra).",
+        en: "The room was spacious and the bed very comfortable. There was plenty of space in the common patio to sit and stroll. Surrounded by nature. They provided everything we needed in the room (hair dryer, umbrella, extra towels).",
+        es: "La habitación era amplia y la cama muy cómoda. Había mucho sitio en el patio común para sentarse y pasear. Estaba rodeado de naturaleza. Nos ofrecieron todo lo que necesitamos en la habitación (secador de pelo, sombrilla, toallas extras).",
+        de: "Das Zimmer war geräumig und das Bett sehr bequem. Im gemeinsamen Innenhof war viel Platz zum Sitzen und Spazieren. Umgeben von Natur. Sie haben uns alles Nötige im Zimmer bereitgestellt (Haartrockner, Sonnenschirm, extra Handtücher).",
+      },
+    },
+  ],
+};
+
 const config: ClientConfig = {
   id: "finca-caballo-blanco",
   brandName: "Finca Caballo Blanco",
@@ -10,10 +223,10 @@ const config: ClientConfig = {
 
   hero: {
     tagline: {
-      it: "Esplora la finca in 360° e prenota il tuo soggiorno in tutta calma",
-      en: "Take a 360° tour of the finca and book your stay at your own pace",
-      es: "Recorrés la finca en 360° y reservás tu estadía sin apuros",
-      de: "Erkunde die Finca in 360° und buchen Sie Ihren Aufenthalt in aller Ruhe",
+      it: "Scopri uno spazio dove il tempo si ferma tra cavalli e paesaggi mediterranei",
+      en: "Discover a space where time stands still among horses and Mediterranean landscapes",
+      es: "Descubrí un espacio donde el tiempo se detiene entre caballos y paisajes mediterráneos",
+      de: "Entdecke einen Ort, wo die Zeit zwischen Pferden und mediterranen Landschaften stillsteht",
     },
     ctaLabel: {
       it: "Prenota",
@@ -34,14 +247,14 @@ const config: ClientConfig = {
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
-        "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2000!2d3.036855!3d39.561988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1",
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
 
       hero: {
         title: {
-          it: "Finca Caballo Blanco",
-          en: "Finca Caballo Blanco",
-          es: "Finca Caballo Blanco",
-          de: "Finca Caballo Blanco",
+          it: "Appartamento degli Ulivi",
+          en: "Olivares Apartment",
+          es: "Departamento Olivares",
+          de: "Olivenhain-Apartment",
         },
         subtitle: {
           it: "Cavalli, piscina e natura nel cuore di Maiorca",
@@ -67,171 +280,9 @@ const config: ClientConfig = {
         amenityKeys: ["wifi", "fridge", "kitchen", "bathroom"],
       },
 
-      location: {
-        title: {
-          it: "La Posizione",
-          en: "Location",
-          es: "Ubicación",
-          de: "Lage",
-        },
-        subtitle: {
-          it: "Montuïri, Maiorca",
-          en: "Montuïri, Mallorca",
-          es: "Montuïri, Mallorca",
-          de: "Montuïri, Mallorca",
-        },
-        description: {
-          it: "Situata nel comune di Montuïri, nel centro di Maiorca, la finca si trova in piena natura tra campi e silenzio. A pochi chilometri dalle principali attrazioni dell'isola — spiagge, borghi storici e mercati locali — con facile accesso in auto dall'aeroporto e da Palma.",
-          en: "Located in the municipality of Montuïri, in central Mallorca, the finca sits in the middle of nature surrounded by fields and silence. Just a few kilometres from the island's main attractions — beaches, historic villages and local markets — with easy car access from the airport and Palma.",
-          es: "Ubicada en el municipio de Montuïri, en el centro de Mallorca, la finca se encuentra en plena naturaleza entre campos y silencio. A pocos kilómetros de las principales atracciones de la isla — playas, pueblos históricos y mercados locales — con fácil acceso en coche desde el aeropuerto y Palma.",
-          de: "Im Gemeindegebiet Montuïri, im Herzen Mallorcas gelegen, befindet sich die Finca mitten in der Natur zwischen Feldern und Stille. Nur wenige Kilometer von den Hauptattraktionen der Insel entfernt — Strände, historische Dörfer und lokale Märkte — mit einfachem Fahrzeugzugang vom Flughafen und Palma.",
-        },
-        categories: [
-          {
-            key: "restaurant",
-            label: {
-              it: "Ristoranti",
-              en: "Restaurants",
-              es: "Restaurantes",
-              de: "Restaurants",
-            },
-            places: [
-              {
-                name: {
-                  it: "Es Cruce",
-                  en: "Es Cruce",
-                  es: "Es Cruce",
-                  de: "Es Cruce",
-                },
-                distance: "1800",
-              },
-              {
-                name: {
-                  it: "Sa Nostra Cuina",
-                  en: "Sa Nostra Cuina",
-                  es: "Sa Nostra Cuina",
-                  de: "Sa Nostra Cuina",
-                },
-                distance: "900",
-              },
-            ],
-          },
-          {
-            key: "coffee",
-            label: {
-              it: "Caffè",
-              en: "Coffee shops",
-              es: "Cafés",
-              de: "Cafés",
-            },
-            places: [
-              {
-                name: {
-                  it: "Bar Can Pieres",
-                  en: "Bar Can Pieres",
-                  es: "Bar Can Pieres",
-                  de: "Bar Can Pieres",
-                },
-                distance: "600",
-              },
-              {
-                name: {
-                  it: "Bar Ca Na Poeta",
-                  en: "Bar Ca Na Poeta",
-                  es: "Bar Ca Na Poeta",
-                  de: "Bar Ca Na Poeta",
-                },
-                distance: "750",
-              },
-            ],
-          },
-          {
-            key: "bus",
-            label: {
-              it: "Autobus",
-              en: "Bus",
-              es: "Bus",
-              de: "Bus",
-            },
-            places: [
-              {
-                name: {
-                  it: "Fermata Montuïri (linea 491 verso Palma)",
-                  en: "Montuïri stop (line 491 to Palma)",
-                  es: "Parada Montuïri (línea 491 a Palma)",
-                  de: "Haltestelle Montuïri (Linie 491 nach Palma)",
-                },
-                distance: "1200",
-              },
-            ],
-          },
-        ],
-      },
+      location: sharedLocation,
 
-      reviews: {
-        title: {
-          it: "Recensioni",
-          en: "Reviews",
-          es: "Reseñas",
-          de: "Bewertungen",
-        },
-        subtitle: {
-          it: "Cosa dicono i nostri ospiti",
-          en: "What our guests say",
-          es: "Lo que dicen nuestros huéspedes",
-          de: "Was unsere Gäste sagen",
-        },
-        items: [
-          {
-            id: "silvia",
-            author: "Silvia",
-            country: "España",
-            rating: 5,
-            comment: {
-              it: "È una casa di campagna con cavalli, hanno un'area comune molto bella, con piscina e zona prendisole.",
-              en: "It's a country house with horses, they have a very nice common area, with a pool and a sunbathing spot.",
-              es: "Es una casa de campo con caballos, tienen una zona común que está muy bien, con piscina, y zona para tomar el sol.",
-              de: "Es ist ein Landhaus mit Pferden, sie haben einen sehr schönen Gemeinschaftsbereich, mit Pool und Sonnenterrasse.",
-            },
-          },
-          {
-            id: "sergiu",
-            author: "Sergiu",
-            country: "España",
-            rating: 4,
-            comment: {
-              it: "La finca è molto bella in generale, con cavalli, molta tranquillità, ideale per staccare dalla routine.",
-              en: "The finca is very beautiful overall, with horses, great tranquility, ideal for disconnecting.",
-              es: "La finca muy bonita en general, con caballos, mucha tranquilidad, ideal para desconectar.",
-              de: "Die Finca ist insgesamt sehr schön, mit Pferden, viel Ruhe, ideal um abzuschalten.",
-            },
-          },
-          {
-            id: "yhisleym",
-            author: "Yhisleym",
-            country: "Colombia",
-            rating: 5,
-            comment: {
-              it: "L'atmosfera rustica del posto, le luci nelle aree comuni di notte. L'attenzione fenomenale. Il convivere con altri cagnolini e vedere i cavalli. L'accoglienza di Jordi e Andrea dal primo giorno è stata calorosa, attenta, aperta e davvero piacevole.",
-              en: "The rustic feel of the place, the lighting in the common areas at night. The service was phenomenal. Being around other dogs and seeing the horses. Jordi and Andrea's hospitality from day one was welcoming, attentive, open and very pleasant.",
-              es: "Lo rústico del sitio, las luces en las áreas comunes en las noches. La atención fenomenal. El estar conviviendo con otros perritos y ver los caballos. La atención de Jordi y Andrea desde el día 1 fue acogedora, atenta, abierta y muy agradable.",
-              de: "Das rustikale Ambiente, die Beleuchtung der Gemeinschaftsbereiche abends. Die Betreuung war phänomenal. Das Zusammensein mit anderen Hunden und die Pferde beobachten. Jordi und Andreas Gastfreundschaft war vom ersten Tag an herzlich, aufmerksam, offen und sehr angenehm.",
-            },
-          },
-          {
-            id: "mercedes",
-            author: "Mercedes",
-            country: "Alemania",
-            rating: 4.5,
-            comment: {
-              it: "La camera era spaziosa e il letto molto comodo. C'era molto spazio nel patio comune per sedersi e passeggiare. Circondato dalla natura. Ci hanno fornito tutto il necessario in camera (asciugacapelli, ombrellone, asciugamani extra).",
-              en: "The room was spacious and the bed very comfortable. There was plenty of space in the common patio to sit and stroll. Surrounded by nature. They provided everything we needed in the room (hair dryer, umbrella, extra towels).",
-              es: "La habitación era amplia y la cama muy cómoda. Había mucho sitio en el patio común para sentarse y pasear. Estaba rodeado de naturaleza. Nos ofrecieron todo lo que necesitamos en la habitación (secador de pelo, sombrilla, toallas extras).",
-              de: "Das Zimmer war geräumig und das Bett sehr bequem. Im gemeinsamen Innenhof war viel Platz zum Sitzen und Spazieren. Umgeben von Natur. Sie haben uns alles Nötige im Zimmer bereitgestellt (Haartrockner, Sonnenschirm, extra Handtücher).",
-            },
-          },
-        ],
-      },
+      reviews: sharedReviews,
 
       cta: {
         title: {
@@ -258,6 +309,8 @@ const config: ClientConfig = {
     {
       id: "suite-jardin",
       guests: 3,
+      googleMapsEmbedUrl:
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
       imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=960&q=80",
       hero: {
         title: {
@@ -273,10 +326,14 @@ const config: ClientConfig = {
           de: "Privater Pool und Olivengarten",
         },
       },
+      location: sharedLocation,
+      reviews: sharedReviews,
     },
     {
       id: "habitacion-patio",
       guests: 4,
+      googleMapsEmbedUrl:
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
       imageUrl: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=960&q=80",
       hero: {
         title: {
@@ -292,10 +349,14 @@ const config: ClientConfig = {
           de: "Authentischer Patio mit Bergblick",
         },
       },
+      location: sharedLocation,
+      reviews: sharedReviews,
     },
     {
       id: "villa-completa",
       guests: 6,
+      googleMapsEmbedUrl:
+        "https://maps.google.com/maps?q=Diseminado+Sector%2C+Num+2%2C+07230+Montu%C3%AFri%2C+Illes+Balears&hl=es&z=15&output=embed",
       imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=960&q=80",
       hero: {
         title: {
@@ -311,6 +372,8 @@ const config: ClientConfig = {
           de: "Die gesamte Finca für Ihre Gruppe",
         },
       },
+      location: sharedLocation,
+      reviews: sharedReviews,
     },
   ],
 };
