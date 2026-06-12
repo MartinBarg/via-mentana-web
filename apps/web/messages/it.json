@@ -38,6 +38,8 @@
     "filterLabel": "Posizione",
     "showAll": "Mostra tutte",
     "filteredBadge": "Tour filtrati per zona",
+    "guestsLabel": "Ospiti",
+    "guestsFilteredBadge": "Tour filtrati per ospiti",
     "select": "Seleziona",
     "selected": "Selezionato"
   }
