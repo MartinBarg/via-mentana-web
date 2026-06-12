@@ -6,7 +6,7 @@ const config: ClientConfig = {
   brandLogoUrl: "/logo-finca-caballo-blanco.png",
   backgroundImageUrl: "/cabalgata.jpg",
   transparentNav: true,
-  heroToursCount: 1,
+  heroToursCount: 4,
 
   hero: {
     tagline: {
@@ -24,11 +24,13 @@ const config: ClientConfig = {
     ctaSingle: {
       url: "https://www.booking.com/hotel/es/finca-caballo-blanco.html",
     },
+    guestFilter: true,
   },
 
   properties: [
     {
       id: "habitacion-1",
+      guests: 2,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -251,6 +253,63 @@ const config: ClientConfig = {
         en: "An authentic experience in the Mallorcan countryside",
         es: "Una experiencia auténtica en el campo mallorquín",
         de: "Ein authentisches Erlebnis auf dem Land Mallorcas",
+      },
+    },
+    {
+      id: "suite-jardin",
+      guests: 3,
+      imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=960&q=80",
+      hero: {
+        title: {
+          it: "Suite del Giardino",
+          en: "Garden Suite",
+          es: "Suite del Jardín",
+          de: "Gartensuite",
+        },
+        subtitle: {
+          it: "Piscina privata e giardino con ulivi",
+          en: "Private pool and olive tree garden",
+          es: "Piscina privada y jardín de olivos",
+          de: "Privater Pool und Olivengarten",
+        },
+      },
+    },
+    {
+      id: "habitacion-patio",
+      guests: 4,
+      imageUrl: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=960&q=80",
+      hero: {
+        title: {
+          it: "Habitación del Patio",
+          en: "Patio Room",
+          es: "Habitación del Patio",
+          de: "Patio-Zimmer",
+        },
+        subtitle: {
+          it: "Patio autentico con vista sulle montagne",
+          en: "Authentic patio with mountain views",
+          es: "Patio auténtico con vistas a la montaña",
+          de: "Authentischer Patio mit Bergblick",
+        },
+      },
+    },
+    {
+      id: "villa-completa",
+      guests: 6,
+      imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=960&q=80",
+      hero: {
+        title: {
+          it: "Villa Completa",
+          en: "Full Villa",
+          es: "Villa Completa",
+          de: "Komplette Villa",
+        },
+        subtitle: {
+          it: "Tutta la finca per il tuo gruppo",
+          en: "The entire finca for your group",
+          es: "Toda la finca para tu grupo",
+          de: "Die gesamte Finca für Ihre Gruppe",
+        },
       },
     },
   ],
