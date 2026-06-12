@@ -165,6 +165,19 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     setScrollbarThumb({ left: 0, width: widthPct });
   }, [filteredProperties]);
 
+  // Recalculate desktop maxScrollOffset when filtered properties change — ResizeObserver
+  // only fires on element size changes, not scrollWidth changes caused by filtering
+  useEffect(() => {
+    const track = trackRef.current;
+    const container = toursContainerRef.current;
+    if (!track || !container) return;
+    const raf = requestAnimationFrame(() => {
+      setMaxScrollOffset(Math.max(0, track.scrollWidth - container.clientWidth));
+      setContainerWidth(container.clientWidth);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [filteredProperties]);
+
   // Auto-select first visible property when the selected one is filtered out
   useEffect(() => {
     if (filteredProperties.length === 0) return;
