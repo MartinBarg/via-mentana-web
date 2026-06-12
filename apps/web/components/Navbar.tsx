@@ -179,7 +179,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
   ] as const;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${transparent ? "bg-transparent border-b border-white/10" : "bg-ivory/95 border-b border-ochre/20"}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-sm ${transparent ? "bg-black/20" : "bg-ivory/95 border-b border-ochre/20"}`}>
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
         {/* Brand + selected property chip */}
