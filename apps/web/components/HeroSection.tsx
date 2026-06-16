@@ -343,6 +343,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
           {hero && ctaUrl && (
             <a
+              id="hero-cta"
               href={ctaUrl}
               target="_blank"
               rel="noopener noreferrer"

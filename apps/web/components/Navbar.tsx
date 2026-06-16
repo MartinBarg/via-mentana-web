@@ -143,13 +143,13 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
   }, [ctaOpen]);
 
   useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) return;
+    const heroCta = document.getElementById("hero-cta");
+    if (!heroCta) return;
     const observer = new IntersectionObserver(
       ([entry]) => setHeroVisible(entry.isIntersecting),
-      { threshold: 0 }
+      { threshold: 0, rootMargin: "-64px 0px 0px 0px" }
     );
-    observer.observe(hero);
+    observer.observe(heroCta);
     return () => observer.disconnect();
   }, []);
 
@@ -210,7 +210,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
           </div>
           {selectedPropertyLabel && (
             <span
-              className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap max-w-[120px] truncate transition-all duration-300 ${transparent ? "text-ivory/70 bg-white/10 border border-white/20" : "text-warm-gray bg-ochre/10 border border-ochre/20"} ${
+              className={`hidden md:inline text-xs px-2.5 py-1 rounded-full whitespace-nowrap max-w-[120px] truncate transition-opacity duration-300 ${transparent ? "text-ivory/70 bg-white/10 border border-white/20" : "text-warm-gray bg-ochre/10 border border-ochre/20"} ${
                 heroVisible ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
