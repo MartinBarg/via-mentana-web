@@ -205,7 +205,9 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
               </span>
             )}
             <span
-              className={`text-lg md:text-xl ${transparent ? "text-ivory" : "text-charcoal"}`}
+              className={`text-lg md:text-xl transition-opacity duration-300 ${transparent ? "text-ivory" : "text-charcoal"} ${
+                !heroVisible ? "hidden md:inline" : ""
+              }`}
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               {brandName}
@@ -213,7 +215,7 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
           </div>
           {selectedPropertyLabel && (
             <span
-              className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap transition-all duration-300 ${transparent ? "text-ivory/70 bg-white/10 border border-white/20" : "text-warm-gray bg-ochre/10 border border-ochre/20"} ${
+              className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap max-w-[120px] truncate transition-all duration-300 ${transparent ? "text-ivory/70 bg-white/10 border border-white/20" : "text-warm-gray bg-ochre/10 border border-ochre/20"} ${
                 heroVisible ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
