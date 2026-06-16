@@ -58,7 +58,7 @@ function CtaButton({
   onToggle: () => void;
 }) {
   const sizeClasses = size === "sm" ? "text-xs px-3.5 py-1.5" : "text-sm px-5 py-2";
-  const baseClasses = `inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold rounded-full shadow-md flex-shrink-0 ${sizeClasses}`;
+  const baseClasses = `inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold rounded-full shadow-md transition-colors duration-200 hover:scale-105 active:scale-95 flex-shrink-0 ${sizeClasses}`;
 
   if (cta.type === "single") {
     return (
