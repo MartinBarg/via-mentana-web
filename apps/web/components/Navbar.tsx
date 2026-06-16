@@ -48,22 +48,17 @@ function scrollToSection(id: string) {
 
 function CtaButton({
   cta,
-  heroVisible,
   size,
   open,
   onToggle,
 }: {
   cta: NavCtaConfig;
-  heroVisible: boolean;
   size: "sm" | "md";
   open: boolean;
   onToggle: () => void;
 }) {
   const sizeClasses = size === "sm" ? "text-xs px-3.5 py-1.5" : "text-sm px-5 py-2";
   const baseClasses = `inline-flex items-center gap-2 bg-terracotta hover:bg-terracotta-dark text-ivory font-semibold rounded-full shadow-md transition-all duration-300 flex-shrink-0 ${sizeClasses}`;
-  const visibilityClasses = heroVisible
-    ? "opacity-0 pointer-events-none scale-95"
-    : "opacity-100 pointer-events-auto scale-100";
 
   if (cta.type === "single") {
     return (
@@ -71,7 +66,7 @@ function CtaButton({
         href={cta.url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${baseClasses} ${visibilityClasses}`}
+        className={baseClasses}
       >
         {cta.label}
       </a>
@@ -84,7 +79,7 @@ function CtaButton({
         onClick={onToggle}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`${baseClasses} ${visibilityClasses}`}
+        className={baseClasses}
       >
         {cta.label}
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -205,7 +200,9 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
               </span>
             )}
             <span
-              className={`text-lg md:text-xl ${transparent ? "text-ivory" : "text-charcoal"}`}
+              className={`text-lg md:text-xl transition-all duration-300 ${transparent ? "text-ivory" : "text-charcoal"} ${
+                heroVisible ? "opacity-100 max-w-[200px]" : "opacity-0 max-w-0 overflow-hidden pointer-events-none"
+              }`}
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               {brandName}
@@ -240,7 +237,6 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
           <div ref={ctaDesktopRef} className="relative hidden md:block flex-shrink-0">
             <CtaButton
               cta={cta}
-              heroVisible={heroVisible}
               size="md"
               open={ctaOpen}
               onToggle={() => setCtaOpen((o) => !o)}
@@ -256,7 +252,6 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
             <div ref={ctaMobileRef} className="relative md:hidden">
               <CtaButton
                 cta={cta}
-                heroVisible={heroVisible}
                 size="sm"
                 open={ctaOpen}
                 onToggle={() => setCtaOpen((o) => !o)}
