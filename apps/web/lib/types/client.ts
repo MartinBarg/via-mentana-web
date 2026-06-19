@@ -53,8 +53,15 @@ export interface PropertyConfig {
   cta?: {
     title: LocalizedString;
     subtitle: LocalizedString;
+    buttonLabel?: LocalizedString;
   };
   footerTagline?: LocalizedString;
+}
+
+export interface AboutUsConfig {
+  title: LocalizedString;
+  body: LocalizedString;
+  imageUrl?: string;
 }
 
 export interface HeroZone {
@@ -78,5 +85,6 @@ export interface ClientConfig {
   transparentNav?: boolean;
   heroToursCount?: number;
   hero?: ClientHeroConfig;
+  aboutUs?: AboutUsConfig;
   properties: PropertyConfig[];
 }

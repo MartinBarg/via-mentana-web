@@ -3,12 +3,13 @@
 import { useTranslations } from "next-intl";
 
 interface CTASectionProps {
-  airbnbUrl: string;
+  ctaUrl: string;
   title: string;
   subtitle: string;
+  buttonLabel?: string;
 }
 
-export default function CTASection({ airbnbUrl, title, subtitle }: CTASectionProps) {
+export default function CTASection({ ctaUrl, title, subtitle, buttonLabel }: CTASectionProps) {
   const t = useTranslations("cta");
 
   return (
@@ -24,12 +25,12 @@ export default function CTASection({ airbnbUrl, title, subtitle }: CTASectionPro
           {subtitle}
         </p>
         <a
-          href={airbnbUrl}
+          href={ctaUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 border border-ivory/50 text-ivory text-sm font-medium tracking-wide px-8 py-3 rounded-full hover:bg-ivory hover:text-terracotta transition-all duration-300"
         >
-          {t("button")}
+          {buttonLabel ?? t("button")}
         </a>
       </div>
     </section>
