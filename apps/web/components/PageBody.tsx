@@ -43,8 +43,13 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
 
   const hasDarkBackground = !!(config.backgroundPersonImageUrl || config.backgroundImageUrl);
 
+  const themeVars = config.theme ? ({
+    ...(config.theme.accent ? { "--color-terracotta": config.theme.accent } : {}),
+    ...(config.theme.accentDark ? { "--color-terracotta-dark": config.theme.accentDark } : {}),
+  } as React.CSSProperties) : undefined;
+
   return (
-    <main>
+    <main style={themeVars}>
       {config.backgroundImageUrl && (
         <div
           className="fixed inset-x-0 top-0 min-h-[100lvh] -z-10 bg-cover bg-center bg-no-repeat bg-charcoal"
