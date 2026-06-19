@@ -56,13 +56,10 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
           className="fixed inset-x-0 top-0 min-h-[100lvh] -z-10"
           style={{
             backgroundColor: "#0a0a0a",
-            backgroundImage: [
-              `url(${config.backgroundPersonImageUrl})`,
-              "radial-gradient(ellipse 55% 70% at 18% 68%, rgba(65,65,65,0.9) 0%, rgba(8,8,8,0) 100%)",
-            ].join(", "),
-            backgroundPosition: "left bottom, left center",
-            backgroundSize: "auto 90vh, 70% 100%",
-            backgroundRepeat: "no-repeat, no-repeat",
+            backgroundImage: `url(${config.backgroundPersonImageUrl})`,
+            backgroundPosition: "left center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
           }}
         />
       )}
