@@ -43,6 +43,7 @@ export interface PropertyConfig {
     title: LocalizedString;
     subtitle: LocalizedString;
     description: LocalizedString;
+    videoUrl?: string;
     categories: POICategory[];
   };
   reviews?: {

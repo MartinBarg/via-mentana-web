@@ -13,6 +13,7 @@ const sharedLocation = {
     es: "Montuïri, Mallorca",
     de: "Montuïri, Mallorca",
   },
+  videoUrl: "/videos/finca-caballo-blanco-ubicacion.mp4",
   description: {
     it: "Situata nel comune di Montuïri, nel centro di Maiorca, la finca si trova in piena natura tra campi e silenzio. A pochi chilometri dalle principali attrazioni dell'isola — spiagge, borghi storici e mercati locali — con facile accesso in auto dall'aeroporto e da Palma.",
     en: "Located in the municipality of Montuïri, in central Mallorca, the finca sits in the middle of nature surrounded by fields and silence. Just a few kilometres from the island's main attractions — beaches, historic villages and local markets — with easy car access from the airport and Palma.",
