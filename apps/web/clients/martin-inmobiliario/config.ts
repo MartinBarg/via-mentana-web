@@ -3,6 +3,8 @@ import type { ClientConfig } from "../../lib/types/client";
 const config: ClientConfig = {
   id: "martin-inmobiliario",
   brandName: "Martin Inmobiliario",
+  backgroundPersonImageUrl: "/martin-inmobiliario/hombre-traje.jpg",
+  transparentNav: true,
   heroToursCount: 8,
 
   aboutUs: {
