@@ -77,6 +77,11 @@ export interface ClientHeroConfig {
   ctaSingle?: { url: string };
 }
 
+export interface ClientTheme {
+  accent?: string;
+  accentDark?: string;
+}
+
 export interface ClientConfig {
   id: string;
   brandName: string;
@@ -84,6 +89,7 @@ export interface ClientConfig {
   backgroundImageUrl?: string;
   backgroundPersonImageUrl?: string;
   transparentNav?: boolean;
+  theme?: ClientTheme;
   heroToursCount?: number;
   hero?: ClientHeroConfig;
   aboutUs?: AboutUsConfig;
