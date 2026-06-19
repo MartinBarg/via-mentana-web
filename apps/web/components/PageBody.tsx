@@ -77,6 +77,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         selectedPropertyId={selectedPropertyId}
         onSelectProperty={setSelectedPropertyId}
         backgroundImageUrl={config.backgroundImageUrl ?? (config.backgroundPersonImageUrl ? "__dark__" : undefined)}
+        noOverlay={!!config.backgroundPersonImageUrl}
       />
       {/* Sin key: todos los hijos son stateless. Si alguno suma useState en el futuro,
           agregar key={selectedProperty.id} aquí para forzar remount al cambiar propiedad */}

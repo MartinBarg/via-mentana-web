@@ -12,6 +12,7 @@ interface HeroSectionProps {
   selectedPropertyId: string;
   onSelectProperty: (id: string) => void;
   backgroundImageUrl?: string;
+  noOverlay?: boolean;
 }
 
 const CARD_WIDTH_PX = 480;
@@ -38,7 +39,7 @@ function FilterCheckbox({ checked }: { checked: boolean }) {
   );
 }
 
-export default function HeroSection({ properties, hero, locale, selectedPropertyId, onSelectProperty, backgroundImageUrl }: HeroSectionProps) {
+export default function HeroSection({ properties, hero, locale, selectedPropertyId, onSelectProperty, backgroundImageUrl, noOverlay }: HeroSectionProps) {
   const t = useTranslations("hero");
 
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
@@ -327,7 +328,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         className={`sticky top-0 h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row ${backgroundImageUrl ? "bg-transparent" : "bg-charcoal"}`}
         style={{ paddingTop: "4rem" }}
       >
-        {backgroundImageUrl && (
+        {backgroundImageUrl && !noOverlay && (
           <div className="absolute inset-0 bg-charcoal/55 pointer-events-none z-0" />
         )}
         {/* Left column — 37.5% width on desktop, 37.5svh height on mobile */}
