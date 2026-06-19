@@ -6,8 +6,8 @@ const config: ClientConfig = {
   backgroundPersonImageUrl: "/martin-inmobiliario/hombre-traje.jpg",
   transparentNav: true,
   theme: {
-    accent: "#1B4FFF",
-    accentDark: "#1240E0",
+    accent: "#1040CC",
+    accentDark: "#0A30B0",
   },
   heroToursCount: 8,
 
