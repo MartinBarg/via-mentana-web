@@ -118,41 +118,6 @@ const config: ClientConfig = {
           },
         ],
       },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "rodrigo-m",
-            author: "Rodrigo M.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Processo di acquisto impeccabile. Il team di Martin è stato disponibile in ogni momento e la proprietà ha superato ogni aspettativa.",
-              en: "Flawless buying process. Martin's team was available at every step and the property exceeded all expectations.",
-              es: "Proceso de compra impecable. El equipo de Martin estuvo disponible en todo momento y la propiedad superó todas las expectativas.",
-              de: "Makelloser Kaufprozess. Das Team von Martin war jederzeit erreichbar und die Immobilie übertraf alle Erwartungen.",
-            },
-          },
-          {
-            id: "valeria-k",
-            author: "Valeria K.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Ho trovato l'appartamento perfetto grazie alla loro conoscenza del mercato. Consiglio vivamente.",
-              en: "Found the perfect apartment thanks to their market knowledge. Highly recommended.",
-              es: "Encontré el departamento perfecto gracias a su conocimiento del mercado. Muy recomendable.",
-              de: "Dank ihrer Marktkenntnis das perfekte Apartment gefunden. Sehr empfehlenswert.",
-            },
-          },
-        ],
-      },
       cta: {
         title: {
           it: "Ti interessa Le Parc?",
@@ -248,41 +213,6 @@ const config: ClientConfig = {
             places: [
               { name: { it: "Linea 67 · Libertador", en: "Line 67 · Libertador", es: "Línea 67 · Libertador", de: "Linie 67 · Libertador" }, distance: "100" },
             ],
-          },
-        ],
-      },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "martin-s",
-            author: "Martín S.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Edificio straordinario in una posizione imbattibile. L'asesoramiento di Martin Inmobiliario è stato fondamentale per chiudere la trattativa.",
-              en: "Extraordinary building in an unbeatable location. Martin Inmobiliario's advisory was key to closing the deal.",
-              es: "Edificio extraordinario en una ubicación inigualable. El asesoramiento de Martin Inmobiliario fue clave para cerrar la negociación.",
-              de: "Außergewöhnliches Gebäude in unschlagbarer Lage. Die Beratung von Martin Inmobiliario war entscheidend für den Abschluss.",
-            },
-          },
-          {
-            id: "carolina-p",
-            author: "Carolina P.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Professionalità e discrezione in ogni fase. Consiglio vivamente.",
-              en: "Professionalism and discretion at every stage. Highly recommended.",
-              es: "Profesionalismo y discreción en cada etapa. Muy recomendable.",
-              de: "Professionalität und Diskretion in jeder Phase. Sehr zu empfehlen.",
-            },
           },
         ],
       },
@@ -383,41 +313,6 @@ const config: ClientConfig = {
           },
         ],
       },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "gustavo-b",
-            author: "Gustavo B.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Ottima qualità costruttiva e posizione strategica. Martin Inmobiliario ci ha guidato perfettamente nell'operazione.",
-              en: "Excellent build quality and strategic location. Martin Inmobiliario guided us perfectly through the transaction.",
-              es: "Excelente calidad constructiva y ubicación estratégica. Martin Inmobiliario nos guió perfectamente en la operación.",
-              de: "Ausgezeichnete Bauqualität und strategische Lage. Martin Inmobiliario hat uns perfekt durch die Transaktion geführt.",
-            },
-          },
-          {
-            id: "andrea-l",
-            author: "Andrea L.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Equipo profesionale e risposte rapide. Molto soddisfatta dell'acquisto.",
-              en: "Professional team and quick responses. Very satisfied with the purchase.",
-              es: "Equipo profesional y respuestas rápidas. Muy satisfecha con la compra.",
-              de: "Professionelles Team und schnelle Antworten. Mit dem Kauf sehr zufrieden.",
-            },
-          },
-        ],
-      },
       cta: {
         title: {
           it: "Ti interessa Alrio?",
@@ -512,41 +407,6 @@ const config: ClientConfig = {
             places: [
               { name: { it: "Estazione San Isidro · Ramal Tigre", en: "San Isidro Station · Tigre Branch", es: "Estación San Isidro · Ramal Tigre", de: "Bahnhof San Isidro · Tigre-Zweig" }, distance: "500" },
             ],
-          },
-        ],
-      },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "pablo-r",
-            author: "Pablo R.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "San Isidro è sempre stata la nostra meta e finalmente con Martin Inmobiliario abbiamo trovato la proprietà perfetta.",
-              en: "San Isidro was always our goal and finally, with Martin Inmobiliario, we found the perfect property.",
-              es: "San Isidro siempre fue nuestra meta y finalmente con Martin Inmobiliario encontramos la propiedad perfecta.",
-              de: "San Isidro war immer unser Ziel und endlich haben wir mit Martin Inmobiliario die perfekte Immobilie gefunden.",
-            },
-          },
-          {
-            id: "florencia-v",
-            author: "Florencia V.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Servizio eccellente, molto professionale. Ci hanno seguito passo dopo passo senza pressioni.",
-              en: "Excellent service, very professional. They guided us step by step without pressure.",
-              es: "Excelente servicio, muy profesional. Nos acompañaron paso a paso sin presiones.",
-              de: "Ausgezeichneter Service, sehr professionell. Sie begleiteten uns Schritt für Schritt ohne Druck.",
-            },
           },
         ],
       },
@@ -645,41 +505,6 @@ const config: ClientConfig = {
           },
         ],
       },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "lucia-m",
-            author: "Lucía M.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Trovare una proprietà in Barrio Parque è difficile. Martin Inmobiliario ha avuto la casa giusta al momento giusto.",
-              en: "Finding a property in Barrio Parque is hard. Martin Inmobiliario had the right home at the right time.",
-              es: "Encontrar una propiedad en Barrio Parque es difícil. Martin Inmobiliario tuvo la casa correcta en el momento correcto.",
-              de: "Eine Immobilie in Barrio Parque zu finden ist schwierig. Martin Inmobiliario hatte zur richtigen Zeit das richtige Haus.",
-            },
-          },
-          {
-            id: "nicolas-f",
-            author: "Nicolás F.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Processo trasparente e molto professionale. La zona è meravigliosa.",
-              en: "Transparent and very professional process. The area is wonderful.",
-              es: "Proceso transparente y muy profesional. La zona es maravillosa.",
-              de: "Transparenter und sehr professioneller Prozess. Die Gegend ist wunderschön.",
-            },
-          },
-        ],
-      },
       cta: {
         title: {
           it: "Ti interessa Casa5?",
@@ -772,41 +597,6 @@ const config: ClientConfig = {
             places: [
               { name: { it: "Accesso Panamericana km 35", en: "Panamericana highway km 35", es: "Acceso Panamericana km 35", de: "Panamericana km 35" }, distance: "2000" },
             ],
-          },
-        ],
-      },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "sergio-a",
-            author: "Sergio A.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Nordelta ha cambiato la nostra qualità di vita. Martin Inmobiliario ci ha trovato la casa ideale in tempi récord.",
-              en: "Nordelta changed our quality of life. Martin Inmobiliario found us the ideal home in record time.",
-              es: "Nordelta cambió nuestra calidad de vida. Martin Inmobiliario nos encontró la casa ideal en tiempo récord.",
-              de: "Nordelta hat unsere Lebensqualität verändert. Martin Inmobiliario fand uns in Rekordzeit das ideale Haus.",
-            },
-          },
-          {
-            id: "daniela-c",
-            author: "Daniela C.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Eccellente gestione, veloce e transparente. Siamo felicissimi del nostro nuovo hogar.",
-              en: "Excellent management, fast and transparent. We are extremely happy with our new home.",
-              es: "Excelente gestión, rápida y transparente. Estamos felicísimos con nuestro nuevo hogar.",
-              de: "Ausgezeichnetes Management, schnell und transparent. Wir sind überglücklich mit unserem neuen Zuhause.",
-            },
           },
         ],
       },
@@ -905,41 +695,6 @@ const config: ClientConfig = {
           },
         ],
       },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "hernan-t",
-            author: "Hernán T.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Il miglior investimento che abbiamo fatto. Martin Inmobiliario ci ha aiutato a trovare il barrio giusto e la casa giusta.",
-              en: "The best investment we made. Martin Inmobiliario helped us find the right neighborhood and the right home.",
-              es: "La mejor inversión que hicimos. Martin Inmobiliario nos ayudó a encontrar el barrio correcto y la casa correcta.",
-              de: "Die beste Investition, die wir je gemacht haben. Martin Inmobiliario half uns, das richtige Viertel und das richtige Haus zu finden.",
-            },
-          },
-          {
-            id: "monica-e",
-            author: "Mónica E.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Risposta immediata, molto attenti alle nostre necessità. Lo consiglio a chiunque cerchi una casa a Pilar.",
-              en: "Immediate response, very attentive to our needs. I recommend them to anyone looking for a home in Pilar.",
-              es: "Respuesta inmediata, muy atentos a nuestras necesidades. Lo recomiendo a quien busque una casa en Pilar.",
-              de: "Sofortige Antwort, sehr aufmerksam auf unsere Bedürfnisse. Ich empfehle sie jedem, der ein Haus in Pilar sucht.",
-            },
-          },
-        ],
-      },
       cta: {
         title: {
           it: "Ti interessa Casa7?",
@@ -1032,41 +787,6 @@ const config: ClientConfig = {
             places: [
               { name: { it: "Puerto de Frutos · Tigre Centro", en: "Puerto de Frutos · Tigre Centro", es: "Puerto de Frutos · Tigre Centro", de: "Puerto de Frutos · Tigre Centro" }, distance: "2500" },
             ],
-          },
-        ],
-      },
-      reviews: {
-        title: { it: "Recensioni", en: "Reviews", es: "Reseñas", de: "Bewertungen" },
-        subtitle: {
-          it: "Cosa dicono i nostri clienti",
-          en: "What our clients say",
-          es: "Lo que dicen nuestros clientes",
-          de: "Was unsere Kunden sagen",
-        },
-        items: [
-          {
-            id: "alejandro-w",
-            author: "Alejandro W.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Venice Tigre è un sogno. Grazie a Martin Inmobiliario abbiamo potuto acquistare con totale tranquillità.",
-              en: "Venice Tigre is a dream. Thanks to Martin Inmobiliario we were able to buy with complete peace of mind.",
-              es: "Venice Tigre es un sueño. Gracias a Martin Inmobiliario pudimos comprar con total tranquilidad.",
-              de: "Venice Tigre ist ein Traum. Dank Martin Inmobiliario konnten wir völlig sorgenfrei kaufen.",
-            },
-          },
-          {
-            id: "silvia-n",
-            author: "Silvia N.",
-            country: "Argentina",
-            rating: 5,
-            comment: {
-              it: "Servizio impeccabile dal primo contatto alla firma. Non avremmo potuto chiedere di meglio.",
-              en: "Impeccable service from first contact to signing. We couldn't have asked for more.",
-              es: "Servicio impecable desde el primer contacto hasta la firma. No podríamos haber pedido más.",
-              de: "Tadelloser Service vom ersten Kontakt bis zur Unterzeichnung. Wir hätten uns nicht mehr wünschen können.",
-            },
           },
         ],
       },
