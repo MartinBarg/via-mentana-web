@@ -41,12 +41,29 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
     ? loc(selectedProperty.footerTagline, locale)
     : "";
 
+  const hasDarkBackground = !!(config.backgroundPersonImageUrl || config.backgroundImageUrl);
+
   return (
     <main>
       {config.backgroundImageUrl && (
         <div
           className="fixed inset-x-0 top-0 min-h-[100lvh] -z-10 bg-cover bg-center bg-no-repeat bg-charcoal"
           style={{ backgroundImage: `url(${config.backgroundImageUrl})` }}
+        />
+      )}
+      {config.backgroundPersonImageUrl && (
+        <div
+          className="fixed inset-x-0 top-0 min-h-[100lvh] -z-10"
+          style={{
+            backgroundColor: "#0a0a0a",
+            backgroundImage: [
+              `url(${config.backgroundPersonImageUrl})`,
+              "radial-gradient(ellipse 55% 70% at 18% 68%, rgba(65,65,65,0.9) 0%, rgba(8,8,8,0) 100%)",
+            ].join(", "),
+            backgroundPosition: "left bottom, left center",
+            backgroundSize: "auto 90vh, 70% 100%",
+            backgroundRepeat: "no-repeat, no-repeat",
+          }}
         />
       )}
       <Navbar
@@ -62,12 +79,12 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         locale={locale}
         selectedPropertyId={selectedPropertyId}
         onSelectProperty={setSelectedPropertyId}
-        backgroundImageUrl={config.backgroundImageUrl}
+        backgroundImageUrl={config.backgroundImageUrl ?? (config.backgroundPersonImageUrl ? "__dark__" : undefined)}
       />
       {/* Sin key: todos los hijos son stateless. Si alguno suma useState en el futuro,
           agregar key={selectedProperty.id} aquí para forzar remount al cambiar propiedad */}
       {config.aboutUs && (
-        <AboutUsSection aboutUs={config.aboutUs} locale={locale} />
+        <AboutUsSection aboutUs={config.aboutUs} locale={locale} variant={hasDarkBackground ? "dark" : "light"} />
       )}
       {selectedProperty && (
         <PropertySections

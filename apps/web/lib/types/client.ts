@@ -82,6 +82,7 @@ export interface ClientConfig {
   brandName: string;
   brandLogoUrl?: string;
   backgroundImageUrl?: string;
+  backgroundPersonImageUrl?: string;
   transparentNav?: boolean;
   heroToursCount?: number;
   hero?: ClientHeroConfig;
