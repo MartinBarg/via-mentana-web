@@ -5,6 +5,10 @@ const config: ClientConfig = {
   brandName: "Martin Inmobiliario",
   backgroundPersonImageUrl: "/martin-inmobiliario/hombre-traje.jpg",
   transparentNav: true,
+  theme: {
+    accent: "#1040CC",
+    accentDark: "#0A30B0",
+  },
   heroToursCount: 8,
 
   aboutUs: {
