@@ -18,14 +18,12 @@ const TITLE_RAISE_START = 0.82;
 export default function LocationSection({ property, locale }: LocationSectionProps) {
   const t = useTranslations("location");
 
-  if (!property.location) return null;
-
-  const { title, subtitle, description, categories, videoUrl } = property.location;
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoZoneRef = useRef<HTMLDivElement>(null);
 
   const [titleTranslateY, setTitleTranslateY] = useState(0);
+
+  const videoUrl = property.location?.videoUrl;
 
   // Scrub video as user scrolls through the video zone
   useEffect(() => {
@@ -114,6 +112,10 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       window.removeEventListener("touchmove", onTouchMove);
     };
   }, [videoUrl]);
+
+  if (!property.location) return null;
+
+  const { title, subtitle, description, categories } = property.location;
 
   return (
     <>
