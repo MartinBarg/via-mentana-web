@@ -24,6 +24,38 @@ export default function LocationSection({ property, locale }: LocationSectionPro
   const [titleTranslateY, setTitleTranslateY] = useState(0);
 
   const videoUrl = property.location?.videoUrl;
+  const posterUrl = videoUrl?.replace(/\.mp4$/, "-poster.jpg");
+
+  // iOS Safari ignores preload="auto". Fix: on the first user interaction (touchstart/scroll/click)
+  // call play()+pause() to unlock seeking. This fires while the user is still in the hero,
+  // so the video is buffered by the time they reach the location section.
+  useEffect(() => {
+    if (!videoUrl) return;
+
+    const unlock = () => {
+      const video = videoRef.current;
+      if (!video || video.readyState >= 2) return;
+      video
+        .play()
+        .then(() => {
+          video.pause();
+          video.currentTime = 0;
+        })
+        .catch(() => {
+          video.load();
+        });
+    };
+
+    window.addEventListener("touchstart", unlock, { passive: true, once: true });
+    window.addEventListener("scroll", unlock, { passive: true, once: true });
+    window.addEventListener("click", unlock, { passive: true, once: true });
+
+    return () => {
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("scroll", unlock);
+      window.removeEventListener("click", unlock);
+    };
+  }, [videoUrl]);
 
   // Scrub video as user scrolls through the video zone
   useEffect(() => {
@@ -142,6 +174,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
             <video
               ref={videoRef}
               src={videoUrl}
+              poster={posterUrl}
               muted
               playsInline
               preload="auto"
