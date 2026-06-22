@@ -41,8 +41,18 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       if (scrollable <= 0) return;
 
       const progress = Math.max(0, Math.min(1, (window.scrollY - zone.offsetTop) / scrollable));
+      const targetTime = progress * video.duration;
 
-      video.currentTime = progress * video.duration;
+      // Skip seek if we're still on the same frame (avoids redundant decoder work)
+      const frameDuration = 1 / 30;
+      if (Math.abs(video.currentTime - targetTime) >= frameDuration * 0.5) {
+        // fastSeek is optimized for scrubbing in browsers that support it (Firefox, Safari)
+        if ("fastSeek" in video) {
+          (video as HTMLVideoElement & { fastSeek(t: number): void }).fastSeek(targetTime);
+        } else {
+          video.currentTime = targetTime;
+        }
+      }
 
       if (progress >= TITLE_RAISE_START) {
         const raise = ((progress - TITLE_RAISE_START) / (1 - TITLE_RAISE_START)) * 80;
