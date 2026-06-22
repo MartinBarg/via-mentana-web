@@ -10,40 +10,52 @@ interface LocationSectionProps {
   locale: string;
 }
 
-// Total scroll budget to play through the whole video (in vh units)
+// Scroll budget for video scrubbing (vh units)
 const VIDEO_SCROLL_VH = 300;
-// Progress threshold (0–1) at which the title starts rising
-const TITLE_RAISE_START = 0.82;
+// Extra scroll budget for the curtain-open animation (after video finishes)
+const CURTAIN_SCROLL_VH = 100;
+// Total zone height
+const TOTAL_SCROLL_VH = VIDEO_SCROLL_VH + CURTAIN_SCROLL_VH;
+// Fraction of total zone used for video scrubbing (300/400 = 0.75)
+const VIDEO_FRACTION = VIDEO_SCROLL_VH / TOTAL_SCROLL_VH;
+// Title starts rising at 80% of the video phase = 0.75 * 0.80 = 0.60 of total
+const TITLE_RAISE_START = VIDEO_FRACTION * 0.8;
+// Curtain opens after video is fully played
+const CURTAIN_START = VIDEO_FRACTION;
 
 export default function LocationSection({ property, locale }: LocationSectionProps) {
   const t = useTranslations("location");
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefRight = useRef<HTMLVideoElement>(null);
   const videoZoneRef = useRef<HTMLDivElement>(null);
 
-  const [titleTranslateY, setTitleTranslateY] = useState(0);
+  // Vertical offset in px for the title overlay: large = near bottom, 0 = resting at top-20
+  const [titleOffset, setTitleOffset] = useState(0);
+  // 0 = curtain closed (video covers screen), 1 = curtain fully open
+  const [curtainProgress, setCurtainProgress] = useState(0);
 
   const videoUrl = property.location?.videoUrl;
   const posterUrl = videoUrl?.replace(/\.mp4$/, "-poster.jpg");
 
-  // iOS Safari ignores preload="auto". Fix: on the first user interaction (touchstart/scroll/click)
-  // call play()+pause() to unlock seeking. This fires while the user is still in the hero,
-  // so the video is buffered by the time they reach the location section.
+  // iOS Safari ignores preload="auto". On first user interaction call play()+pause() on both
+  // video elements to unlock seeking before the user reaches the location section.
   useEffect(() => {
     if (!videoUrl) return;
 
     const unlock = () => {
-      const video = videoRef.current;
-      if (!video || video.readyState >= 2) return;
-      video
-        .play()
-        .then(() => {
-          video.pause();
-          video.currentTime = 0;
-        })
-        .catch(() => {
-          video.load();
-        });
+      [videoRef.current, videoRefRight.current].forEach((video) => {
+        if (!video || video.readyState >= 2) return;
+        video
+          .play()
+          .then(() => {
+            video.pause();
+            video.currentTime = 0;
+          })
+          .catch(() => {
+            video.load();
+          });
+      });
     };
 
     window.addEventListener("touchstart", unlock, { passive: true, once: true });
@@ -57,11 +69,25 @@ export default function LocationSection({ property, locale }: LocationSectionPro
     };
   }, [videoUrl]);
 
-  // Scrub video as user scrolls through the video zone
+  // Scrub both video panels as user scrolls, then animate title rise and curtain open
   useEffect(() => {
     if (!videoUrl) return;
 
     let rafPending = false;
+
+    const seekBoth = (targetTime: number) => {
+      const frameDuration = 1 / 30;
+      [videoRef.current, videoRefRight.current].forEach((v) => {
+        if (!v) return;
+        if (Math.abs(v.currentTime - targetTime) < frameDuration * 0.5) return;
+        const vf = v as HTMLVideoElement & { fastSeek?: (t: number) => void };
+        if (typeof vf.fastSeek === "function") {
+          vf.fastSeek(targetTime);
+        } else {
+          v.currentTime = targetTime;
+        }
+      });
+    };
 
     const scrub = () => {
       rafPending = false;
@@ -73,25 +99,27 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       if (scrollable <= 0) return;
 
       const progress = Math.max(0, Math.min(1, (window.scrollY - zone.offsetTop) / scrollable));
-      const targetTime = progress * video.duration;
 
-      // Skip seek if we're still on the same frame (avoids redundant decoder work)
-      const frameDuration = 1 / 30;
-      if (Math.abs(video.currentTime - targetTime) >= frameDuration * 0.5) {
-        // fastSeek is optimized for scrubbing in browsers that support it (Firefox, Safari)
-        const v = video as HTMLVideoElement & { fastSeek?: (t: number) => void };
-        if (typeof v.fastSeek === "function") {
-          v.fastSeek(targetTime);
-        } else {
-          v.currentTime = targetTime;
-        }
+      // Video scrubs only through the VIDEO_FRACTION of total scroll budget
+      const videoProgress = Math.min(1, progress / VIDEO_FRACTION);
+      seekBoth(videoProgress * video.duration);
+
+      // Title offset: starts near viewport bottom, rises to 0 (top-20 resting position)
+      const bottomOffset = window.innerHeight - 200;
+      if (progress < TITLE_RAISE_START) {
+        setTitleOffset(bottomOffset);
+      } else if (progress < CURTAIN_START) {
+        const raise = (progress - TITLE_RAISE_START) / (CURTAIN_START - TITLE_RAISE_START);
+        setTitleOffset((1 - raise) * bottomOffset);
+      } else {
+        setTitleOffset(0);
       }
 
-      if (progress >= TITLE_RAISE_START) {
-        const raise = ((progress - TITLE_RAISE_START) / (1 - TITLE_RAISE_START)) * 80;
-        setTitleTranslateY(raise);
+      // Curtain opens after video is done
+      if (progress >= CURTAIN_START) {
+        setCurtainProgress((progress - CURTAIN_START) / (1 - CURTAIN_START));
       } else {
-        setTitleTranslateY(0);
+        setCurtainProgress(0);
       }
     };
 
@@ -167,32 +195,80 @@ export default function LocationSection({ property, locale }: LocationSectionPro
         <div
           id="location"
           ref={videoZoneRef}
-          style={{ height: `${VIDEO_SCROLL_VH}vh` }}
+          style={{ height: `${TOTAL_SCROLL_VH}vh` }}
           className="relative"
         >
           <div className="sticky top-0 h-screen overflow-hidden">
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              poster={posterUrl}
-              muted
-              playsInline
-              preload="auto"
-              className="absolute inset-0 w-full h-full object-cover"
+
+            {/* Layer 0: charcoal background with title at resting position (revealed as curtain opens) */}
+            <div className="absolute inset-0 bg-charcoal z-0">
+              <div className="absolute inset-x-0 top-20 text-center pointer-events-none">
+                <h2
+                  className="text-5xl md:text-6xl text-ivory"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  {loc(title, locale)}
+                </h2>
+                <p className="text-terracotta font-medium text-lg mt-3">
+                  {loc(subtitle, locale)}
+                </p>
+              </div>
+            </div>
+
+            {/* Layer 1: left curtain panel — shows left half of video, slides left */}
+            <div
+              className="absolute inset-0 z-10 overflow-hidden will-change-transform"
+              style={{
+                clipPath: "inset(0 50% 0 0)",
+                transform: `translateX(${-curtainProgress * 100}%)`,
+              }}
+              aria-hidden="true"
+            >
+              <video
+                ref={videoRef}
+                src={videoUrl}
+                poster={posterUrl}
+                muted
+                playsInline
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Layer 2: right curtain panel — shows right half of video, slides right */}
+            <div
+              className="absolute inset-0 z-10 overflow-hidden will-change-transform"
+              style={{
+                clipPath: "inset(0 0 0 50%)",
+                transform: `translateX(${curtainProgress * 100}%)`,
+              }}
+              aria-hidden="true"
+            >
+              <video
+                ref={videoRefRight}
+                src={videoUrl}
+                poster={posterUrl}
+                muted
+                playsInline
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Layer 3: bottom gradient — fades out as curtain opens */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-64 pointer-events-none z-20"
+              style={{
+                background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)",
+                opacity: 1 - curtainProgress,
+              }}
               aria-hidden="true"
             />
 
-            {/* Bottom gradient for text readability */}
+            {/* Layer 4: title overlay — always visible above curtain, rises from bottom to top */}
             <div
-              className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
-              style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)" }}
-              aria-hidden="true"
-            />
-
-            {/* Title + subtitle overlay — rises near video end */}
-            <div
-              className="absolute inset-x-0 bottom-0 pb-14 text-center pointer-events-none will-change-transform"
-              style={{ transform: `translateY(${-titleTranslateY}px)` }}
+              className="absolute inset-x-0 top-20 text-center pointer-events-none will-change-transform z-30"
+              style={{ transform: `translateY(${titleOffset}px)` }}
               aria-hidden="true"
             >
               <h2
@@ -205,6 +281,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
                 {loc(subtitle, locale)}
               </p>
             </div>
+
           </div>
         </div>
       )}
@@ -216,15 +293,19 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       >
         <div className="max-w-5xl mx-auto">
 
-          {/* Header */}
+          {/* Header — title/subtitle only shown when there's no video (video delivers them via animation) */}
           <div className="text-center mb-16">
-            <h2
-              className="text-4xl md:text-5xl mb-4"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              {loc(title, locale)}
-            </h2>
-            <p className="text-terracotta font-medium text-lg">{loc(subtitle, locale)}</p>
+            {!videoUrl && (
+              <>
+                <h2
+                  className="text-4xl md:text-5xl mb-4"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  {loc(title, locale)}
+                </h2>
+                <p className="text-terracotta font-medium text-lg">{loc(subtitle, locale)}</p>
+              </>
+            )}
             <p className="text-ivory/50 mt-4 max-w-2xl mx-auto text-sm leading-relaxed">
               {loc(description, locale)}
             </p>
