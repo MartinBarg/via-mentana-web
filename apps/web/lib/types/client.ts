@@ -5,8 +5,14 @@ export interface ReviewerConfig {
   id: string;
   author: string;
   country: string;
-  rating: number;
+  rating?: number;
   comment: LocalizedString;
+}
+
+export interface ClientReviewsConfig {
+  title: LocalizedString;
+  subtitle?: LocalizedString;
+  items: ReviewerConfig[];
 }
 
 export interface POIPlace {
@@ -93,5 +99,6 @@ export interface ClientConfig {
   heroToursCount?: number;
   hero?: ClientHeroConfig;
   aboutUs?: AboutUsConfig;
+  reviews?: ClientReviewsConfig;
   properties: PropertyConfig[];
 }

@@ -94,6 +94,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
           property={selectedProperty}
           locale={locale}
           backgroundImageUrl={config.backgroundImageUrl}
+          clientReviews={config.reviews}
         />
       )}
       {selectedProperty?.cta && (selectedProperty.hero.ctaUrl ?? selectedProperty.airbnbUrl) && (

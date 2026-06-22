@@ -1,12 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { PropertyConfig } from "@/lib/types/client";
+import type { PropertyConfig, ClientReviewsConfig } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
 
 interface ReviewsSectionProps {
   property: PropertyConfig;
   locale: string;
+  clientReviews?: ClientReviewsConfig;
 }
 
 function StarRating({ rating }: { rating: number }) {
@@ -26,13 +27,17 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export default function ReviewsSection({ property, locale }: ReviewsSectionProps) {
+export default function ReviewsSection({ property, locale, clientReviews }: ReviewsSectionProps) {
   const t = useTranslations("reviews");
 
-  if (!property.reviews) return null;
+  const reviews = clientReviews ?? property.reviews;
+  if (!reviews) return null;
 
-  const { title, subtitle, items } = property.reviews;
-  const avgRating = (items.reduce((s, r) => s + r.rating, 0) / items.length).toFixed(1);
+  const { title, subtitle, items } = reviews;
+  const hasRatings = items.some((r) => r.rating !== undefined);
+  const avgRating = hasRatings
+    ? (items.reduce((s, r) => s + (r.rating ?? 0), 0) / items.length).toFixed(1)
+    : null;
 
   return (
     <section id="reviews" className="py-24 px-6 bg-ivory">
@@ -44,12 +49,16 @@ export default function ReviewsSection({ property, locale }: ReviewsSectionProps
           >
             {loc(title, locale)}
           </h2>
-          <p className="text-warm-gray mb-4">{loc(subtitle, locale)}</p>
-          <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-sm border border-ochre/10">
-            <StarRating rating={5} />
-            <span className="text-2xl font-bold text-charcoal">{avgRating}</span>
-            <span className="text-warm-gray text-sm">{t("rating_label")}</span>
-          </div>
+          {subtitle && (
+            <p className="text-warm-gray mb-4">{loc(subtitle, locale)}</p>
+          )}
+          {avgRating && (
+            <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-sm border border-ochre/10">
+              <StarRating rating={5} />
+              <span className="text-2xl font-bold text-charcoal">{avgRating}</span>
+              <span className="text-warm-gray text-sm">{t("rating_label")}</span>
+            </div>
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -63,7 +72,7 @@ export default function ReviewsSection({ property, locale }: ReviewsSectionProps
                   <p className="font-semibold text-charcoal">{reviewer.author}</p>
                   <p className="text-sm text-warm-gray">{reviewer.country}</p>
                 </div>
-                <StarRating rating={reviewer.rating} />
+                {reviewer.rating !== undefined && <StarRating rating={reviewer.rating} />}
               </div>
               <p className="text-warm-gray leading-relaxed text-sm">
                 &ldquo;{loc(reviewer.comment, locale)}&rdquo;
