@@ -24,6 +24,34 @@ export default function LocationSection({ property, locale }: LocationSectionPro
   const [titleTranslateY, setTitleTranslateY] = useState(0);
 
   const videoUrl = property.location?.videoUrl;
+  const posterUrl = videoUrl?.replace(/\.mp4$/, "-poster.jpg");
+
+  // iOS Safari: play()+pause() unlocks seeking for muted videos without requiring a user gesture.
+  // Without this, iOS ignores preload="auto" and video.duration stays NaN, breaking scrubbing.
+  useEffect(() => {
+    if (!videoUrl || !videoZoneRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const video = videoRef.current;
+        if (!entry.isIntersecting || !video || video.readyState >= 2) return;
+        video
+          .play()
+          .then(() => {
+            video.pause();
+            video.currentTime = 0;
+          })
+          .catch(() => {
+            // Fallback for browsers that still refuse play() — just trigger load
+            video.load();
+          });
+      },
+      { rootMargin: "0px 0px 400px 0px" } // start loading 400px before zone enters viewport
+    );
+
+    observer.observe(videoZoneRef.current);
+    return () => observer.disconnect();
+  }, [videoUrl]);
 
   // Scrub video as user scrolls through the video zone
   useEffect(() => {
@@ -138,10 +166,11 @@ export default function LocationSection({ property, locale }: LocationSectionPro
           style={{ height: `${VIDEO_SCROLL_VH}vh` }}
           className="relative"
         >
-          <div className="sticky top-0 h-screen overflow-hidden">
+          <div className="sticky top-0 h-screen overflow-hidden bg-black">
             <video
               ref={videoRef}
               src={videoUrl}
+              poster={posterUrl}
               muted
               playsInline
               preload="auto"
