@@ -47,10 +47,11 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       const frameDuration = 1 / 30;
       if (Math.abs(video.currentTime - targetTime) >= frameDuration * 0.5) {
         // fastSeek is optimized for scrubbing in browsers that support it (Firefox, Safari)
-        if ("fastSeek" in video) {
-          (video as HTMLVideoElement & { fastSeek(t: number): void }).fastSeek(targetTime);
+        const v = video as HTMLVideoElement & { fastSeek?: (t: number) => void };
+        if (typeof v.fastSeek === "function") {
+          v.fastSeek(targetTime);
         } else {
-          video.currentTime = targetTime;
+          v.currentTime = targetTime;
         }
       }
 
