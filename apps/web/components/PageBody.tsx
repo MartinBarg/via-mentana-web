@@ -74,6 +74,7 @@ export default function PageBody({ config, heroProperties, locale }: PageBodyPro
         cta={navCta}
         selectedPropertyLabel={selectedPropertyLabel}
         transparent={config.transparentNav}
+        reviewsNavLabel={config.reviews ? loc(config.reviews.title, locale) : undefined}
       />
       <HeroSection
         properties={heroProperties}
