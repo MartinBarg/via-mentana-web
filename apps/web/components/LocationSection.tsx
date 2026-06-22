@@ -196,31 +196,16 @@ export default function LocationSection({ property, locale }: LocationSectionPro
           id="location"
           ref={videoZoneRef}
           style={{ height: `${TOTAL_SCROLL_VH}vh` }}
-          className="relative"
+          className="relative z-10"
         >
           <div className="sticky top-0 h-screen overflow-hidden">
-
-            {/* Layer 0: charcoal background with title at resting position (revealed as curtain opens) */}
-            <div className="absolute inset-0 bg-charcoal z-0">
-              <div className="absolute inset-x-0 top-20 text-center pointer-events-none">
-                <h2
-                  className="text-5xl md:text-6xl text-ivory"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
-                  {loc(title, locale)}
-                </h2>
-                <p className="text-terracotta font-medium text-lg mt-3">
-                  {loc(subtitle, locale)}
-                </p>
-              </div>
-            </div>
 
             {/* Layer 1: left curtain panel — shows left half of video, slides left */}
             <div
               className="absolute inset-0 z-10 overflow-hidden will-change-transform"
               style={{
                 clipPath: "inset(0 50% 0 0)",
-                transform: `translateX(${-curtainProgress * 100}%)`,
+                transform: `translateX(${-curtainProgress * 50}%)`,
               }}
               aria-hidden="true"
             >
@@ -240,7 +225,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
               className="absolute inset-0 z-10 overflow-hidden will-change-transform"
               style={{
                 clipPath: "inset(0 0 0 50%)",
-                transform: `translateX(${curtainProgress * 100}%)`,
+                transform: `translateX(${curtainProgress * 50}%)`,
               }}
               aria-hidden="true"
             >
@@ -287,9 +272,12 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       )}
 
       {/* ── Location content section ── */}
+      {/* margin-top: -100vh overlaps this section behind the curtain zone so the
+          content (map, POIs) is revealed through the opening panels */}
       <section
         id={!videoUrl ? "location" : undefined}
         className="py-24 px-6 bg-charcoal text-ivory"
+        style={videoUrl ? { marginTop: "-100vh" } : undefined}
       >
         <div className="max-w-5xl mx-auto">
 
