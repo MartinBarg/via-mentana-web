@@ -166,7 +166,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
           style={{ height: `${VIDEO_SCROLL_VH}vh` }}
           className="relative"
         >
-          <div className="sticky top-0 h-screen overflow-hidden bg-black">
+          <div className="sticky top-0 h-screen overflow-hidden">
             <video
               ref={videoRef}
               src={videoUrl}
