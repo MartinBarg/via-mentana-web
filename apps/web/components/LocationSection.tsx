@@ -10,9 +10,7 @@ interface LocationSectionProps {
   locale: string;
 }
 
-// Total scroll budget to play through the whole video (in vh units)
 const VIDEO_SCROLL_VH = 300;
-// Progress threshold (0–1) at which the title starts rising
 const TITLE_RAISE_START = 0.82;
 
 export default function LocationSection({ property, locale }: LocationSectionProps) {
@@ -21,7 +19,12 @@ export default function LocationSection({ property, locale }: LocationSectionPro
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoZoneRef = useRef<HTMLDivElement>(null);
 
+  // Video layer exits upward: 0 = fully visible, 100 = fully off-screen
+  const [videoTranslate, setVideoTranslate] = useState(0);
+  // Overlay title rises from bottom (px, upward)
   const [titleTranslateY, setTitleTranslateY] = useState(0);
+  // Overlay title fades out as it lands in position
+  const [overlayOpacity, setOverlayOpacity] = useState(1);
 
   const videoUrl = property.location?.videoUrl;
   const posterUrl = videoUrl?.replace(/\.mp4$/, "-poster.jpg");
@@ -57,7 +60,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
     };
   }, [videoUrl]);
 
-  // Scrub video as user scrolls through the video zone
+  // Scrub video + drive transition animation
   useEffect(() => {
     if (!videoUrl) return;
 
@@ -73,25 +76,38 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       if (scrollable <= 0) return;
 
       const progress = Math.max(0, Math.min(1, (window.scrollY - zone.offsetTop) / scrollable));
-      const targetTime = progress * video.duration;
 
-      // Skip seek if we're still on the same frame (avoids redundant decoder work)
+      // Seek video — cap at 99.9% to avoid triggering end-of-video state
+      const seekTime = Math.min(progress, 0.999) * video.duration;
       const frameDuration = 1 / 30;
-      if (Math.abs(video.currentTime - targetTime) >= frameDuration * 0.5) {
-        // fastSeek is optimized for scrubbing in browsers that support it (Firefox, Safari)
+      if (Math.abs(video.currentTime - seekTime) >= frameDuration * 0.5) {
         const v = video as HTMLVideoElement & { fastSeek?: (t: number) => void };
         if (typeof v.fastSeek === "function") {
-          v.fastSeek(targetTime);
+          v.fastSeek(seekTime);
         } else {
-          v.currentTime = targetTime;
+          v.currentTime = seekTime;
         }
       }
 
       if (progress >= TITLE_RAISE_START) {
-        const raise = ((progress - TITLE_RAISE_START) / (1 - TITLE_RAISE_START)) * 80;
-        setTitleTranslateY(raise);
+        const transitionT = (progress - TITLE_RAISE_START) / (1 - TITLE_RAISE_START); // 0→1
+
+        // Video layer slides off the top of the screen
+        setVideoTranslate(transitionT * 100);
+
+        // Title rises from its overlay position toward the section header position.
+        // Overlay title center starts at approx: vh - pb(56px) - h2Height/2
+        // Section header h2 center is at: pt-24(96px) + h2Height/2 from container top
+        // Total rise ≈ vh - 210 (averaged across mobile/desktop font sizes)
+        const rise = window.innerHeight - 210;
+        setTitleTranslateY(transitionT * Math.max(rise, 100));
+
+        // Fade out overlay in second half so section header takes over cleanly
+        setOverlayOpacity(Math.max(0, 1 - transitionT * 2));
       } else {
+        setVideoTranslate(0);
         setTitleTranslateY(0);
+        setOverlayOpacity(1);
       }
     };
 
@@ -123,21 +139,18 @@ export default function LocationSection({ property, locale }: LocationSectionPro
       if (zone) window.scrollTo({ top: Math.max(0, zone.offsetTop - 1), behavior: "instant" });
     };
 
-    // Desktop: wheel event
     const onWheel = (e: WheelEvent) => {
-      if (e.deltaY >= 0) return; // only upward scroll
-      if (window.scrollY <= getContentThreshold()) return; // not in content zone
+      if (e.deltaY >= 0) return;
+      if (window.scrollY <= getContentThreshold()) return;
       e.preventDefault();
       jumpToBeforeZone();
     };
 
-    // Mobile: touch events
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
     };
     const onTouchMove = (e: TouchEvent) => {
-      // dy < 0 → finger moved down → page scrolls up
       const dy = touchStartY - e.touches[0].clientY;
       if (dy >= 0) return;
       if (window.scrollY <= getContentThreshold()) return;
@@ -171,28 +184,56 @@ export default function LocationSection({ property, locale }: LocationSectionPro
           className="relative"
         >
           <div className="sticky top-0 h-screen overflow-hidden">
-            <video
-              ref={videoRef}
-              src={videoUrl}
-              poster={posterUrl}
-              muted
-              playsInline
-              preload="auto"
-              className="absolute inset-0 w-full h-full object-cover"
-              aria-hidden="true"
-            />
 
-            {/* Bottom gradient for text readability */}
+            {/* Layer 1 (back): section header content — always present, revealed as video exits */}
+            <div className="absolute inset-0 bg-charcoal text-ivory flex flex-col items-center justify-start pt-24 px-6">
+              <h2
+                className="text-4xl md:text-5xl mb-4 text-center"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                {loc(title, locale)}
+              </h2>
+              <p className="text-terracotta font-medium text-lg text-center">
+                {loc(subtitle, locale)}
+              </p>
+              <p className="text-ivory/50 mt-4 max-w-2xl text-center text-sm leading-relaxed">
+                {loc(description, locale)}
+              </p>
+            </div>
+
+            {/* Layer 2 (middle): video + gradient — slides off the top during transition */}
             <div
-              className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
-              style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)" }}
-              aria-hidden="true"
-            />
+              className="absolute inset-0 will-change-transform"
+              style={{
+                zIndex: 10,
+                transform: `translateY(-${videoTranslate}%)`,
+              }}
+            >
+              <video
+                ref={videoRef}
+                src={videoUrl}
+                poster={posterUrl}
+                muted
+                playsInline
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-cover"
+                aria-hidden="true"
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 h-64 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)" }}
+                aria-hidden="true"
+              />
+            </div>
 
-            {/* Title + subtitle overlay — rises near video end */}
+            {/* Layer 3 (top): title overlay — rises independently then fades out */}
             <div
               className="absolute inset-x-0 bottom-0 pb-14 text-center pointer-events-none will-change-transform"
-              style={{ transform: `translateY(${-titleTranslateY}px)` }}
+              style={{
+                zIndex: 20,
+                transform: `translateY(-${titleTranslateY}px)`,
+                opacity: overlayOpacity,
+              }}
               aria-hidden="true"
             >
               <h2
@@ -205,6 +246,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
                 {loc(subtitle, locale)}
               </p>
             </div>
+
           </div>
         </div>
       )}
