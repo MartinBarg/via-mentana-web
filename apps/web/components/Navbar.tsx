@@ -23,6 +23,7 @@ interface NavbarProps {
   cta?: NavCtaConfig;
   selectedPropertyLabel?: string;
   transparent?: boolean;
+  reviewsNavLabel?: string;
 }
 
 function FlagImage({ countryCode, label }: { countryCode: string; label: string }) {
@@ -106,7 +107,7 @@ function CtaButton({
   );
 }
 
-export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyLabel, transparent }: NavbarProps) {
+export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyLabel, transparent, reviewsNavLabel }: NavbarProps) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const router = useRouter();
@@ -167,10 +168,10 @@ export default function Navbar({ brandName, brandLogoUrl, cta, selectedPropertyL
   }
 
   const NAV_LINKS = [
-    { id: "top",         label: t("tour360")         },
-    { id: "description", label: t("descriptionLink") },
-    { id: "location",    label: t("locationLink")    },
-    { id: "reviews",     label: t("reviewsLink")     },
+    { id: "top",         label: t("tour360")                       },
+    { id: "description", label: t("descriptionLink")               },
+    { id: "location",    label: t("locationLink")                  },
+    { id: "reviews",     label: reviewsNavLabel ?? t("reviewsLink") },
   ] as const;
 
   return (
