@@ -41,6 +41,83 @@ const config: ClientConfig = {
     },
   },
 
+  reviews: {
+    title: {
+      it: "Referenze",
+      en: "References",
+      es: "Referencias",
+      de: "Referenzen",
+    },
+    items: [
+      {
+        id: "ref-1",
+        author: "Gabriela M.",
+        country: "Buenos Aires",
+        comment: {
+          es: "Desde el primer contacto, Martín nos transmitió confianza total. Sabíamos que estábamos en manos de alguien serio y que realmente conoce el mercado.",
+          en: "From the very first contact, Martín gave us complete confidence. We knew we were in the hands of someone serious who truly knows the market.",
+          it: "Dal primo contatto, Martín ci ha trasmesso una fiducia totale. Sapevamo di essere nelle mani di qualcuno di serio che conosce davvero il mercato.",
+          de: "Vom ersten Kontakt an gab uns Martín volles Vertrauen. Wir wussten, dass wir in den Händen von jemandem waren, der den Markt wirklich kennt.",
+        },
+      },
+      {
+        id: "ref-2",
+        author: "Federico R.",
+        country: "Buenos Aires",
+        comment: {
+          es: "Compramos en un momento complicado y Martín resolvió cada obstáculo que surgió. Tuvo una respuesta concreta para todo, nunca nos dejó solos en el proceso.",
+          en: "We bought during a complicated period and Martín solved every obstacle that came up. He had a concrete answer for everything and never left us alone in the process.",
+          it: "Abbiamo comprato in un momento complicato e Martín ha risolto ogni ostacolo che si presentava. Ha avuto una risposta concreta per tutto e non ci ha mai lasciato soli nel processo.",
+          de: "Wir kauften in einer schwierigen Zeit und Martín löste jedes auftauchende Hindernis. Er hatte für alles eine konkrete Antwort und ließ uns im Prozess nie allein.",
+        },
+      },
+      {
+        id: "ref-3",
+        author: "Valeria & Tomás",
+        country: "Buenos Aires",
+        comment: {
+          es: "El trato fue impecable. Nunca nos sentimos presionados ni apurados. Martín escuchó lo que necesitábamos y trabajó en función de eso.",
+          en: "The treatment was impeccable. We never felt pressured or rushed. Martín listened to what we needed and worked accordingly.",
+          it: "Il trattamento è stato impeccabile. Non ci siamo mai sentiti sotto pressione o di fretta. Martín ha ascoltato ciò di cui avevamo bisogno e ha lavorato di conseguenza.",
+          de: "Die Behandlung war makellos. Wir fühlten uns nie unter Druck gesetzt oder gehetzt. Martín hörte zu, was wir brauchten, und arbeitete entsprechend.",
+        },
+      },
+      {
+        id: "ref-4",
+        author: "Ignacio P.",
+        country: "Gran Buenos Aires",
+        comment: {
+          es: "Nos asesoró sobre zonas, precios y timing con una claridad que no encontramos en ningún otro lado. Su conocimiento del mercado es genuino y lo demuestra en cada conversación.",
+          en: "He advised us on neighborhoods, prices, and timing with a clarity we didn't find anywhere else. His market knowledge is genuine and shows in every conversation.",
+          it: "Ci ha consigliato su zone, prezzi e tempi con una chiarezza che non abbiamo trovato da nessun'altra parte. La sua conoscenza del mercato è genuina e lo dimostra in ogni conversazione.",
+          de: "Er beriet uns zu Gegenden, Preisen und Timing mit einer Klarheit, die wir nirgendwo sonst fanden. Sein Marktwissen ist echt und zeigt sich in jedem Gespräch.",
+        },
+      },
+      {
+        id: "ref-5",
+        author: "Carolina B.",
+        country: "Buenos Aires",
+        comment: {
+          es: "Alquilamos a través de Martín y se encargó de absolutamente todo. La burocracia, los papeles, las consultas del propietario. Nosotros solo teníamos que tomar decisiones.",
+          en: "We rented through Martín and he handled absolutely everything. The paperwork, the bureaucracy, the landlord's questions. We only had to make decisions.",
+          it: "Abbiamo affittato tramite Martín e lui si è occupato di assolutamente tutto. La burocrazia, i documenti, le domande del proprietario. Noi dovevamo solo prendere decisioni.",
+          de: "Wir mieteten über Martín und er kümmerte sich um absolut alles. Den Papierkram, die Bürokratie, die Fragen des Vermieters. Wir mussten nur Entscheidungen treffen.",
+        },
+      },
+      {
+        id: "ref-6",
+        author: "Pablo L.",
+        country: "Gran Buenos Aires",
+        comment: {
+          es: "La compra de nuestra casa fue compleja, con varios pasos que no entendíamos. Martín los explicó con paciencia y nos ayudó a tomar cada decisión con información real.",
+          en: "Buying our house was complex, with several steps we didn't understand. Martín explained them patiently and helped us make each decision with real information.",
+          it: "L'acquisto della nostra casa è stato complesso, con diversi passaggi che non capivamo. Martín li ha spiegati con pazienza e ci ha aiutato a prendere ogni decisione con informazioni reali.",
+          de: "Der Kauf unseres Hauses war komplex, mit mehreren Schritten, die wir nicht verstanden. Martín erklärte sie geduldig und half uns, jede Entscheidung mit echten Informationen zu treffen.",
+        },
+      },
+    ],
+  },
+
   properties: [
     // ─── 1. Le Parc ───────────────────────────────────────────────────────────
     {
