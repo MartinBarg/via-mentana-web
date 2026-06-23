@@ -394,13 +394,44 @@ export interface RealEstateInlineFiltersProps {
 
 type FilterKey = "opType" | "price" | "ambientes" | "zone" | "m2";
 
+// Defined outside the parent component to avoid "component created during render" lint error
+function FilterChip({
+  id, label, summary, isActive, isOpen, accent, onToggle,
+}: {
+  id: FilterKey;
+  label: string;
+  summary?: string | null;
+  isActive: boolean;
+  isOpen: boolean;
+  accent: string;
+  onToggle: (id: FilterKey) => void;
+}) {
+  return (
+    <button
+      onClick={() => onToggle(id)}
+      className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap flex-shrink-0"
+      style={isActive || isOpen
+        ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
+        : { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }
+      }
+    >
+      {summary ?? label}
+      <svg
+        className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  );
+}
+
 export function RealEstateInlineFilters({
   api, allZones, locale, accent, labels,
 }: RealEstateInlineFiltersProps) {
   const [openFilter, setOpenFilter] = useState<FilterKey | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close panel on outside click
   useEffect(() => {
     if (!openFilter) return;
     const handler = (e: MouseEvent) => {
@@ -424,42 +455,12 @@ export function RealEstateInlineFilters({
   const mMin = m2Range ? m2Range[0] : available.m2Min;
   const mMax = m2Range ? m2Range[1] : available.m2Max;
 
-  // Chip active states
-  const opTypeActive = !!opType;
-  const priceActive = !!priceRange;
-  const ambientesActive = ambientes.length > 0;
-  const zoneActive = selectedZones.length > 0;
-  const m2Active = !!m2Range;
-
-  // Short summaries shown on the chip when a filter is active
-  const opTypeSummary = opType === "alquiler" ? labels.rental : opType === "venta" ? labels.purchase : null;
+  const opTypeSummary = opType ? (opType === "alquiler" ? labels.rental : labels.purchase) : null;
   const ambientesSummary = ambientes.length > 0 ? ambientes.join(", ") : null;
   const zoneSummary = selectedZones.length === 1
     ? (allZones.find((z) => z.id === selectedZones[0]) ? loc(allZones.find((z) => z.id === selectedZones[0])!.label, locale) : selectedZones[0])
     : selectedZones.length > 1 ? `${selectedZones.length}` : null;
   const m2Summary = m2Range ? `${m2Range[0]}–${m2Range[1]}` : null;
-
-  function Chip({ id, label, summary, isActive }: { id: FilterKey; label: string; summary?: string | null; isActive: boolean }) {
-    const isOpen = openFilter === id;
-    return (
-      <button
-        onClick={() => toggle(id)}
-        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap flex-shrink-0"
-        style={isActive || isOpen
-          ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
-          : { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }
-        }
-      >
-        {summary ?? label}
-        <svg
-          className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-    );
-  }
 
   // Panel content styles (light bg, dark text)
   const panelBtnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
@@ -469,11 +470,11 @@ export function RealEstateInlineFilters({
     <div ref={containerRef} className="flex flex-col mb-3 flex-shrink-0">
       {/* Chips row */}
       <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <Chip id="opType" label={`${labels.rental} / ${labels.purchase}`} summary={opTypeSummary} isActive={opTypeActive} />
-        <Chip id="price" label={labels.price} isActive={priceActive} />
-        <Chip id="ambientes" label={labels.rooms} summary={ambientesSummary} isActive={ambientesActive} />
-        <Chip id="zone" label={labels.zone} summary={zoneSummary} isActive={zoneActive} />
-        <Chip id="m2" label={labels.m2} summary={m2Summary ? `${m2Summary} m²` : null} isActive={m2Active} />
+        <FilterChip id="opType" label={`${labels.rental} / ${labels.purchase}`} summary={opTypeSummary} isActive={!!opType} isOpen={openFilter === "opType"} accent={accent} onToggle={toggle} />
+        <FilterChip id="price" label={labels.price} isActive={!!priceRange} isOpen={openFilter === "price"} accent={accent} onToggle={toggle} />
+        <FilterChip id="ambientes" label={labels.rooms} summary={ambientesSummary} isActive={ambientes.length > 0} isOpen={openFilter === "ambientes"} accent={accent} onToggle={toggle} />
+        <FilterChip id="zone" label={labels.zone} summary={zoneSummary} isActive={selectedZones.length > 0} isOpen={openFilter === "zone"} accent={accent} onToggle={toggle} />
+        <FilterChip id="m2" label={labels.m2} summary={m2Summary ? `${m2Summary} m²` : null} isActive={!!m2Range} isOpen={openFilter === "m2"} accent={accent} onToggle={toggle} />
         <button
           onClick={api.clearAll}
           className="text-xs font-medium transition-colors px-2.5 py-1.5 rounded-full border flex-shrink-0"
