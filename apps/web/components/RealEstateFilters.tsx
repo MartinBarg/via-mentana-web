@@ -467,9 +467,9 @@ export function RealEstateInlineFilters({
   const panelBtnIdle: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
 
   return (
-    <div ref={containerRef} className="flex flex-col mb-3 flex-shrink-0">
+    <div ref={containerRef} className="relative mb-3 flex-shrink-0">
       {/* Chips row */}
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap">
         <FilterChip id="opType" label={`${labels.rental} / ${labels.purchase}`} summary={opTypeSummary} isActive={!!opType} isOpen={openFilter === "opType"} accent={accent} onToggle={toggle} />
         <FilterChip id="price" label={labels.price} isActive={!!priceRange} isOpen={openFilter === "price"} accent={accent} onToggle={toggle} />
         <FilterChip id="ambientes" label={labels.rooms} summary={ambientesSummary} isActive={ambientes.length > 0} isOpen={openFilter === "ambientes"} accent={accent} onToggle={toggle} />
@@ -487,10 +487,10 @@ export function RealEstateInlineFilters({
         </button>
       </div>
 
-      {/* Expandable panel — appears below chips when any is open */}
+      {/* Expandable panel — absolute so it overlays tour cards without resizing them */}
       {openFilter && (
         <div
-          className="bg-ivory rounded-2xl shadow-2xl mb-2 overflow-hidden"
+          className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 overflow-hidden"
           style={{ border: "1px solid rgba(0,0,0,0.08)" }}
         >
           {/* Alquiler / Compra */}
