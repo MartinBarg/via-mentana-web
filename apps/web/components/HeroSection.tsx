@@ -272,6 +272,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const reLabels = {
     rental: t("reRental"),
     purchase: t("rePurchase"),
+    price: t("rePrice"),
     monthlyPrice: t("reMonthlyPrice"),
     totalPrice: t("reTotalPrice"),
     rooms: t("reRooms"),

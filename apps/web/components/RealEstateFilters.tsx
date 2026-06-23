@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import type { PropertyConfig, HeroZone } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
 
@@ -42,7 +42,6 @@ export interface RealEstateFilterAPI {
 
 // ─── Cross-reactive helper ────────────────────────────────────────────────────
 // Applies all raw filters EXCEPT the one named in `exclude`.
-// Uses raw (unvalidated) values so there's no circular dependency between filters.
 
 function applyExcept(
   base: PropertyConfig[],
@@ -75,9 +74,6 @@ function applyExcept(
 }
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
-// All derived state uses useMemo — no setState inside useEffect.
-// Each filter's available options are computed from byOpType + ALL other raw filters
-// (excluding itself), making every filter fully cross-reactive.
 
 export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFilterAPI {
   const [opType, setOpTypeRaw] = useState<OpType | null>(null);
@@ -87,7 +83,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
   const [priceFilterRaw, setPriceFilterRaw] = useState<[number, number] | null>(null);
   const [m2FilterRaw, setM2FilterRaw] = useState<[number, number] | null>(null);
 
-  // Step 1: filter by opType
   const byOpType = useMemo(() =>
     opType === null
       ? properties
@@ -95,8 +90,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     [properties, opType]
   );
 
-  // Step 2: derive currency from byOpType + zones + ambientes (no price/m2)
-  // Computing currency first breaks the circular dependency between currency and price options.
+  // Derive currency from byOpType + zones + ambientes (no price/m2 to avoid circular deps)
   const forCurrencyBase = useMemo(() => {
     let r = byOpType;
     if (zonesRaw.length > 0) r = r.filter((p) => p.zone && zonesRaw.includes(p.zone));
@@ -121,7 +115,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return availableCurrencies[0];
   }, [availableCurrencies, currencyRaw]);
 
-  // Step 3: cross-reactive option sets — each excludes its own filter
+  // Cross-reactive option sets
   const forZoneOptions = useMemo(() =>
     applyExcept(byOpType, "zone", zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw),
     [byOpType, zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw]
@@ -137,7 +131,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     [byOpType, zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw]
   );
 
-  // Step 4: available options derived from their respective cross-reactive sets
   const availableZones = useMemo(() => {
     const set = new Set<string>();
     forZoneOptions.forEach((p) => { if (p.zone) set.add(p.zone); });
@@ -150,7 +143,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return Array.from(set).sort((a, b) => a - b);
   }, [forAmbientesOptions]);
 
-  // Price range: from zones+ambientes base (not m2, to avoid over-constraining currency detection)
   const availablePriceRange = useMemo((): [number, number] => {
     if (!opType || !currency) return [0, 0];
     const amounts = forCurrencyBase
@@ -169,7 +161,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return [Math.min(...vals), Math.max(...vals)];
   }, [forM2Options]);
 
-  // Step 5: effective (clamped/cleaned) derived values — no useEffect needed
   const effectiveAmbientes = useMemo(() =>
     ambientesRaw.filter((a) => availableAmbientes.includes(a)),
     [ambientesRaw, availableAmbientes]
@@ -195,7 +186,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return [lo, hi];
   }, [m2FilterRaw, availableM2Range]);
 
-  // Step 6: final result — apply all effective filters to byOpType
   const finalFiltered = useMemo(() => {
     let r = byOpType;
     if (zonesRaw.length > 0) r = r.filter((p) => p.zone && zonesRaw.includes(p.zone));
@@ -267,27 +257,15 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
 // ─── DualRangeSlider ─────────────────────────────────────────────────────────
 
 function DualRangeSlider({
-  min,
-  max,
-  valueMin,
-  valueMax,
-  onChangeMin,
-  onChangeMax,
-  formatValue,
-  accent,
-  step = 1,
-  dark = false,
+  min, max, valueMin, valueMax, onChangeMin, onChangeMax, formatValue, accent, step = 1,
 }: {
-  min: number;
-  max: number;
-  valueMin: number;
-  valueMax: number;
+  min: number; max: number;
+  valueMin: number; valueMax: number;
   onChangeMin: (v: number) => void;
   onChangeMax: (v: number) => void;
   formatValue: (v: number) => string;
   accent: string;
   step?: number;
-  dark?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -315,18 +293,18 @@ function DualRangeSlider({
 
   return (
     <div className="pt-1 pb-2">
-      <div className={`flex justify-between text-xs font-semibold mb-3 tabular-nums ${dark ? "text-white/80" : "text-charcoal"}`}>
+      <div className="flex justify-between text-xs font-semibold text-charcoal mb-3 tabular-nums">
         <span>{formatValue(valueMin)}</span>
         <span>{formatValue(valueMax)}</span>
       </div>
       <div className="relative h-5 mx-2" ref={trackRef}>
-        <div className={`absolute inset-x-0 h-[3px] top-1/2 -translate-y-1/2 rounded-full ${dark ? "bg-white/20" : "bg-charcoal/15"}`} />
+        <div className="absolute inset-x-0 h-[3px] top-1/2 -translate-y-1/2 rounded-full bg-charcoal/15" />
         <div
           className="absolute h-[3px] top-1/2 -translate-y-1/2 rounded-full"
           style={{ left: `${leftPct}%`, right: `${100 - rightPct}%`, backgroundColor: accent }}
         />
         <div
-          className="absolute w-[16px] h-[16px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
+          className="absolute w-[18px] h-[18px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
           style={{ ...handleBase, left: `${leftPct}%` }}
           onPointerDown={(e) => {
             e.preventDefault();
@@ -340,7 +318,7 @@ function DualRangeSlider({
           onPointerUp={(e) => { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); }}
         />
         <div
-          className="absolute w-[16px] h-[16px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
+          className="absolute w-[18px] h-[18px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
           style={{ ...handleBase, left: `${rightPct}%` }}
           onPointerDown={(e) => {
             e.preventDefault();
@@ -392,6 +370,7 @@ function priceStep(currency: Currency, range: number): number {
 }
 
 // ─── RealEstateInlineFilters ──────────────────────────────────────────────────
+// 5 individual filter chips (closed by default), each expands its own panel when clicked.
 
 export interface RealEstateInlineFiltersProps {
   api: RealEstateFilterAPI;
@@ -401,6 +380,7 @@ export interface RealEstateInlineFiltersProps {
   labels: {
     rental: string;
     purchase: string;
+    price: string;
     monthlyPrice: string;
     totalPrice: string;
     rooms: string;
@@ -412,14 +392,27 @@ export interface RealEstateInlineFiltersProps {
   };
 }
 
+type FilterKey = "opType" | "price" | "ambientes" | "zone" | "m2";
+
 export function RealEstateInlineFilters({
-  api,
-  allZones,
-  locale,
-  accent,
-  labels,
+  api, allZones, locale, accent, labels,
 }: RealEstateInlineFiltersProps) {
-  const { state, available, isFiltered, setOpType, toggleZone, toggleAmbiente, setCurrency, setPriceRange, setM2Range, clearAll } = api;
+  const [openFilter, setOpenFilter] = useState<FilterKey | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close panel on outside click
+  useEffect(() => {
+    if (!openFilter) return;
+    const handler = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setOpenFilter(null);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [openFilter]);
+
+  const toggle = (f: FilterKey) => setOpenFilter((o) => (o === f ? null : f));
+
+  const { state, available, isFiltered } = api;
   const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
 
   const hasPriceData = opType !== null && available.priceMin < available.priceMax;
@@ -428,158 +421,251 @@ export function RealEstateInlineFilters({
   const pMin = priceRange ? priceRange[0] : available.priceMin;
   const pMax = priceRange ? priceRange[1] : available.priceMax;
   const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
-
   const mMin = m2Range ? m2Range[0] : available.m2Min;
   const mMax = m2Range ? m2Range[1] : available.m2Max;
 
-  const btnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
-  const btnIdle: React.CSSProperties = { backgroundColor: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.22)", color: "rgba(255,255,255,0.82)" };
-  const btnMuted: React.CSSProperties = { backgroundColor: "transparent", borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.28)" };
+  // Chip active states
+  const opTypeActive = !!opType;
+  const priceActive = !!priceRange;
+  const ambientesActive = ambientes.length > 0;
+  const zoneActive = selectedZones.length > 0;
+  const m2Active = !!m2Range;
+
+  // Short summaries shown on the chip when a filter is active
+  const opTypeSummary = opType === "alquiler" ? labels.rental : opType === "venta" ? labels.purchase : null;
+  const ambientesSummary = ambientes.length > 0 ? ambientes.join(", ") : null;
+  const zoneSummary = selectedZones.length === 1
+    ? (allZones.find((z) => z.id === selectedZones[0]) ? loc(allZones.find((z) => z.id === selectedZones[0])!.label, locale) : selectedZones[0])
+    : selectedZones.length > 1 ? `${selectedZones.length}` : null;
+  const m2Summary = m2Range ? `${m2Range[0]}–${m2Range[1]}` : null;
+
+  function Chip({ id, label, summary, isActive }: { id: FilterKey; label: string; summary?: string | null; isActive: boolean }) {
+    const isOpen = openFilter === id;
+    return (
+      <button
+        onClick={() => toggle(id)}
+        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap flex-shrink-0"
+        style={isActive || isOpen
+          ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
+          : { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }
+        }
+      >
+        {summary ?? label}
+        <svg
+          className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    );
+  }
+
+  // Panel content styles (light bg, dark text)
+  const panelBtnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
+  const panelBtnIdle: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
 
   return (
-    <div className="flex flex-col mb-3 flex-shrink-0">
-      {/* Row 1: Alquiler/Compra + Borrar */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="flex gap-1.5 flex-1">
-          {(["alquiler", "venta"] as OpType[]).map((v) => (
-            <button
-              key={v}
-              onClick={() => setOpType(opType === v ? null : v)}
-              className="px-3 py-1.5 text-xs rounded-full font-medium border transition-colors flex-1 text-center"
-              style={opType === v ? btnActive : btnIdle}
-            >
-              {v === "alquiler" ? labels.rental : labels.purchase}
-            </button>
-          ))}
-        </div>
+    <div ref={containerRef} className="flex flex-col mb-3 flex-shrink-0">
+      {/* Chips row */}
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <Chip id="opType" label={`${labels.rental} / ${labels.purchase}`} summary={opTypeSummary} isActive={opTypeActive} />
+        <Chip id="price" label={labels.price} isActive={priceActive} />
+        <Chip id="ambientes" label={labels.rooms} summary={ambientesSummary} isActive={ambientesActive} />
+        <Chip id="zone" label={labels.zone} summary={zoneSummary} isActive={zoneActive} />
+        <Chip id="m2" label={labels.m2} summary={m2Summary ? `${m2Summary} m²` : null} isActive={m2Active} />
         <button
-          onClick={clearAll}
-          className="text-xs font-medium transition-colors flex-shrink-0 px-2.5 py-1.5 rounded-full border"
-          style={isFiltered ? { ...btnIdle, borderColor: "rgba(255,255,255,0.35)" } : btnMuted}
+          onClick={api.clearAll}
+          className="text-xs font-medium transition-colors px-2.5 py-1.5 rounded-full border flex-shrink-0"
+          style={isFiltered
+            ? { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.85)" }
+            : { backgroundColor: "transparent", borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.28)" }
+          }
         >
           {labels.clearFilters}
         </button>
       </div>
 
-      <div className="h-px bg-white/10 mb-3" />
-
-      {/* Row 2: Precio */}
-      <div className="mb-3">
-        {opType === null ? (
-          <p className="text-[11px] text-white/35 py-0.5 italic">{labels.selectOpFirst}</p>
-        ) : (
-          <>
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider">
-                {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
+      {/* Expandable panel — appears below chips when any is open */}
+      {openFilter && (
+        <div
+          className="bg-ivory rounded-2xl shadow-2xl mb-2 overflow-hidden"
+          style={{ border: "1px solid rgba(0,0,0,0.08)" }}
+        >
+          {/* Alquiler / Compra */}
+          {openFilter === "opType" && (
+            <div className="p-4">
+              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
+                {labels.rental} / {labels.purchase}
               </p>
-              {available.currencies.length > 1 && (
-                <div className="flex gap-1">
-                  {available.currencies.map((c) => (
+              <div className="flex gap-2">
+                {(["alquiler", "venta"] as OpType[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => api.setOpType(opType === v ? null : v)}
+                    className="px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center"
+                    style={opType === v ? panelBtnActive : panelBtnIdle}
+                  >
+                    {v === "alquiler" ? labels.rental : labels.purchase}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Precio */}
+          {openFilter === "price" && (
+            <div className="p-4">
+              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
+                {labels.price}
+              </p>
+              {opType === null ? (
+                <>
+                  <p className="text-xs text-warm-gray mb-3">{labels.selectOpFirst}</p>
+                  <div className="flex gap-2">
+                    {(["alquiler", "venta"] as OpType[]).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => api.setOpType(v)}
+                        className="px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
+                        style={panelBtnIdle}
+                      >
+                        {v === "alquiler" ? labels.rental : labels.purchase}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-xs text-warm-gray mb-2">
+                    {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
+                  </p>
+                  {available.currencies.length > 1 && (
+                    <div className="flex gap-1.5 mb-3">
+                      {available.currencies.map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => api.setCurrency(c)}
+                          className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
+                          style={currency === c ? panelBtnActive : panelBtnIdle}
+                        >
+                          {c === "ARS" ? "Pesos $" : "Dólares US$"}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {hasPriceData && currency ? (
+                    <DualRangeSlider
+                      min={available.priceMin}
+                      max={available.priceMax}
+                      valueMin={pMin}
+                      valueMax={pMax}
+                      onChangeMin={(v) => api.setPriceRange([v, pMax])}
+                      onChangeMax={(v) => api.setPriceRange([pMin, v])}
+                      formatValue={(v) => formatPrice(v, currency)}
+                      accent={accent}
+                      step={pStep}
+                    />
+                  ) : (
+                    <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Ambientes */}
+          {openFilter === "ambientes" && (
+            <div className="p-4">
+              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
+                {labels.rooms}
+              </p>
+              {available.ambientes.length === 0 ? (
+                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {available.ambientes.map((n) => (
                     <button
-                      key={c}
-                      onClick={() => setCurrency(c)}
-                      className="px-2 py-0.5 text-[10px] rounded-full border transition-colors font-semibold"
-                      style={currency === c ? btnActive : btnIdle}
+                      key={n}
+                      onClick={() => api.toggleAmbiente(n)}
+                      className="w-10 h-10 rounded-xl text-sm font-medium border transition-colors"
+                      style={ambientes.includes(n) ? panelBtnActive : panelBtnIdle}
                     >
-                      {c === "ARS" ? "ARS $" : "USD"}
+                      {n}
                     </button>
                   ))}
                 </div>
               )}
             </div>
-            {hasPriceData && currency ? (
-              <DualRangeSlider
-                min={available.priceMin}
-                max={available.priceMax}
-                valueMin={pMin}
-                valueMax={pMax}
-                onChangeMin={(v) => setPriceRange([v, pMax])}
-                onChangeMax={(v) => setPriceRange([pMin, v])}
-                formatValue={(v) => formatPrice(v, currency)}
-                accent={accent}
-                step={pStep}
-                dark
-              />
-            ) : (
-              <p className="text-xs text-white/30 italic py-1">{labels.noProps}</p>
-            )}
-          </>
-        )}
-      </div>
+          )}
 
-      <div className="h-px bg-white/10 mb-3" />
+          {/* Zona */}
+          {openFilter === "zone" && (
+            <div className="p-4">
+              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
+                {labels.zone}
+              </p>
+              {available.zones.length === 0 && selectedZones.length === 0 ? (
+                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+              ) : (
+                <div className="space-y-1">
+                  {allZones.map((zone) => {
+                    const checked = selectedZones.includes(zone.id);
+                    const isAvail = available.zones.includes(zone.id);
+                    if (!checked && !isAvail) return null;
+                    return (
+                      <button
+                        key={zone.id}
+                        onClick={() => api.toggleZone(zone.id)}
+                        className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
+                      >
+                        <span
+                          className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
+                          style={checked
+                            ? { backgroundColor: accent, borderColor: accent }
+                            : { backgroundColor: "transparent", borderColor: "#9B9490" }
+                          }
+                        >
+                          {checked && (
+                            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </span>
+                        {loc(zone.label, locale)}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
-      {/* Row 3: Ambientes + m² */}
-      <div className="flex gap-4 mb-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1.5">{labels.rooms}</p>
-          {available.ambientes.length === 0 ? (
-            <p className="text-xs text-white/30 italic">{labels.noProps}</p>
-          ) : (
-            <div className="flex flex-wrap gap-1.5">
-              {available.ambientes.map((n) => (
-                <button
-                  key={n}
-                  onClick={() => toggleAmbiente(n)}
-                  className="w-8 h-7 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center"
-                  style={ambientes.includes(n) ? btnActive : btnIdle}
-                >
-                  {n}
-                </button>
-              ))}
+          {/* m² */}
+          {openFilter === "m2" && (
+            <div className="p-4">
+              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
+                m²
+              </p>
+              {hasM2Data ? (
+                <DualRangeSlider
+                  min={available.m2Min}
+                  max={available.m2Max}
+                  valueMin={mMin}
+                  valueMax={mMax}
+                  onChangeMin={(v) => api.setM2Range([v, mMax])}
+                  onChangeMax={(v) => api.setM2Range([mMin, v])}
+                  formatValue={(v) => `${v} m²`}
+                  accent={accent}
+                  step={5}
+                />
+              ) : (
+                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+              )}
             </div>
           )}
         </div>
-
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1">{labels.m2}</p>
-          {hasM2Data ? (
-            <DualRangeSlider
-              min={available.m2Min}
-              max={available.m2Max}
-              valueMin={mMin}
-              valueMax={mMax}
-              onChangeMin={(v) => setM2Range([v, mMax])}
-              onChangeMax={(v) => setM2Range([mMin, v])}
-              formatValue={(v) => `${v}m²`}
-              accent={accent}
-              step={5}
-              dark
-            />
-          ) : (
-            <p className="text-xs text-white/30 italic pt-1">{labels.noProps}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="h-px bg-white/10 mb-3" />
-
-      {/* Row 4: Zona */}
-      <div>
-        <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1.5">{labels.zone}</p>
-        {available.zones.length === 0 && selectedZones.length === 0 ? (
-          <p className="text-xs text-white/30 italic">{labels.noProps}</p>
-        ) : (
-          <div className="flex flex-wrap gap-1.5">
-            {allZones.map((zone) => {
-              const checked = selectedZones.includes(zone.id);
-              const isAvail = available.zones.includes(zone.id);
-              if (!checked && !isAvail) return null;
-              return (
-                <button
-                  key={zone.id}
-                  onClick={() => toggleZone(zone.id)}
-                  className="px-2.5 py-1 text-xs rounded-full border transition-colors font-medium"
-                  style={checked ? btnActive : isAvail ? btnIdle : btnMuted}
-                >
-                  {loc(zone.label, locale)}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
