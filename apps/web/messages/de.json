@@ -41,6 +41,20 @@
     "guestsLabel": "Gäste",
     "guestsFilteredBadge": "Touren nach Gästen gefiltert",
     "select": "Auswählen",
-    "selected": "Ausgewählt"
+    "selected": "Ausgewählt",
+    "reFilters": "Filter",
+    "reRental": "Miete",
+    "rePurchase": "Kauf",
+    "rePrice": "Preis",
+    "reMonthlyPrice": "Monatspreis",
+    "reTotalPrice": "Gesamtpreis",
+    "reRooms": "Zimmer",
+    "reZone": "Zone",
+    "reM2": "m²",
+    "reClearFilters": "Zurücksetzen",
+    "reAllZones": "Alle Zonen",
+    "reSelectOpFirst": "Miete oder Kauf auswählen",
+    "reCurrency": "Währung",
+    "reFiltered": "Immobilien"
   }
 }

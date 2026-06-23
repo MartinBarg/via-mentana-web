@@ -26,10 +26,20 @@ export interface POICategory {
   places: POIPlace[];
 }
 
+export interface PropertyPrice {
+  amount: number;
+  currency: "ARS" | "USD";
+}
+
 export interface PropertyConfig {
   id: string;
   zone?: string;
   guests?: number;
+  operationType?: ("alquiler" | "venta")[];
+  rentalPrice?: PropertyPrice;
+  salePrice?: PropertyPrice;
+  ambientes?: number;
+  m2?: number;
   imageUrl?: string;
   airbnbUrl?: string;
   kuulaEmbedUrl?: string;
@@ -80,6 +90,7 @@ export interface ClientHeroConfig {
   ctaLabel: LocalizedString;
   zones?: HeroZone[];
   guestFilter?: boolean;
+  realEstateFilters?: boolean;
   ctaSingle?: { url: string };
 }
 

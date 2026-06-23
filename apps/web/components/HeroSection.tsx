@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import type { PropertyConfig, ClientHeroConfig } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
+import { useRealEstateFilters, RealEstateFilterPanel } from "@/components/RealEstateFilters";
 
 interface HeroSectionProps {
   properties: PropertyConfig[];
@@ -42,6 +43,11 @@ function FilterCheckbox({ checked }: { checked: boolean }) {
 export default function HeroSection({ properties, hero, locale, selectedPropertyId, onSelectProperty, backgroundImageUrl, noOverlay }: HeroSectionProps) {
   const t = useTranslations("hero");
 
+  const isRealEstate = hero?.realEstateFilters === true;
+
+  // Real estate filter hook (only active when realEstateFilters: true)
+  const reFilters = useRealEstateFilters(properties);
+
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [selectedGuests, setSelectedGuests] = useState<number | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -77,6 +83,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const zones = hero?.zones ?? [];
 
   const filteredProperties = useMemo(() => {
+    if (isRealEstate) return reFilters.filteredProperties;
     if (hero?.guestFilter) {
       return selectedGuests === null
         ? properties
@@ -85,7 +92,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     return selectedZones.length === 0
       ? properties
       : properties.filter((p) => p.zone && selectedZones.includes(p.zone));
-  }, [properties, selectedZones, selectedGuests, hero?.guestFilter]);
+  }, [isRealEstate, reFilters.filteredProperties, properties, selectedZones, selectedGuests, hero?.guestFilter]);
 
   const selectedProperty = properties.find((p) => p.id === selectedPropertyId) ?? properties[0];
   const ctaUrl = hero?.ctaSingle
@@ -260,7 +267,11 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     setFilterOpen(false);
   };
 
-  const isFiltered = hero?.guestFilter ? selectedGuests !== null : selectedZones.length > 0;
+  const isFiltered = isRealEstate
+    ? reFilters.isFiltered
+    : hero?.guestFilter
+      ? selectedGuests !== null
+      : selectedZones.length > 0;
 
   // Desktop scrollbar thumb geometry
   const desktopThumbWidth = containerWidth > 0 && maxScrollOffset > 0
@@ -270,52 +281,85 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     ? (translateX / maxScrollOffset) * (100 - desktopThumbWidth)
     : 0;
 
+  // Labels for the real estate filter panel
+  const reLabels = {
+    filters: t("reFilters"),
+    rental: t("reRental"),
+    purchase: t("rePurchase"),
+    price: t("rePrice"),
+    monthlyPrice: t("reMonthlyPrice"),
+    totalPrice: t("reTotalPrice"),
+    rooms: t("reRooms"),
+    zone: t("reZone"),
+    m2: t("reM2"),
+    clearFilters: t("reClearFilters"),
+    allZones: t("reAllZones"),
+    selectOpFirst: t("reSelectOpFirst"),
+    currency: t("reCurrency"),
+  };
+
   // Shared filter dropdown content (used in both desktop and mobile)
-  const filterDropdown = (width: string) => (
-    <div className={`absolute left-0 top-full mt-2 ${width} bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50`}>
-      {hero?.guestFilter ? (
-        <>
-          <button
-            onClick={() => { setTranslateX(0); setSelectedGuests(null); setFilterOpen(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
-          >
-            <FilterCheckbox checked={selectedGuests === null} />
-            {t("showAll")}
-          </button>
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+  const filterDropdown = (panelClass: string) => {
+    if (isRealEstate) {
+      return (
+        <RealEstateFilterPanel
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
+          api={reFilters}
+          zones={hero?.zones ?? []}
+          locale={locale}
+          accent="var(--color-terracotta)"
+          labels={reLabels}
+          panelClass={panelClass}
+        />
+      );
+    }
+    return (
+      <div className={`absolute left-0 top-full mt-2 ${panelClass} bg-ivory rounded-2xl shadow-2xl overflow-hidden z-50`}>
+        {hero?.guestFilter ? (
+          <>
             <button
-              key={n}
-              onClick={() => toggleGuests(n)}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+              onClick={() => { setTranslateX(0); setSelectedGuests(null); setFilterOpen(false); }}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
             >
-              <FilterCheckbox checked={selectedGuests === n} />
-              {n}
+              <FilterCheckbox checked={selectedGuests === null} />
+              {t("showAll")}
             </button>
-          ))}
-        </>
-      ) : (
-        <>
-          <button
-            onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
-          >
-            <FilterCheckbox checked={!isFiltered} />
-            {t("showAll")}
-          </button>
-          {zones.map((zone) => (
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <button
+                key={n}
+                onClick={() => toggleGuests(n)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+              >
+                <FilterCheckbox checked={selectedGuests === n} />
+                {n}
+              </button>
+            ))}
+          </>
+        ) : (
+          <>
             <button
-              key={zone.id}
-              onClick={() => toggleZone(zone.id)}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+              onClick={() => { setTranslateX(0); setSelectedZones([]); setFilterOpen(false); }}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors border-b border-ochre/20"
             >
-              <FilterCheckbox checked={selectedZones.includes(zone.id)} />
-              {loc(zone.label, locale)}
+              <FilterCheckbox checked={!isFiltered} />
+              {t("showAll")}
             </button>
-          ))}
-        </>
-      )}
-    </div>
-  );
+            {zones.map((zone) => (
+              <button
+                key={zone.id}
+                onClick={() => toggleZone(zone.id)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal hover:bg-terracotta/10 transition-colors"
+              >
+                <FilterCheckbox checked={selectedZones.includes(zone.id)} />
+                {loc(zone.label, locale)}
+              </button>
+            ))}
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div
@@ -361,9 +405,9 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         {/* Right column — desktop */}
         <div className="hidden md:flex flex-col flex-1 min-w-0 py-6 pr-6">
           {/* Filter button + desktop scrollbar row */}
-          {(zones.length > 0 || hero?.guestFilter || maxScrollOffset > 0) && (
+          {(isRealEstate || zones.length > 0 || hero?.guestFilter || maxScrollOffset > 0) && (
           <div className="relative flex items-center gap-3 mb-4 flex-shrink-0">
-            {(zones.length > 0 || hero?.guestFilter) && (
+            {(isRealEstate || zones.length > 0 || hero?.guestFilter) && (
               <div ref={filterDesktopRef} className="relative flex-shrink-0">
                 <button
                   onClick={() => setFilterOpen((o) => !o)}
@@ -372,17 +416,23 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                   className="flex items-center gap-2 bg-white/10 hover:bg-white/15 text-ivory text-sm font-medium px-4 py-2 rounded-full border border-white/20 transition-colors"
                 >
                   <FunnelIcon className="w-4 h-4" />
-                  {hero?.guestFilter
-                    ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
-                    : t("filterLabel")}
+                  {isRealEstate
+                    ? (reFilters.activeCount > 0
+                        ? `${t("reFilters")} (${reFilters.activeCount})`
+                        : t("reFilters"))
+                    : hero?.guestFilter
+                      ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
+                      : t("filterLabel")}
                 </button>
-                {filterOpen && filterDropdown("w-44")}
+                {(filterOpen || isRealEstate) && filterDropdown("w-80")}
               </div>
             )}
 
             {isFiltered && (
               <span className="text-ivory/60 text-xs flex-shrink-0">
-                {hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
+                {isRealEstate
+                  ? `${filteredProperties.length} ${t("reFiltered")}`
+                  : hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
               </span>
             )}
 
@@ -437,7 +487,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
           {/* Filter button + tour scrollbar — same row */}
           <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
-            {(zones.length > 0 || hero?.guestFilter) && (
+            {(isRealEstate || zones.length > 0 || hero?.guestFilter) && (
               <button
                 onClick={() => setFilterOpen((o) => !o)}
                 aria-expanded={filterOpen}
@@ -445,16 +495,23 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 className="flex items-center gap-2 bg-white/10 text-ivory text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 flex-shrink-0"
               >
                 <FunnelIcon className="w-3.5 h-3.5" />
-                {hero?.guestFilter
-                  ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
-                  : t("filterLabel")}
+                {isRealEstate
+                  ? (reFilters.activeCount > 0
+                      ? `${t("reFilters")} (${reFilters.activeCount})`
+                      : t("reFilters"))
+                  : hero?.guestFilter
+                    ? (selectedGuests !== null ? `${selectedGuests}` : t("guestsLabel"))
+                    : t("filterLabel")}
               </button>
             )}
             {isFiltered && (
               <span className="text-ivory/60 text-xs flex-shrink-0">
-                {hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
+                {isRealEstate
+                  ? `${filteredProperties.length} ${t("reFiltered")}`
+                  : hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
               </span>
             )}
+            {filterOpen && isRealEstate && filterDropdown("w-[calc(100vw-2rem)]")}
 
             {/* Tour position scrollbar — flex-1 so it shrinks when filter badge appears */}
             <div
@@ -475,7 +532,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
               </div>
             </div>
 
-            {filterOpen && filterDropdown("w-52")}
+            {filterOpen && !isRealEstate && filterDropdown("w-52")}
           </div>
 
           {/* Tour carousel — 75vw cards with gap-5 so next card peeks */}

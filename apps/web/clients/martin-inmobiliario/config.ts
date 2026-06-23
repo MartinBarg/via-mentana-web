@@ -39,6 +39,27 @@ const config: ClientConfig = {
       es: "Contactanos",
       de: "Kontakt",
     },
+    realEstateFilters: true,
+    zones: [
+      {
+        id: "capital-norte",
+        label: {
+          es: "Capital - Zona Norte",
+          en: "Capital - Northern Zone",
+          it: "Capitale - Zona Nord",
+          de: "Hauptstadt - Nordzone",
+        },
+      },
+      {
+        id: "gba-norte",
+        label: {
+          es: "GBA Norte",
+          en: "GBA North",
+          it: "GBA Nord",
+          de: "GBA Nord",
+        },
+      },
+    ],
   },
 
   reviews: {
@@ -122,6 +143,12 @@ const config: ClientConfig = {
     // ─── 1. Le Parc ───────────────────────────────────────────────────────────
     {
       id: "le-parc",
+      zone: "capital-norte",
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 2500, currency: "USD" },
+      salePrice: { amount: 280000, currency: "USD" },
+      ambientes: 3,
+      m2: 110,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -232,6 +259,11 @@ const config: ClientConfig = {
     // ─── 2. Chateaux ──────────────────────────────────────────────────────────
     {
       id: "chateaux",
+      zone: "capital-norte",
+      operationType: ["alquiler"],
+      rentalPrice: { amount: 1800, currency: "USD" },
+      ambientes: 2,
+      m2: 85,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -330,6 +362,11 @@ const config: ClientConfig = {
     // ─── 3. Alrio ─────────────────────────────────────────────────────────────
     {
       id: "alrio",
+      zone: "gba-norte",
+      operationType: ["venta"],
+      salePrice: { amount: 380000, currency: "USD" },
+      ambientes: 4,
+      m2: 145,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TNK4?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -427,6 +464,12 @@ const config: ClientConfig = {
     // ─── 4. Casa4 ─────────────────────────────────────────────────────────────
     {
       id: "casa4",
+      zone: "gba-norte",
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 900000, currency: "ARS" },
+      salePrice: { amount: 420000, currency: "USD" },
+      ambientes: 5,
+      m2: 200,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -524,6 +567,11 @@ const config: ClientConfig = {
     // ─── 5. Casa5 ─────────────────────────────────────────────────────────────
     {
       id: "casa5",
+      zone: "capital-norte",
+      operationType: ["venta"],
+      salePrice: { amount: 650000, currency: "USD" },
+      ambientes: 4,
+      m2: 280,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Barrio+Parque+Buenos+Aires&output=embed",
       hero: {
@@ -619,6 +667,11 @@ const config: ClientConfig = {
     // ─── 6. Casa6 ─────────────────────────────────────────────────────────────
     {
       id: "casa6",
+      zone: "gba-norte",
+      operationType: ["venta"],
+      salePrice: { amount: 850000, currency: "USD" },
+      ambientes: 5,
+      m2: 350,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Nordelta+Tigre+Buenos+Aires&output=embed",
       hero: {
@@ -714,6 +767,11 @@ const config: ClientConfig = {
     // ─── 7. Casa7 ─────────────────────────────────────────────────────────────
     {
       id: "casa7",
+      zone: "gba-norte",
+      operationType: ["venta"],
+      salePrice: { amount: 520000, currency: "USD" },
+      ambientes: 5,
+      m2: 260,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Pilar+Buenos+Aires&output=embed",
       hero: {
@@ -809,6 +867,11 @@ const config: ClientConfig = {
     // ─── 8. Casa8 ─────────────────────────────────────────────────────────────
     {
       id: "casa8",
+      zone: "gba-norte",
+      operationType: ["venta"],
+      salePrice: { amount: 750000, currency: "USD" },
+      ambientes: 4,
+      m2: 310,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Venice+Tigre+Buenos+Aires&output=embed",
       hero: {

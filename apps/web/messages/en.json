@@ -41,6 +41,20 @@
     "guestsLabel": "Guests",
     "guestsFilteredBadge": "Tours filtered by guests",
     "select": "Select",
-    "selected": "Selected"
+    "selected": "Selected",
+    "reFilters": "Filters",
+    "reRental": "Rental",
+    "rePurchase": "Purchase",
+    "rePrice": "Price",
+    "reMonthlyPrice": "Monthly price",
+    "reTotalPrice": "Total price",
+    "reRooms": "Rooms",
+    "reZone": "Zone",
+    "reM2": "m²",
+    "reClearFilters": "Clear",
+    "reAllZones": "All zones",
+    "reSelectOpFirst": "Select Rental or Purchase",
+    "reCurrency": "Currency",
+    "reFiltered": "properties"
   }
 }
