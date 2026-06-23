@@ -169,7 +169,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
   const priceRange = useMemo((): [number, number] | null => {
     if (!priceFilterRaw) return null;
     const [aMin, aMax] = availablePriceRange;
-    if (aMin === aMax) return null;
     const lo = Math.max(aMin, Math.min(priceFilterRaw[0], aMax));
     const hi = Math.max(aMin, Math.min(priceFilterRaw[1], aMax));
     if (lo === aMin && hi === aMax) return null;
@@ -179,7 +178,6 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
   const m2Range = useMemo((): [number, number] | null => {
     if (!m2FilterRaw) return null;
     const [aMin, aMax] = availableM2Range;
-    if (aMin === aMax) return null;
     const lo = Math.max(aMin, Math.min(m2FilterRaw[0], aMax));
     const hi = Math.max(aMin, Math.min(m2FilterRaw[1], aMax));
     if (lo === aMin && hi === aMax) return null;
@@ -281,8 +279,8 @@ function DualRangeSlider({
   }
 
   const range = max - min;
-  const leftPct = range > 0 ? ((valueMin - min) / range) * 100 : 0;
-  const rightPct = range > 0 ? ((valueMax - min) / range) * 100 : 100;
+  const leftPct = range > 0 ? ((valueMin - min) / range) * 100 : 50;
+  const rightPct = range > 0 ? ((valueMax - min) / range) * 100 : 50;
 
   const handleBase: React.CSSProperties = {
     backgroundColor: "#fff",
@@ -446,8 +444,8 @@ export function RealEstateInlineFilters({
   const { state, available, isFiltered } = api;
   const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
 
-  const hasPriceData = opType !== null && available.priceMin < available.priceMax;
-  const hasM2Data = available.m2Min < available.m2Max;
+  const hasPriceData = opType !== null && available.priceMax > 0;
+  const hasM2Data = available.m2Max > 0;
 
   const pMin = priceRange ? priceRange[0] : available.priceMin;
   const pMax = priceRange ? priceRange[1] : available.priceMax;
