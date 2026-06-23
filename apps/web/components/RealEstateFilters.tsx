@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import type { PropertyConfig, HeroZone } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
 
@@ -40,14 +40,17 @@ export interface RealEstateFilterAPI {
 }
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
+// All derived values are computed with useMemo — no setState inside useEffect.
+// Currency, clamped ranges, and invalid ambientes are derived, not synced.
 
 export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFilterAPI {
+  // Raw user selections (only mutated by explicit user actions, never by effects)
   const [opType, setOpTypeRaw] = useState<OpType | null>(null);
-  const [zones, setZones] = useState<string[]>([]);
-  const [ambientes, setAmbientes] = useState<number[]>([]);
-  const [currency, setCurrencyRaw] = useState<Currency | null>(null);
-  const [priceRange, setPriceRangeRaw] = useState<[number, number] | null>(null);
-  const [m2Range, setM2RangeRaw] = useState<[number, number] | null>(null);
+  const [zonesRaw, setZones] = useState<string[]>([]);
+  const [ambientesRaw, setAmbientes] = useState<number[]>([]);
+  const [currencyRaw, setCurrencyRaw] = useState<Currency | null>(null);
+  const [priceFilterRaw, setPriceFilterRaw] = useState<[number, number] | null>(null);
+  const [m2FilterRaw, setM2FilterRaw] = useState<[number, number] | null>(null);
 
   // Step 1: by operationType
   const byOpType = useMemo(() =>
@@ -59,25 +62,23 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
 
   // Step 2: by zones
   const byZone = useMemo(() =>
-    zones.length === 0
+    zonesRaw.length === 0
       ? byOpType
-      : byOpType.filter((p) => p.zone && zones.includes(p.zone)),
-    [byOpType, zones]
+      : byOpType.filter((p) => p.zone && zonesRaw.includes(p.zone)),
+    [byOpType, zonesRaw]
   );
 
-  // Step 3: available ambientes from byZone, then filter
+  // Step 3: available ambientes; effective ambientes = intersection with available
   const availableAmbientes = useMemo(() => {
     const set = new Set<number>();
     byZone.forEach((p) => { if (p.ambientes !== undefined) set.add(p.ambientes); });
     return Array.from(set).sort((a, b) => a - b);
   }, [byZone]);
 
-  // Clean up invalid ambientes selections
-  useEffect(() => {
-    if (ambientes.length === 0) return;
-    const cleaned = ambientes.filter((a) => availableAmbientes.includes(a));
-    if (cleaned.length !== ambientes.length) setAmbientes(cleaned);
-  }, [availableAmbientes]); // eslint-disable-line react-hooks/exhaustive-deps
+  const ambientes = useMemo(() =>
+    ambientesRaw.filter((a) => availableAmbientes.includes(a)),
+    [ambientesRaw, availableAmbientes]
+  );
 
   const byAmbientes = useMemo(() =>
     ambientes.length === 0
@@ -86,7 +87,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     [byZone, ambientes]
   );
 
-  // Step 4: available currencies for the current opType
+  // Step 4: available currencies; effective currency = auto-select or user pick
   const availableCurrencies = useMemo((): Currency[] => {
     if (!opType) return [];
     const set = new Set<Currency>();
@@ -97,18 +98,14 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return Array.from(set) as Currency[];
   }, [byAmbientes, opType]);
 
-  // Auto-select currency when only one option exists
-  useEffect(() => {
-    if (availableCurrencies.length === 1) {
-      setCurrencyRaw(availableCurrencies[0]);
-    } else if (availableCurrencies.length === 0) {
-      setCurrencyRaw(null);
-    } else if (currency && !availableCurrencies.includes(currency)) {
-      setCurrencyRaw(availableCurrencies[0]);
-    }
-  }, [availableCurrencies]); // eslint-disable-line react-hooks/exhaustive-deps
+  const currency = useMemo((): Currency | null => {
+    if (availableCurrencies.length === 0) return null;
+    if (availableCurrencies.length === 1) return availableCurrencies[0];
+    if (currencyRaw && availableCurrencies.includes(currencyRaw)) return currencyRaw;
+    return availableCurrencies[0];
+  }, [availableCurrencies, currencyRaw]);
 
-  // Available price range from byAmbientes (filtered by opType + zones + ambientes)
+  // Available price range from byAmbientes
   const pricePropsForRange = useMemo(() => {
     if (!opType || !currency) return [];
     return byAmbientes.filter((p) => {
@@ -125,30 +122,18 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return [Math.min(...amounts), Math.max(...amounts)];
   }, [pricePropsForRange, opType]);
 
-  // Reset price range when opType changes
-  const prevOpType = useRef(opType);
-  useEffect(() => {
-    if (prevOpType.current !== opType) {
-      setPriceRangeRaw(null);
-      prevOpType.current = opType;
-    }
-  }, [opType]);
-
-  // Clamp price range when available range shrinks
-  useEffect(() => {
-    if (!priceRange) return;
+  // Effective price range: clamp raw selection to available range (pure derivation, no effect)
+  const priceRange = useMemo((): [number, number] | null => {
+    if (!priceFilterRaw) return null;
     const [aMin, aMax] = availablePriceRange;
-    if (aMin === aMax) { setPriceRangeRaw(null); return; }
-    const newMin = Math.max(aMin, Math.min(priceRange[0], aMax));
-    const newMax = Math.max(aMin, Math.min(priceRange[1], aMax));
-    if (newMin === aMin && newMax === aMax) {
-      setPriceRangeRaw(null);
-    } else if (newMin !== priceRange[0] || newMax !== priceRange[1]) {
-      setPriceRangeRaw([newMin, newMax]);
-    }
-  }, [availablePriceRange]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (aMin === aMax) return null;
+    const lo = Math.max(aMin, Math.min(priceFilterRaw[0], aMax));
+    const hi = Math.max(aMin, Math.min(priceFilterRaw[1], aMax));
+    if (lo === aMin && hi === aMax) return null; // full range = no constraint
+    return [lo, hi];
+  }, [priceFilterRaw, availablePriceRange]);
 
-  // Step 5: filter by price range
+  // Step 5: filter by price
   const byPrice = useMemo(() => {
     if (!priceRange || !opType || !currency) return byAmbientes;
     const [pMin, pMax] = priceRange;
@@ -159,28 +144,24 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     });
   }, [byAmbientes, priceRange, opType, currency]);
 
-  // Step 6: available m2 range from byPrice
+  // Step 6: available m2 range; effective m2 range = clamped raw selection
   const availableM2Range = useMemo((): [number, number] => {
     const vals = byPrice.map((p) => p.m2).filter((v): v is number => v !== undefined);
     if (vals.length === 0) return [0, 0];
     return [Math.min(...vals), Math.max(...vals)];
   }, [byPrice]);
 
-  // Clamp m2 range when available range shrinks
-  useEffect(() => {
-    if (!m2Range) return;
+  const m2Range = useMemo((): [number, number] | null => {
+    if (!m2FilterRaw) return null;
     const [aMin, aMax] = availableM2Range;
-    if (aMin === aMax) { setM2RangeRaw(null); return; }
-    const newMin = Math.max(aMin, Math.min(m2Range[0], aMax));
-    const newMax = Math.max(aMin, Math.min(m2Range[1], aMax));
-    if (newMin === aMin && newMax === aMax) {
-      setM2RangeRaw(null);
-    } else if (newMin !== m2Range[0] || newMax !== m2Range[1]) {
-      setM2RangeRaw([newMin, newMax]);
-    }
-  }, [availableM2Range]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (aMin === aMax) return null;
+    const lo = Math.max(aMin, Math.min(m2FilterRaw[0], aMax));
+    const hi = Math.max(aMin, Math.min(m2FilterRaw[1], aMax));
+    if (lo === aMin && hi === aMax) return null;
+    return [lo, hi];
+  }, [m2FilterRaw, availableM2Range]);
 
-  // Step 7: filter by m2 range
+  // Step 7: filter by m2
   const finalFiltered = useMemo(() => {
     if (!m2Range) return byPrice;
     const [mMin, mMax] = m2Range;
@@ -191,17 +172,17 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
 
   const activeCount = [
     opType !== null,
-    zones.length > 0,
-    ambientes.length > 0,
-    priceRange !== null,
-    m2Range !== null,
+    zonesRaw.length > 0,
+    ambientesRaw.length > 0,
+    priceFilterRaw !== null,
+    m2FilterRaw !== null,
   ].filter(Boolean).length;
 
   return {
     filteredProperties: finalFiltered,
     isFiltered: activeCount > 0,
     activeCount,
-    state: { opType, zones, ambientes, currency, priceRange, m2Range },
+    state: { opType, zones: zonesRaw, ambientes, currency, priceRange, m2Range },
     available: {
       ambientes: availableAmbientes,
       priceMin: availablePriceRange[0],
@@ -210,7 +191,10 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
       m2Min: availableM2Range[0],
       m2Max: availableM2Range[1],
     },
-    setOpType: (v) => setOpTypeRaw(v),
+    setOpType: (v) => {
+      setOpTypeRaw(v);
+      setPriceFilterRaw(null); // reset price when op type changes
+    },
     toggleZone: (id) =>
       setZones((prev) =>
         prev.includes(id) ? prev.filter((z) => z !== id) : [...prev, id]
@@ -221,15 +205,15 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
         prev.includes(n) ? prev.filter((a) => a !== n) : [...prev, n]
       ),
     setCurrency: (c) => setCurrencyRaw(c),
-    setPriceRange: (r) => setPriceRangeRaw(r),
-    setM2Range: (r) => setM2RangeRaw(r),
+    setPriceRange: (r) => setPriceFilterRaw(r),
+    setM2Range: (r) => setM2FilterRaw(r),
     clearAll: () => {
       setOpTypeRaw(null);
       setZones([]);
       setAmbientes([]);
       setCurrencyRaw(null);
-      setPriceRangeRaw(null);
-      setM2RangeRaw(null);
+      setPriceFilterRaw(null);
+      setM2FilterRaw(null);
     },
   };
 }
