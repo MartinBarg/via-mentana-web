@@ -55,6 +55,8 @@
     "reAllZones": "Alle Zonen",
     "reSelectOpFirst": "Miete oder Kauf auswählen",
     "reCurrency": "Währung",
-    "reFiltered": "Immobilien"
+    "reFiltered": "Immobilien",
+    "reNoProps": "Keine Ergebnisse",
+    "reAppliedFilters": "Filter aktiv"
   }
 }

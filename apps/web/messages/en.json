@@ -55,6 +55,8 @@
     "reAllZones": "All zones",
     "reSelectOpFirst": "Select Rental or Purchase",
     "reCurrency": "Currency",
-    "reFiltered": "properties"
+    "reFiltered": "properties",
+    "reNoProps": "No results",
+    "reAppliedFilters": "Filters applied"
   }
 }

@@ -23,6 +23,7 @@ export interface RealEstateFilterAPI {
   };
   available: {
     ambientes: number[];
+    zones: string[];
     priceMin: number;
     priceMax: number;
     currencies: Currency[];
@@ -39,12 +40,46 @@ export interface RealEstateFilterAPI {
   clearAll: () => void;
 }
 
+// ─── Cross-reactive helper ────────────────────────────────────────────────────
+// Applies all raw filters EXCEPT the one named in `exclude`.
+// Uses raw (unvalidated) values so there's no circular dependency between filters.
+
+function applyExcept(
+  base: PropertyConfig[],
+  exclude: "zone" | "ambientes" | "price" | "m2",
+  zones: string[],
+  ambientes: number[],
+  opType: OpType | null,
+  currency: Currency | null,
+  priceFilterRaw: [number, number] | null,
+  m2FilterRaw: [number, number] | null,
+): PropertyConfig[] {
+  let r = base;
+  if (exclude !== "zone" && zones.length > 0)
+    r = r.filter((p) => p.zone && zones.includes(p.zone));
+  if (exclude !== "ambientes" && ambientes.length > 0)
+    r = r.filter((p) => p.ambientes !== undefined && ambientes.includes(p.ambientes));
+  if (exclude !== "price" && priceFilterRaw && opType && currency) {
+    const [lo, hi] = priceFilterRaw;
+    r = r.filter((p) => {
+      const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
+      if (!price || price.currency !== currency) return true;
+      return price.amount >= lo && price.amount <= hi;
+    });
+  }
+  if (exclude !== "m2" && m2FilterRaw) {
+    const [lo, hi] = m2FilterRaw;
+    r = r.filter((p) => p.m2 === undefined || (p.m2 >= lo && p.m2 <= hi));
+  }
+  return r;
+}
+
 // ─── Hook ────────────────────────────────────────────────────────────────────
-// All derived values are computed with useMemo — no setState inside useEffect.
-// Currency, clamped ranges, and invalid ambientes are derived, not synced.
+// All derived state uses useMemo — no setState inside useEffect.
+// Each filter's available options are computed from byOpType + ALL other raw filters
+// (excluding itself), making every filter fully cross-reactive.
 
 export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFilterAPI {
-  // Raw user selections (only mutated by explicit user actions, never by effects)
   const [opType, setOpTypeRaw] = useState<OpType | null>(null);
   const [zonesRaw, setZones] = useState<string[]>([]);
   const [ambientesRaw, setAmbientes] = useState<number[]>([]);
@@ -52,7 +87,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
   const [priceFilterRaw, setPriceFilterRaw] = useState<[number, number] | null>(null);
   const [m2FilterRaw, setM2FilterRaw] = useState<[number, number] | null>(null);
 
-  // Step 1: by operationType
+  // Step 1: filter by opType
   const byOpType = useMemo(() =>
     opType === null
       ? properties
@@ -60,43 +95,24 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     [properties, opType]
   );
 
-  // Step 2: by zones
-  const byZone = useMemo(() =>
-    zonesRaw.length === 0
-      ? byOpType
-      : byOpType.filter((p) => p.zone && zonesRaw.includes(p.zone)),
-    [byOpType, zonesRaw]
-  );
+  // Step 2: derive currency from byOpType + zones + ambientes (no price/m2)
+  // Computing currency first breaks the circular dependency between currency and price options.
+  const forCurrencyBase = useMemo(() => {
+    let r = byOpType;
+    if (zonesRaw.length > 0) r = r.filter((p) => p.zone && zonesRaw.includes(p.zone));
+    if (ambientesRaw.length > 0) r = r.filter((p) => p.ambientes !== undefined && ambientesRaw.includes(p.ambientes));
+    return r;
+  }, [byOpType, zonesRaw, ambientesRaw]);
 
-  // Step 3: available ambientes; effective ambientes = intersection with available
-  const availableAmbientes = useMemo(() => {
-    const set = new Set<number>();
-    byZone.forEach((p) => { if (p.ambientes !== undefined) set.add(p.ambientes); });
-    return Array.from(set).sort((a, b) => a - b);
-  }, [byZone]);
-
-  const ambientes = useMemo(() =>
-    ambientesRaw.filter((a) => availableAmbientes.includes(a)),
-    [ambientesRaw, availableAmbientes]
-  );
-
-  const byAmbientes = useMemo(() =>
-    ambientes.length === 0
-      ? byZone
-      : byZone.filter((p) => p.ambientes !== undefined && ambientes.includes(p.ambientes)),
-    [byZone, ambientes]
-  );
-
-  // Step 4: available currencies; effective currency = auto-select or user pick
   const availableCurrencies = useMemo((): Currency[] => {
     if (!opType) return [];
     const set = new Set<Currency>();
-    byAmbientes.forEach((p) => {
+    forCurrencyBase.forEach((p) => {
       const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
       if (price) set.add(price.currency);
     });
     return Array.from(set) as Currency[];
-  }, [byAmbientes, opType]);
+  }, [forCurrencyBase, opType]);
 
   const currency = useMemo((): Currency | null => {
     if (availableCurrencies.length === 0) return null;
@@ -105,51 +121,69 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return availableCurrencies[0];
   }, [availableCurrencies, currencyRaw]);
 
-  // Available price range from byAmbientes
-  const pricePropsForRange = useMemo(() => {
-    if (!opType || !currency) return [];
-    return byAmbientes.filter((p) => {
-      const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-      return price?.currency === currency;
-    });
-  }, [byAmbientes, opType, currency]);
+  // Step 3: cross-reactive option sets — each excludes its own filter
+  const forZoneOptions = useMemo(() =>
+    applyExcept(byOpType, "zone", zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw),
+    [byOpType, zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw]
+  );
 
+  const forAmbientesOptions = useMemo(() =>
+    applyExcept(byOpType, "ambientes", zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw),
+    [byOpType, zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw]
+  );
+
+  const forM2Options = useMemo(() =>
+    applyExcept(byOpType, "m2", zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw),
+    [byOpType, zonesRaw, ambientesRaw, opType, currency, priceFilterRaw, m2FilterRaw]
+  );
+
+  // Step 4: available options derived from their respective cross-reactive sets
+  const availableZones = useMemo(() => {
+    const set = new Set<string>();
+    forZoneOptions.forEach((p) => { if (p.zone) set.add(p.zone); });
+    return Array.from(set);
+  }, [forZoneOptions]);
+
+  const availableAmbientes = useMemo(() => {
+    const set = new Set<number>();
+    forAmbientesOptions.forEach((p) => { if (p.ambientes !== undefined) set.add(p.ambientes); });
+    return Array.from(set).sort((a, b) => a - b);
+  }, [forAmbientesOptions]);
+
+  // Price range: from zones+ambientes base (not m2, to avoid over-constraining currency detection)
   const availablePriceRange = useMemo((): [number, number] => {
-    if (pricePropsForRange.length === 0) return [0, 0];
-    const amounts = pricePropsForRange.map((p) =>
-      (opType === "alquiler" ? p.rentalPrice! : p.salePrice!).amount
-    );
+    if (!opType || !currency) return [0, 0];
+    const amounts = forCurrencyBase
+      .filter((p) => {
+        const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
+        return price?.currency === currency;
+      })
+      .map((p) => (opType === "alquiler" ? p.rentalPrice! : p.salePrice!).amount);
+    if (amounts.length === 0) return [0, 0];
     return [Math.min(...amounts), Math.max(...amounts)];
-  }, [pricePropsForRange, opType]);
+  }, [forCurrencyBase, opType, currency]);
 
-  // Effective price range: clamp raw selection to available range (pure derivation, no effect)
+  const availableM2Range = useMemo((): [number, number] => {
+    const vals = forM2Options.map((p) => p.m2).filter((v): v is number => v !== undefined);
+    if (vals.length === 0) return [0, 0];
+    return [Math.min(...vals), Math.max(...vals)];
+  }, [forM2Options]);
+
+  // Step 5: effective (clamped/cleaned) derived values — no useEffect needed
+  const effectiveAmbientes = useMemo(() =>
+    ambientesRaw.filter((a) => availableAmbientes.includes(a)),
+    [ambientesRaw, availableAmbientes]
+  );
+
   const priceRange = useMemo((): [number, number] | null => {
     if (!priceFilterRaw) return null;
     const [aMin, aMax] = availablePriceRange;
     if (aMin === aMax) return null;
     const lo = Math.max(aMin, Math.min(priceFilterRaw[0], aMax));
     const hi = Math.max(aMin, Math.min(priceFilterRaw[1], aMax));
-    if (lo === aMin && hi === aMax) return null; // full range = no constraint
+    if (lo === aMin && hi === aMax) return null;
     return [lo, hi];
   }, [priceFilterRaw, availablePriceRange]);
-
-  // Step 5: filter by price
-  const byPrice = useMemo(() => {
-    if (!priceRange || !opType || !currency) return byAmbientes;
-    const [pMin, pMax] = priceRange;
-    return byAmbientes.filter((p) => {
-      const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-      if (!price || price.currency !== currency) return true;
-      return price.amount >= pMin && price.amount <= pMax;
-    });
-  }, [byAmbientes, priceRange, opType, currency]);
-
-  // Step 6: available m2 range; effective m2 range = clamped raw selection
-  const availableM2Range = useMemo((): [number, number] => {
-    const vals = byPrice.map((p) => p.m2).filter((v): v is number => v !== undefined);
-    if (vals.length === 0) return [0, 0];
-    return [Math.min(...vals), Math.max(...vals)];
-  }, [byPrice]);
 
   const m2Range = useMemo((): [number, number] | null => {
     if (!m2FilterRaw) return null;
@@ -161,14 +195,25 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     return [lo, hi];
   }, [m2FilterRaw, availableM2Range]);
 
-  // Step 7: filter by m2
+  // Step 6: final result — apply all effective filters to byOpType
   const finalFiltered = useMemo(() => {
-    if (!m2Range) return byPrice;
-    const [mMin, mMax] = m2Range;
-    return byPrice.filter((p) =>
-      p.m2 === undefined || (p.m2 >= mMin && p.m2 <= mMax)
-    );
-  }, [byPrice, m2Range]);
+    let r = byOpType;
+    if (zonesRaw.length > 0) r = r.filter((p) => p.zone && zonesRaw.includes(p.zone));
+    if (effectiveAmbientes.length > 0) r = r.filter((p) => p.ambientes !== undefined && effectiveAmbientes.includes(p.ambientes));
+    if (priceRange && opType && currency) {
+      const [pMin, pMax] = priceRange;
+      r = r.filter((p) => {
+        const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
+        if (!price || price.currency !== currency) return true;
+        return price.amount >= pMin && price.amount <= pMax;
+      });
+    }
+    if (m2Range) {
+      const [mMin, mMax] = m2Range;
+      r = r.filter((p) => p.m2 === undefined || (p.m2 >= mMin && p.m2 <= mMax));
+    }
+    return r;
+  }, [byOpType, zonesRaw, effectiveAmbientes, priceRange, opType, currency, m2Range]);
 
   const activeCount = [
     opType !== null,
@@ -182,9 +227,10 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     filteredProperties: finalFiltered,
     isFiltered: activeCount > 0,
     activeCount,
-    state: { opType, zones: zonesRaw, ambientes, currency, priceRange, m2Range },
+    state: { opType, zones: zonesRaw, ambientes: effectiveAmbientes, currency, priceRange, m2Range },
     available: {
       ambientes: availableAmbientes,
+      zones: availableZones,
       priceMin: availablePriceRange[0],
       priceMax: availablePriceRange[1],
       currencies: availableCurrencies,
@@ -193,7 +239,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     },
     setOpType: (v) => {
       setOpTypeRaw(v);
-      setPriceFilterRaw(null); // reset price when op type changes
+      setPriceFilterRaw(null);
     },
     toggleZone: (id) =>
       setZones((prev) =>
@@ -230,6 +276,7 @@ function DualRangeSlider({
   formatValue,
   accent,
   step = 1,
+  dark = false,
 }: {
   min: number;
   max: number;
@@ -240,6 +287,7 @@ function DualRangeSlider({
   formatValue: (v: number) => string;
   accent: string;
   step?: number;
+  dark?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -258,36 +306,28 @@ function DualRangeSlider({
   const leftPct = range > 0 ? ((valueMin - min) / range) * 100 : 0;
   const rightPct = range > 0 ? ((valueMax - min) / range) * 100 : 100;
 
-  const handleStyle = {
-    backgroundColor: accent,
+  const handleBase: React.CSSProperties = {
+    backgroundColor: "#fff",
     top: "50%",
     transform: "translate(-50%, -50%)",
+    border: `2px solid ${accent}`,
   };
 
   return (
     <div className="pt-1 pb-2">
-      <div className="flex justify-between text-xs font-semibold text-charcoal mb-3 tabular-nums">
+      <div className={`flex justify-between text-xs font-semibold mb-3 tabular-nums ${dark ? "text-white/80" : "text-charcoal"}`}>
         <span>{formatValue(valueMin)}</span>
         <span>{formatValue(valueMax)}</span>
       </div>
       <div className="relative h-5 mx-2" ref={trackRef}>
-        {/* Background track */}
-        <div className="absolute inset-x-0 h-[3px] top-1/2 -translate-y-1/2 rounded-full bg-charcoal/15" />
-
-        {/* Active range highlight */}
+        <div className={`absolute inset-x-0 h-[3px] top-1/2 -translate-y-1/2 rounded-full ${dark ? "bg-white/20" : "bg-charcoal/15"}`} />
         <div
           className="absolute h-[3px] top-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            left: `${leftPct}%`,
-            right: `${100 - rightPct}%`,
-            backgroundColor: accent,
-          }}
+          style={{ left: `${leftPct}%`, right: `${100 - rightPct}%`, backgroundColor: accent }}
         />
-
-        {/* Min handle */}
         <div
-          className="absolute w-[18px] h-[18px] rounded-full border-2 border-white shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
-          style={{ ...handleStyle, left: `${leftPct}%` }}
+          className="absolute w-[16px] h-[16px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
+          style={{ ...handleBase, left: `${leftPct}%` }}
           onPointerDown={(e) => {
             e.preventDefault();
             (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -297,15 +337,11 @@ function DualRangeSlider({
             const v = Math.min(valueFromClientX(e.clientX), valueMax - step);
             if (v !== valueMin) onChangeMin(v);
           }}
-          onPointerUp={(e) => {
-            (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-          }}
+          onPointerUp={(e) => { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); }}
         />
-
-        {/* Max handle */}
         <div
-          className="absolute w-[18px] h-[18px] rounded-full border-2 border-white shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
-          style={{ ...handleStyle, left: `${rightPct}%` }}
+          className="absolute w-[16px] h-[16px] rounded-full shadow-md cursor-grab active:cursor-grabbing touch-none z-10"
+          style={{ ...handleBase, left: `${rightPct}%` }}
           onPointerDown={(e) => {
             e.preventDefault();
             (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -315,9 +351,7 @@ function DualRangeSlider({
             const v = Math.max(valueFromClientX(e.clientX), valueMin + step);
             if (v !== valueMax) onChangeMax(v);
           }}
-          onPointerUp={(e) => {
-            (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
-          }}
+          onPointerUp={(e) => { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); }}
         />
       </div>
     </div>
@@ -344,6 +378,8 @@ function formatPrice(amount: number, currency: Currency): string {
 
 function priceStep(currency: Currency, range: number): number {
   if (currency === "ARS") {
+    if (range > 100_000_000) return 10_000_000;
+    if (range > 10_000_000) return 1_000_000;
     if (range > 1_000_000) return 100_000;
     if (range > 200_000) return 50_000;
     return 10_000;
@@ -355,316 +391,194 @@ function priceStep(currency: Currency, range: number): number {
   }
 }
 
-// ─── OpTypeToggle (shared between main section and price sub-section) ─────────
+// ─── RealEstateInlineFilters ──────────────────────────────────────────────────
 
-function OpTypeToggle({
-  value,
-  onChange,
-  accent,
-  labelAlquiler,
-  labelCompra,
-  size = "md",
-}: {
-  value: OpType | null;
-  onChange: (v: OpType | null) => void;
-  accent: string;
-  labelAlquiler: string;
-  labelCompra: string;
-  size?: "sm" | "md";
-}) {
-  const baseBtn = size === "sm"
-    ? "px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
-    : "px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center";
-
-  const activeStyle = { backgroundColor: accent, borderColor: accent, color: "#fff" };
-  const inactiveStyle = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
-
-  return (
-    <div className="flex gap-2">
-      <button
-        className={baseBtn}
-        style={value === "alquiler" ? activeStyle : inactiveStyle}
-        onClick={() => onChange(value === "alquiler" ? null : "alquiler")}
-      >
-        {labelAlquiler}
-      </button>
-      <button
-        className={baseBtn}
-        style={value === "venta" ? activeStyle : inactiveStyle}
-        onClick={() => onChange(value === "venta" ? null : "venta")}
-      >
-        {labelCompra}
-      </button>
-    </div>
-  );
-}
-
-// ─── FilterSection wrapper ────────────────────────────────────────────────────
-
-function FilterSection({
-  title,
-  children,
-  noPadding = false,
-}: {
-  title: string;
-  children: React.ReactNode;
-  noPadding?: boolean;
-}) {
-  return (
-    <div className="border-b border-charcoal/8 last:border-b-0 py-4">
-      <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3 px-4">
-        {title}
-      </p>
-      <div className={noPadding ? "" : "px-4"}>{children}</div>
-    </div>
-  );
-}
-
-// ─── RealEstateFilterPanel ────────────────────────────────────────────────────
-
-export interface RealEstateFilterPanelProps {
-  open: boolean;
-  onClose: () => void;
+export interface RealEstateInlineFiltersProps {
   api: RealEstateFilterAPI;
-  zones: HeroZone[];
+  allZones: HeroZone[];
   locale: string;
   accent: string;
   labels: {
-    filters: string;
     rental: string;
     purchase: string;
-    price: string;
     monthlyPrice: string;
     totalPrice: string;
     rooms: string;
     zone: string;
     m2: string;
     clearFilters: string;
-    allZones: string;
     selectOpFirst: string;
-    currency: string;
+    noProps: string;
   };
-  panelClass?: string;
 }
 
-export function RealEstateFilterPanel({
-  open,
-  onClose,
+export function RealEstateInlineFilters({
   api,
-  zones,
+  allZones,
   locale,
   accent,
   labels,
-  panelClass = "w-80",
-}: RealEstateFilterPanelProps) {
-  if (!open) return null;
-
-  const { state, available, setOpType, toggleZone, toggleAmbiente, setCurrency, setPriceRange, setM2Range, clearAll } = api;
+}: RealEstateInlineFiltersProps) {
+  const { state, available, isFiltered, setOpType, toggleZone, toggleAmbiente, setCurrency, setPriceRange, setM2Range, clearAll } = api;
   const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
 
-  // Price range values: use selectedPriceRange if set, else available range
+  const hasPriceData = opType !== null && available.priceMin < available.priceMax;
+  const hasM2Data = available.m2Min < available.m2Max;
+
   const pMin = priceRange ? priceRange[0] : available.priceMin;
   const pMax = priceRange ? priceRange[1] : available.priceMax;
   const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
 
-  // m2 range values
   const mMin = m2Range ? m2Range[0] : available.m2Min;
   const mMax = m2Range ? m2Range[1] : available.m2Max;
-  const hasPriceData = opType !== null && available.priceMin < available.priceMax;
-  const hasM2Data = available.m2Min < available.m2Max;
+
+  const btnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
+  const btnIdle: React.CSSProperties = { backgroundColor: "rgba(255,255,255,0.08)", borderColor: "rgba(255,255,255,0.22)", color: "rgba(255,255,255,0.82)" };
+  const btnMuted: React.CSSProperties = { backgroundColor: "transparent", borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.28)" };
 
   return (
-    <div
-      className={`absolute left-0 top-full mt-2 ${panelClass} bg-ivory rounded-2xl shadow-2xl z-50 overflow-hidden`}
-      style={{ border: "1px solid rgba(0,0,0,0.08)" }}
-    >
-      {/* Header */}
-      <div
-        className="flex items-center justify-between px-4 py-3 border-b border-charcoal/8"
-        style={{ borderBottomColor: "rgba(28,28,26,0.08)" }}
-      >
-        <span className="text-sm font-semibold text-charcoal">{labels.filters}</span>
-        <div className="flex items-center gap-3">
-          {api.isFiltered && (
+    <div className="flex flex-col mb-3 flex-shrink-0">
+      {/* Row 1: Alquiler/Compra + Borrar */}
+      <div className="flex items-center gap-2 mb-3">
+        <div className="flex gap-1.5 flex-1">
+          {(["alquiler", "venta"] as OpType[]).map((v) => (
             <button
-              onClick={clearAll}
-              className="text-xs text-warm-gray hover:text-charcoal underline underline-offset-2 transition-colors"
+              key={v}
+              onClick={() => setOpType(opType === v ? null : v)}
+              className="px-3 py-1.5 text-xs rounded-full font-medium border transition-colors flex-1 text-center"
+              style={opType === v ? btnActive : btnIdle}
             >
-              {labels.clearFilters}
+              {v === "alquiler" ? labels.rental : labels.purchase}
             </button>
+          ))}
+        </div>
+        <button
+          onClick={clearAll}
+          className="text-xs font-medium transition-colors flex-shrink-0 px-2.5 py-1.5 rounded-full border"
+          style={isFiltered ? { ...btnIdle, borderColor: "rgba(255,255,255,0.35)" } : btnMuted}
+        >
+          {labels.clearFilters}
+        </button>
+      </div>
+
+      <div className="h-px bg-white/10 mb-3" />
+
+      {/* Row 2: Precio */}
+      <div className="mb-3">
+        {opType === null ? (
+          <p className="text-[11px] text-white/35 py-0.5 italic">{labels.selectOpFirst}</p>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider">
+                {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
+              </p>
+              {available.currencies.length > 1 && (
+                <div className="flex gap-1">
+                  {available.currencies.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setCurrency(c)}
+                      className="px-2 py-0.5 text-[10px] rounded-full border transition-colors font-semibold"
+                      style={currency === c ? btnActive : btnIdle}
+                    >
+                      {c === "ARS" ? "ARS $" : "USD"}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {hasPriceData && currency ? (
+              <DualRangeSlider
+                min={available.priceMin}
+                max={available.priceMax}
+                valueMin={pMin}
+                valueMax={pMax}
+                onChangeMin={(v) => setPriceRange([v, pMax])}
+                onChangeMax={(v) => setPriceRange([pMin, v])}
+                formatValue={(v) => formatPrice(v, currency)}
+                accent={accent}
+                step={pStep}
+                dark
+              />
+            ) : (
+              <p className="text-xs text-white/30 italic py-1">{labels.noProps}</p>
+            )}
+          </>
+        )}
+      </div>
+
+      <div className="h-px bg-white/10 mb-3" />
+
+      {/* Row 3: Ambientes + m² */}
+      <div className="flex gap-4 mb-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1.5">{labels.rooms}</p>
+          {available.ambientes.length === 0 ? (
+            <p className="text-xs text-white/30 italic">{labels.noProps}</p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {available.ambientes.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => toggleAmbiente(n)}
+                  className="w-8 h-7 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center"
+                  style={ambientes.includes(n) ? btnActive : btnIdle}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
           )}
-          <button
-            onClick={onClose}
-            className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-charcoal/8 text-warm-gray hover:text-charcoal transition-colors"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1">{labels.m2}</p>
+          {hasM2Data ? (
+            <DualRangeSlider
+              min={available.m2Min}
+              max={available.m2Max}
+              valueMin={mMin}
+              valueMax={mMax}
+              onChangeMin={(v) => setM2Range([v, mMax])}
+              onChangeMax={(v) => setM2Range([mMin, v])}
+              formatValue={(v) => `${v}m²`}
+              accent={accent}
+              step={5}
+              dark
+            />
+          ) : (
+            <p className="text-xs text-white/30 italic pt-1">{labels.noProps}</p>
+          )}
         </div>
       </div>
 
-      {/* Scrollable content */}
-      <div className="overflow-y-auto max-h-[70vh]">
+      <div className="h-px bg-white/10 mb-3" />
 
-        {/* 1. Alquiler / Compra */}
-        <FilterSection title={`${labels.rental} / ${labels.purchase}`}>
-          <OpTypeToggle
-            value={opType}
-            onChange={setOpType}
-            accent={accent}
-            labelAlquiler={labels.rental}
-            labelCompra={labels.purchase}
-          />
-        </FilterSection>
-
-        {/* 2. Precio */}
-        <FilterSection title={labels.price} noPadding>
-          <div className="px-4">
-            {opType === null ? (
-              /* No opType selected → show mini picker */
-              <div>
-                <p className="text-xs text-warm-gray mb-2">{labels.selectOpFirst}</p>
-                <OpTypeToggle
-                  value={opType}
-                  onChange={setOpType}
-                  accent={accent}
-                  labelAlquiler={labels.rental}
-                  labelCompra={labels.purchase}
-                  size="sm"
-                />
-              </div>
-            ) : (
-              <div>
-                {/* Monthly/Total label */}
-                <p className="text-xs text-warm-gray mb-2">
-                  {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
-                </p>
-
-                {/* Currency selector when multiple currencies */}
-                {available.currencies.length > 1 && (
-                  <div className="flex gap-1.5 mb-3">
-                    {available.currencies.map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => setCurrency(c)}
-                        className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
-                        style={
-                          currency === c
-                            ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
-                            : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" }
-                        }
-                      >
-                        {c === "ARS" ? "Pesos $" : "Dólares US$"}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Range slider */}
-                {hasPriceData && currency ? (
-                  <DualRangeSlider
-                    min={available.priceMin}
-                    max={available.priceMax}
-                    valueMin={pMin}
-                    valueMax={pMax}
-                    onChangeMin={(v) => setPriceRange([v, pMax])}
-                    onChangeMax={(v) => setPriceRange([pMin, v])}
-                    formatValue={(v) => formatPrice(v, currency)}
-                    accent={accent}
-                    step={pStep}
-                  />
-                ) : (
-                  <p className="text-xs text-warm-gray italic py-1">
-                    {labels.selectOpFirst}
-                  </p>
-                )}
-              </div>
-            )}
+      {/* Row 4: Zona */}
+      <div>
+        <p className="text-[10px] font-semibold text-white/45 uppercase tracking-wider mb-1.5">{labels.zone}</p>
+        {available.zones.length === 0 && selectedZones.length === 0 ? (
+          <p className="text-xs text-white/30 italic">{labels.noProps}</p>
+        ) : (
+          <div className="flex flex-wrap gap-1.5">
+            {allZones.map((zone) => {
+              const checked = selectedZones.includes(zone.id);
+              const isAvail = available.zones.includes(zone.id);
+              if (!checked && !isAvail) return null;
+              return (
+                <button
+                  key={zone.id}
+                  onClick={() => toggleZone(zone.id)}
+                  className="px-2.5 py-1 text-xs rounded-full border transition-colors font-medium"
+                  style={checked ? btnActive : isAvail ? btnIdle : btnMuted}
+                >
+                  {loc(zone.label, locale)}
+                </button>
+              );
+            })}
           </div>
-        </FilterSection>
-
-        {/* 3. Ambientes */}
-        <FilterSection title={labels.rooms}>
-          {available.ambientes.length === 0 ? (
-            <p className="text-xs text-warm-gray italic">—</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {available.ambientes.map((n) => {
-                const selected = ambientes.includes(n);
-                return (
-                  <button
-                    key={n}
-                    onClick={() => toggleAmbiente(n)}
-                    className="w-9 h-9 rounded-xl text-sm font-medium border transition-colors"
-                    style={
-                      selected
-                        ? { backgroundColor: accent, borderColor: accent, color: "#fff" }
-                        : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" }
-                    }
-                  >
-                    {n}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </FilterSection>
-
-        {/* 4. Zona */}
-        {zones.length > 0 && (
-          <FilterSection title={labels.zone}>
-            <div className="space-y-1">
-              {zones.map((zone) => {
-                const checked = selectedZones.includes(zone.id);
-                return (
-                  <button
-                    key={zone.id}
-                    onClick={() => toggleZone(zone.id)}
-                    className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
-                  >
-                    <span
-                      className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
-                      style={
-                        checked
-                          ? { backgroundColor: accent, borderColor: accent }
-                          : { backgroundColor: "transparent", borderColor: "#9B9490" }
-                      }
-                    >
-                      {checked && (
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </span>
-                    {loc(zone.label, locale)}
-                  </button>
-                );
-              })}
-            </div>
-          </FilterSection>
         )}
-
-        {/* 5. m² */}
-        <FilterSection title="m²" noPadding>
-          <div className="px-4">
-            {hasM2Data ? (
-              <DualRangeSlider
-                min={available.m2Min}
-                max={available.m2Max}
-                valueMin={mMin}
-                valueMax={mMax}
-                onChangeMin={(v) => setM2Range([v, mMax])}
-                onChangeMax={(v) => setM2Range([mMin, v])}
-                formatValue={(v) => `${v} m²`}
-                accent={accent}
-                step={5}
-              />
-            ) : (
-              <p className="text-xs text-warm-gray italic py-1">—</p>
-            )}
-          </div>
-        </FilterSection>
       </div>
     </div>
   );

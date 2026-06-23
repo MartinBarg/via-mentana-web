@@ -55,6 +55,8 @@
     "reAllZones": "Todas las zonas",
     "reSelectOpFirst": "Seleccioná Alquiler o Compra",
     "reCurrency": "Moneda",
-    "reFiltered": "propiedades"
+    "reFiltered": "propiedades",
+    "reNoProps": "Sin resultados",
+    "reAppliedFilters": "Filtros aplicados"
   }
 }

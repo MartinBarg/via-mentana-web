@@ -55,6 +55,8 @@
     "reAllZones": "Tutte le zone",
     "reSelectOpFirst": "Seleziona Affitto o Acquisto",
     "reCurrency": "Valuta",
-    "reFiltered": "proprietà"
+    "reFiltered": "proprietà",
+    "reNoProps": "Nessun risultato",
+    "reAppliedFilters": "Filtri attivi"
   }
 }

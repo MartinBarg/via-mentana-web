@@ -41,24 +41,13 @@ const config: ClientConfig = {
     },
     realEstateFilters: true,
     zones: [
-      {
-        id: "capital-norte",
-        label: {
-          es: "Capital - Zona Norte",
-          en: "Capital - Northern Zone",
-          it: "Capitale - Zona Nord",
-          de: "Hauptstadt - Nordzone",
-        },
-      },
-      {
-        id: "gba-norte",
-        label: {
-          es: "GBA Norte",
-          en: "GBA North",
-          it: "GBA Nord",
-          de: "GBA Nord",
-        },
-      },
+      { id: "palermo", label: { es: "Palermo", en: "Palermo", it: "Palermo", de: "Palermo" } },
+      { id: "belgrano", label: { es: "Belgrano / Núñez", en: "Belgrano / Núñez", it: "Belgrano / Núñez", de: "Belgrano / Núñez" } },
+      { id: "vicente-lopez", label: { es: "Vicente López", en: "Vicente López", it: "Vicente López", de: "Vicente López" } },
+      { id: "san-isidro", label: { es: "San Isidro", en: "San Isidro", it: "San Isidro", de: "San Isidro" } },
+      { id: "nordelta", label: { es: "Nordelta", en: "Nordelta", it: "Nordelta", de: "Nordelta" } },
+      { id: "pilar", label: { es: "Pilar", en: "Pilar", it: "Pilar", de: "Pilar" } },
+      { id: "tigre", label: { es: "Tigre", en: "Tigre", it: "Tigre", de: "Tigre" } },
     ],
   },
 
@@ -143,7 +132,7 @@ const config: ClientConfig = {
     // ─── 1. Le Parc ───────────────────────────────────────────────────────────
     {
       id: "le-parc",
-      zone: "capital-norte",
+      zone: "palermo",
       operationType: ["alquiler", "venta"],
       rentalPrice: { amount: 2500, currency: "USD" },
       salePrice: { amount: 280000, currency: "USD" },
@@ -259,7 +248,7 @@ const config: ClientConfig = {
     // ─── 2. Chateaux ──────────────────────────────────────────────────────────
     {
       id: "chateaux",
-      zone: "capital-norte",
+      zone: "belgrano",
       operationType: ["alquiler"],
       rentalPrice: { amount: 1800, currency: "USD" },
       ambientes: 2,
@@ -362,7 +351,7 @@ const config: ClientConfig = {
     // ─── 3. Alrio ─────────────────────────────────────────────────────────────
     {
       id: "alrio",
-      zone: "gba-norte",
+      zone: "vicente-lopez",
       operationType: ["venta"],
       salePrice: { amount: 380000, currency: "USD" },
       ambientes: 4,
@@ -464,10 +453,10 @@ const config: ClientConfig = {
     // ─── 4. Casa4 ─────────────────────────────────────────────────────────────
     {
       id: "casa4",
-      zone: "gba-norte",
+      zone: "san-isidro",
       operationType: ["alquiler", "venta"],
       rentalPrice: { amount: 900000, currency: "ARS" },
-      salePrice: { amount: 420000, currency: "USD" },
+      salePrice: { amount: 350000000, currency: "ARS" },
       ambientes: 5,
       m2: 200,
       kuulaEmbedUrl:
@@ -567,7 +556,7 @@ const config: ClientConfig = {
     // ─── 5. Casa5 ─────────────────────────────────────────────────────────────
     {
       id: "casa5",
-      zone: "capital-norte",
+      zone: "palermo",
       operationType: ["venta"],
       salePrice: { amount: 650000, currency: "USD" },
       ambientes: 4,
@@ -667,7 +656,7 @@ const config: ClientConfig = {
     // ─── 6. Casa6 ─────────────────────────────────────────────────────────────
     {
       id: "casa6",
-      zone: "gba-norte",
+      zone: "nordelta",
       operationType: ["venta"],
       salePrice: { amount: 850000, currency: "USD" },
       ambientes: 5,
@@ -767,9 +756,9 @@ const config: ClientConfig = {
     // ─── 7. Casa7 ─────────────────────────────────────────────────────────────
     {
       id: "casa7",
-      zone: "gba-norte",
+      zone: "pilar",
       operationType: ["venta"],
-      salePrice: { amount: 520000, currency: "USD" },
+      salePrice: { amount: 420000000, currency: "ARS" },
       ambientes: 5,
       m2: 260,
       googleMapsEmbedUrl:
@@ -867,7 +856,7 @@ const config: ClientConfig = {
     // ─── 8. Casa8 ─────────────────────────────────────────────────────────────
     {
       id: "casa8",
-      zone: "gba-norte",
+      zone: "tigre",
       operationType: ["venta"],
       salePrice: { amount: 750000, currency: "USD" },
       ambientes: 4,
