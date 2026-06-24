@@ -488,8 +488,8 @@ export function RealEstateInlineFilters({
       {/* Expandable panel — absolute so it overlays tour cards without resizing them */}
       {openFilter && (
         <div
-          className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 overflow-hidden"
-          style={{ border: "1px solid rgba(0,0,0,0.08)" }}
+          className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 overflow-x-hidden overflow-y-auto"
+          style={{ border: "1px solid rgba(0,0,0,0.08)", maxHeight: "55svh" }}
         >
           {/* Alquiler / Compra */}
           {openFilter === "opType" && (
