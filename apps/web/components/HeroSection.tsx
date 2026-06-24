@@ -542,6 +542,16 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 </svg>
               </button>
             )}
+            {/* RE: "Limpiar" en la barra — solo visible cuando hay filtros activos y el panel está cerrado */}
+            {isRealEstate && isFiltered && !mobileREFilterOpen && (
+              <button
+                onClick={() => reFilters.clearAll()}
+                className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors flex-shrink-0"
+                style={{ backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}
+              >
+                {reLabels.clearFilters}
+              </button>
+            )}
             {/* RE: panel — fixed so escapes overflow-hidden del hero */}
             {isRealEstate && mobileREFilterOpen && (
               <RealEstateMobileFilterPanel
