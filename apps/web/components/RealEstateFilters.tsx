@@ -367,6 +367,206 @@ function priceStep(currency: Currency, range: number): number {
   }
 }
 
+// ─── FilterLabels ─────────────────────────────────────────────────────────────
+
+export type FilterLabels = {
+  rental: string;
+  purchase: string;
+  price: string;
+  monthlyPrice: string;
+  totalPrice: string;
+  rooms: string;
+  zone: string;
+  m2: string;
+  clearFilters: string;
+  selectOpFirst: string;
+  noProps: string;
+  currencyARS: string;
+  currencyUSD: string;
+};
+
+// ─── Shared style helpers ─────────────────────────────────────────────────────
+
+const PANEL_BTN_IDLE: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
+function panelBtnActive(accent: string): React.CSSProperties {
+  return { backgroundColor: accent, borderColor: accent, color: "#fff" };
+}
+const SECTION_TITLE = "text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3";
+
+// ─── Filter section content components ───────────────────────────────────────
+// Each renders only the interactive content — title + wrapper div is the parent's job.
+// Adding a new filter = add one component here and use it in both InlineFilters + MobilePanel.
+
+function OpTypeSectionContent({ api, labels, accent }: { api: RealEstateFilterAPI; labels: FilterLabels; accent: string }) {
+  const { opType } = api.state;
+  return (
+    <div className="flex gap-2">
+      {(["alquiler", "venta"] as OpType[]).map((v) => (
+        <button
+          key={v}
+          onClick={() => api.setOpType(opType === v ? null : v)}
+          className="px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center"
+          style={opType === v ? panelBtnActive(accent) : PANEL_BTN_IDLE}
+        >
+          {v === "alquiler" ? labels.rental : labels.purchase}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function PriceSectionContent({ api, labels, accent }: { api: RealEstateFilterAPI; labels: FilterLabels; accent: string }) {
+  const { opType, currency, priceRange } = api.state;
+  const { available } = api;
+  const hasPriceData = opType !== null && available.priceMax > 0;
+  const pMin = priceRange ? priceRange[0] : available.priceMin;
+  const pMax = priceRange ? priceRange[1] : available.priceMax;
+  const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
+
+  if (opType === null) {
+    return (
+      <>
+        <p className="text-xs text-warm-gray mb-3">{labels.selectOpFirst}</p>
+        <div className="flex gap-2">
+          {(["alquiler", "venta"] as OpType[]).map((v) => (
+            <button
+              key={v}
+              onClick={() => api.setOpType(v)}
+              className="px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
+              style={PANEL_BTN_IDLE}
+            >
+              {v === "alquiler" ? labels.rental : labels.purchase}
+            </button>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p className="text-xs text-warm-gray mb-2">
+        {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
+      </p>
+      {available.currencies.length > 1 && (
+        <div className="flex gap-1.5 mb-3">
+          {available.currencies.map((c) => (
+            <button
+              key={c}
+              onClick={() => api.setCurrency(c)}
+              className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
+              style={currency === c ? panelBtnActive(accent) : PANEL_BTN_IDLE}
+            >
+              {c === "ARS" ? labels.currencyARS : labels.currencyUSD}
+            </button>
+          ))}
+        </div>
+      )}
+      {hasPriceData && currency ? (
+        <DualRangeSlider
+          min={available.priceMin}
+          max={available.priceMax}
+          valueMin={pMin}
+          valueMax={pMax}
+          onChangeMin={(v) => api.setPriceRange([v, pMax])}
+          onChangeMax={(v) => api.setPriceRange([pMin, v])}
+          formatValue={(v) => formatPrice(v, currency)}
+          accent={accent}
+          step={pStep}
+        />
+      ) : (
+        <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+      )}
+    </>
+  );
+}
+
+function AmbientesSectionContent({ api, labels, accent }: { api: RealEstateFilterAPI; labels: FilterLabels; accent: string }) {
+  const { ambientes } = api.state;
+  const { available } = api;
+  if (available.ambientes.length === 0) {
+    return <p className="text-xs text-warm-gray italic">{labels.noProps}</p>;
+  }
+  return (
+    <div className="flex flex-wrap gap-2">
+      {available.ambientes.map((n) => (
+        <button
+          key={n}
+          onClick={() => api.toggleAmbiente(n)}
+          className="w-10 h-10 rounded-xl text-sm font-medium border transition-colors"
+          style={ambientes.includes(n) ? panelBtnActive(accent) : PANEL_BTN_IDLE}
+        >
+          {n}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ZoneSectionContent({ api, labels, locale, accent, allZones }: {
+  api: RealEstateFilterAPI; labels: FilterLabels; locale: string; accent: string; allZones: HeroZone[];
+}) {
+  const { zones: selectedZones } = api.state;
+  const { available } = api;
+  if (available.zones.length === 0 && selectedZones.length === 0) {
+    return <p className="text-xs text-warm-gray italic">{labels.noProps}</p>;
+  }
+  return (
+    <div className="space-y-1">
+      {allZones.map((zone) => {
+        const checked = selectedZones.includes(zone.id);
+        const isAvail = available.zones.includes(zone.id);
+        if (!checked && !isAvail) return null;
+        return (
+          <button
+            key={zone.id}
+            onClick={() => api.toggleZone(zone.id)}
+            className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
+          >
+            <span
+              className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
+              style={checked
+                ? { backgroundColor: accent, borderColor: accent }
+                : { backgroundColor: "transparent", borderColor: "#9B9490" }
+              }
+            >
+              {checked && (
+                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </span>
+            {loc(zone.label, locale)}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function M2SectionContent({ api, labels, accent }: { api: RealEstateFilterAPI; labels: FilterLabels; accent: string }) {
+  const { m2Range } = api.state;
+  const { available } = api;
+  const mMin = m2Range ? m2Range[0] : available.m2Min;
+  const mMax = m2Range ? m2Range[1] : available.m2Max;
+  if (available.m2Max === 0) {
+    return <p className="text-xs text-warm-gray italic">{labels.noProps}</p>;
+  }
+  return (
+    <DualRangeSlider
+      min={available.m2Min}
+      max={available.m2Max}
+      valueMin={mMin}
+      valueMax={mMax}
+      onChangeMin={(v) => api.setM2Range([v, mMax])}
+      onChangeMax={(v) => api.setM2Range([mMin, v])}
+      formatValue={(v) => `${v} m²`}
+      accent={accent}
+      step={5}
+    />
+  );
+}
+
 // ─── RealEstateInlineFilters ──────────────────────────────────────────────────
 // 5 individual filter chips (closed by default), each expands its own panel when clicked.
 
@@ -375,21 +575,7 @@ export interface RealEstateInlineFiltersProps {
   allZones: HeroZone[];
   locale: string;
   accent: string;
-  labels: {
-    rental: string;
-    purchase: string;
-    price: string;
-    monthlyPrice: string;
-    totalPrice: string;
-    rooms: string;
-    zone: string;
-    m2: string;
-    clearFilters: string;
-    selectOpFirst: string;
-    noProps: string;
-    currencyARS: string;
-    currencyUSD: string;
-  };
+  labels: FilterLabels;
 }
 
 type FilterKey = "opType" | "price" | "ambientes" | "zone" | "m2";
@@ -442,22 +628,8 @@ export interface RealEstateMobileFilterPanelProps {
 export function RealEstateMobileFilterPanel({
   api, allZones, locale, accent, labels, topPx = 0, onClose,
 }: RealEstateMobileFilterPanelProps) {
-  const { state, available, isFiltered } = api;
-  const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
-
-  const hasPriceData = opType !== null && available.priceMax > 0;
-  const hasM2Data = available.m2Max > 0;
-
-  const pMin = priceRange ? priceRange[0] : available.priceMin;
-  const pMax = priceRange ? priceRange[1] : available.priceMax;
-  const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
-  const mMin = m2Range ? m2Range[0] : available.m2Min;
-  const mMax = m2Range ? m2Range[1] : available.m2Max;
-
-  const panelBtnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
-  const panelBtnIdle: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
+  const { isFiltered } = api;
   const sectionClass = "p-4 border-b border-charcoal/[0.06]";
-  const sectionTitle = "text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3";
 
   return (
     <div
@@ -469,7 +641,7 @@ export function RealEstateMobileFilterPanel({
         <button
           onClick={api.clearAll}
           className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
-          style={isFiltered ? panelBtnActive : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#9B9490" }}
+          style={isFiltered ? panelBtnActive(accent) : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#9B9490" }}
         >
           {labels.clearFilters}
         </button>
@@ -482,157 +654,25 @@ export function RealEstateMobileFilterPanel({
 
       {/* Scrollable content */}
       <div className="overflow-y-auto flex-1 pb-4">
-        {/* Tipo de operación */}
         <div className={sectionClass}>
-          <p className={sectionTitle}>{labels.rental} / {labels.purchase}</p>
-          <div className="flex gap-2">
-            {(["alquiler", "venta"] as OpType[]).map((v) => (
-              <button
-                key={v}
-                onClick={() => api.setOpType(opType === v ? null : v)}
-                className="px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center"
-                style={opType === v ? panelBtnActive : panelBtnIdle}
-              >
-                {v === "alquiler" ? labels.rental : labels.purchase}
-              </button>
-            ))}
-          </div>
+          <p className={SECTION_TITLE}>{labels.rental} / {labels.purchase}</p>
+          <OpTypeSectionContent api={api} labels={labels} accent={accent} />
         </div>
-
-        {/* Precio */}
         <div className={sectionClass}>
-          <p className={sectionTitle}>{labels.price}</p>
-          {opType === null ? (
-            <>
-              <p className="text-xs text-warm-gray mb-3">{labels.selectOpFirst}</p>
-              <div className="flex gap-2">
-                {(["alquiler", "venta"] as OpType[]).map((v) => (
-                  <button
-                    key={v}
-                    onClick={() => api.setOpType(v)}
-                    className="px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
-                    style={panelBtnIdle}
-                  >
-                    {v === "alquiler" ? labels.rental : labels.purchase}
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-xs text-warm-gray mb-2">
-                {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
-              </p>
-              {available.currencies.length > 1 && (
-                <div className="flex gap-1.5 mb-3">
-                  {available.currencies.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => api.setCurrency(c)}
-                      className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
-                      style={currency === c ? panelBtnActive : panelBtnIdle}
-                    >
-                      {c === "ARS" ? labels.currencyARS : labels.currencyUSD}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {hasPriceData && currency ? (
-                <DualRangeSlider
-                  min={available.priceMin}
-                  max={available.priceMax}
-                  valueMin={pMin}
-                  valueMax={pMax}
-                  onChangeMin={(v) => api.setPriceRange([v, pMax])}
-                  onChangeMax={(v) => api.setPriceRange([pMin, v])}
-                  formatValue={(v) => formatPrice(v, currency)}
-                  accent={accent}
-                  step={pStep}
-                />
-              ) : (
-                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-              )}
-            </>
-          )}
+          <p className={SECTION_TITLE}>{labels.price}</p>
+          <PriceSectionContent api={api} labels={labels} accent={accent} />
         </div>
-
-        {/* Ambientes */}
         <div className={sectionClass}>
-          <p className={sectionTitle}>{labels.rooms}</p>
-          {available.ambientes.length === 0 ? (
-            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {available.ambientes.map((n) => (
-                <button
-                  key={n}
-                  onClick={() => api.toggleAmbiente(n)}
-                  className="w-10 h-10 rounded-xl text-sm font-medium border transition-colors"
-                  style={ambientes.includes(n) ? panelBtnActive : panelBtnIdle}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          )}
+          <p className={SECTION_TITLE}>{labels.rooms}</p>
+          <AmbientesSectionContent api={api} labels={labels} accent={accent} />
         </div>
-
-        {/* Zona */}
         <div className={sectionClass}>
-          <p className={sectionTitle}>{labels.zone}</p>
-          {available.zones.length === 0 && selectedZones.length === 0 ? (
-            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-          ) : (
-            <div className="space-y-1">
-              {allZones.map((zone) => {
-                const checked = selectedZones.includes(zone.id);
-                const isAvail = available.zones.includes(zone.id);
-                if (!checked && !isAvail) return null;
-                return (
-                  <button
-                    key={zone.id}
-                    onClick={() => api.toggleZone(zone.id)}
-                    className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
-                  >
-                    <span
-                      className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
-                      style={checked
-                        ? { backgroundColor: accent, borderColor: accent }
-                        : { backgroundColor: "transparent", borderColor: "#9B9490" }
-                      }
-                    >
-                      {checked && (
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </span>
-                    {loc(zone.label, locale)}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <p className={SECTION_TITLE}>{labels.zone}</p>
+          <ZoneSectionContent api={api} labels={labels} locale={locale} accent={accent} allZones={allZones} />
         </div>
-
-        {/* m² */}
         <div className="p-4">
-          <p className={sectionTitle}>m²</p>
-          {hasM2Data ? (
-            <DualRangeSlider
-              min={available.m2Min}
-              max={available.m2Max}
-              valueMin={mMin}
-              valueMax={mMax}
-              onChangeMin={(v) => api.setM2Range([v, mMax])}
-              onChangeMax={(v) => api.setM2Range([mMin, v])}
-              formatValue={(v) => `${v} m²`}
-              accent={accent}
-              step={5}
-            />
-          ) : (
-            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-          )}
+          <p className={SECTION_TITLE}>m²</p>
+          <M2SectionContent api={api} labels={labels} accent={accent} />
         </div>
       </div>
     </div>
@@ -656,17 +696,8 @@ export function RealEstateInlineFilters({
 
   const toggle = (f: FilterKey) => setOpenFilter((o) => (o === f ? null : f));
 
-  const { state, available, isFiltered } = api;
-  const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
-
-  const hasPriceData = opType !== null && available.priceMax > 0;
-  const hasM2Data = available.m2Max > 0;
-
-  const pMin = priceRange ? priceRange[0] : available.priceMin;
-  const pMax = priceRange ? priceRange[1] : available.priceMax;
-  const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
-  const mMin = m2Range ? m2Range[0] : available.m2Min;
-  const mMax = m2Range ? m2Range[1] : available.m2Max;
+  const { state, isFiltered } = api;
+  const { opType, zones: selectedZones, ambientes, priceRange, m2Range } = state;
 
   const opTypeSummary = opType ? (opType === "alquiler" ? labels.rental : labels.purchase) : null;
   const ambientesSummary = ambientes.length > 0 ? ambientes.join(", ") : null;
@@ -674,10 +705,6 @@ export function RealEstateInlineFilters({
     ? (allZones.find((z) => z.id === selectedZones[0]) ? loc(allZones.find((z) => z.id === selectedZones[0])!.label, locale) : selectedZones[0])
     : selectedZones.length > 1 ? `${selectedZones.length}` : null;
   const m2Summary = m2Range ? `${m2Range[0]}–${m2Range[1]}` : null;
-
-  // Panel content styles (light bg, dark text)
-  const panelBtnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
-  const panelBtnIdle: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
 
   return (
     <div ref={containerRef} className="relative mb-3 flex-shrink-0">
@@ -706,176 +733,34 @@ export function RealEstateInlineFilters({
           className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 overflow-x-hidden overflow-y-auto"
           style={{ border: "1px solid rgba(0,0,0,0.08)", maxHeight: "55svh" }}
         >
-          {/* Alquiler / Compra */}
           {openFilter === "opType" && (
             <div className="p-4">
-              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
-                {labels.rental} / {labels.purchase}
-              </p>
-              <div className="flex gap-2">
-                {(["alquiler", "venta"] as OpType[]).map((v) => (
-                  <button
-                    key={v}
-                    onClick={() => api.setOpType(opType === v ? null : v)}
-                    className="px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center"
-                    style={opType === v ? panelBtnActive : panelBtnIdle}
-                  >
-                    {v === "alquiler" ? labels.rental : labels.purchase}
-                  </button>
-                ))}
-              </div>
+              <p className={SECTION_TITLE}>{labels.rental} / {labels.purchase}</p>
+              <OpTypeSectionContent api={api} labels={labels} accent={accent} />
             </div>
           )}
-
-          {/* Precio */}
           {openFilter === "price" && (
             <div className="p-4">
-              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
-                {labels.price}
-              </p>
-              {opType === null ? (
-                <>
-                  <p className="text-xs text-warm-gray mb-3">{labels.selectOpFirst}</p>
-                  <div className="flex gap-2">
-                    {(["alquiler", "venta"] as OpType[]).map((v) => (
-                      <button
-                        key={v}
-                        onClick={() => api.setOpType(v)}
-                        className="px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
-                        style={panelBtnIdle}
-                      >
-                        {v === "alquiler" ? labels.rental : labels.purchase}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-xs text-warm-gray mb-2">
-                    {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
-                  </p>
-                  {available.currencies.length > 1 && (
-                    <div className="flex gap-1.5 mb-3">
-                      {available.currencies.map((c) => (
-                        <button
-                          key={c}
-                          onClick={() => api.setCurrency(c)}
-                          className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
-                          style={currency === c ? panelBtnActive : panelBtnIdle}
-                        >
-                          {c === "ARS" ? labels.currencyARS : labels.currencyUSD}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {hasPriceData && currency ? (
-                    <DualRangeSlider
-                      min={available.priceMin}
-                      max={available.priceMax}
-                      valueMin={pMin}
-                      valueMax={pMax}
-                      onChangeMin={(v) => api.setPriceRange([v, pMax])}
-                      onChangeMax={(v) => api.setPriceRange([pMin, v])}
-                      formatValue={(v) => formatPrice(v, currency)}
-                      accent={accent}
-                      step={pStep}
-                    />
-                  ) : (
-                    <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-                  )}
-                </>
-              )}
+              <p className={SECTION_TITLE}>{labels.price}</p>
+              <PriceSectionContent api={api} labels={labels} accent={accent} />
             </div>
           )}
-
-          {/* Ambientes */}
           {openFilter === "ambientes" && (
             <div className="p-4">
-              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
-                {labels.rooms}
-              </p>
-              {available.ambientes.length === 0 ? (
-                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {available.ambientes.map((n) => (
-                    <button
-                      key={n}
-                      onClick={() => api.toggleAmbiente(n)}
-                      className="w-10 h-10 rounded-xl text-sm font-medium border transition-colors"
-                      style={ambientes.includes(n) ? panelBtnActive : panelBtnIdle}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <p className={SECTION_TITLE}>{labels.rooms}</p>
+              <AmbientesSectionContent api={api} labels={labels} accent={accent} />
             </div>
           )}
-
-          {/* Zona */}
           {openFilter === "zone" && (
             <div className="p-4">
-              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
-                {labels.zone}
-              </p>
-              {available.zones.length === 0 && selectedZones.length === 0 ? (
-                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-              ) : (
-                <div className="space-y-1">
-                  {allZones.map((zone) => {
-                    const checked = selectedZones.includes(zone.id);
-                    const isAvail = available.zones.includes(zone.id);
-                    if (!checked && !isAvail) return null;
-                    return (
-                      <button
-                        key={zone.id}
-                        onClick={() => api.toggleZone(zone.id)}
-                        className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
-                      >
-                        <span
-                          className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
-                          style={checked
-                            ? { backgroundColor: accent, borderColor: accent }
-                            : { backgroundColor: "transparent", borderColor: "#9B9490" }
-                          }
-                        >
-                          {checked && (
-                            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </span>
-                        {loc(zone.label, locale)}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              <p className={SECTION_TITLE}>{labels.zone}</p>
+              <ZoneSectionContent api={api} labels={labels} locale={locale} accent={accent} allZones={allZones} />
             </div>
           )}
-
-          {/* m² */}
           {openFilter === "m2" && (
             <div className="p-4">
-              <p className="text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3">
-                m²
-              </p>
-              {hasM2Data ? (
-                <DualRangeSlider
-                  min={available.m2Min}
-                  max={available.m2Max}
-                  valueMin={mMin}
-                  valueMax={mMax}
-                  onChangeMin={(v) => api.setM2Range([v, mMax])}
-                  onChangeMax={(v) => api.setM2Range([mMin, v])}
-                  formatValue={(v) => `${v} m²`}
-                  accent={accent}
-                  step={5}
-                />
-              ) : (
-                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
-              )}
+              <p className={SECTION_TITLE}>m²</p>
+              <M2SectionContent api={api} labels={labels} accent={accent} />
             </div>
           )}
         </div>
