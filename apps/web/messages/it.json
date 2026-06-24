@@ -41,6 +41,24 @@
     "guestsLabel": "Ospiti",
     "guestsFilteredBadge": "Tour filtrati per ospiti",
     "select": "Seleziona",
-    "selected": "Selezionato"
+    "selected": "Selezionato",
+    "reFilters": "Filtri",
+    "reRental": "Affitto",
+    "rePurchase": "Acquisto",
+    "rePrice": "Prezzo",
+    "reMonthlyPrice": "Prezzo mensile",
+    "reTotalPrice": "Prezzo totale",
+    "reRooms": "Ambienti",
+    "reZone": "Zona",
+    "reM2": "m²",
+    "reClearFilters": "Azzera",
+    "reAllZones": "Tutte le zone",
+    "reSelectOpFirst": "Seleziona Affitto o Acquisto",
+    "reCurrency": "Valuta",
+    "reCurrencyARS": "Pesos $",
+    "reCurrencyUSD": "Dollari US$",
+    "reFiltered": "proprietà",
+    "reNoProps": "Nessun risultato",
+    "reAppliedFilters": "Filtri attivi"
   }
 }

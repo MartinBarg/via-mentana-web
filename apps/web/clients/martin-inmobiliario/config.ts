@@ -39,6 +39,16 @@ const config: ClientConfig = {
       es: "Contactanos",
       de: "Kontakt",
     },
+    realEstateFilters: true,
+    zones: [
+      { id: "palermo", label: { es: "Palermo", en: "Palermo", it: "Palermo", de: "Palermo" } },
+      { id: "belgrano", label: { es: "Belgrano / Núñez", en: "Belgrano / Núñez", it: "Belgrano / Núñez", de: "Belgrano / Núñez" } },
+      { id: "vicente-lopez", label: { es: "Vicente López", en: "Vicente López", it: "Vicente López", de: "Vicente López" } },
+      { id: "san-isidro", label: { es: "San Isidro", en: "San Isidro", it: "San Isidro", de: "San Isidro" } },
+      { id: "nordelta", label: { es: "Nordelta", en: "Nordelta", it: "Nordelta", de: "Nordelta" } },
+      { id: "pilar", label: { es: "Pilar", en: "Pilar", it: "Pilar", de: "Pilar" } },
+      { id: "tigre", label: { es: "Tigre", en: "Tigre", it: "Tigre", de: "Tigre" } },
+    ],
   },
 
   reviews: {
@@ -122,6 +132,12 @@ const config: ClientConfig = {
     // ─── 1. Le Parc ───────────────────────────────────────────────────────────
     {
       id: "le-parc",
+      zone: "palermo",
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 2500, currency: "USD" },
+      salePrice: { amount: 280000, currency: "USD" },
+      ambientes: 3,
+      m2: 110,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -232,6 +248,11 @@ const config: ClientConfig = {
     // ─── 2. Chateaux ──────────────────────────────────────────────────────────
     {
       id: "chateaux",
+      zone: "belgrano",
+      operationType: ["alquiler"],
+      rentalPrice: { amount: 1800, currency: "USD" },
+      ambientes: 2,
+      m2: 85,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -330,6 +351,11 @@ const config: ClientConfig = {
     // ─── 3. Alrio ─────────────────────────────────────────────────────────────
     {
       id: "alrio",
+      zone: "vicente-lopez",
+      operationType: ["venta"],
+      salePrice: { amount: 380000, currency: "USD" },
+      ambientes: 4,
+      m2: 145,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7TNK4?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -427,6 +453,12 @@ const config: ClientConfig = {
     // ─── 4. Casa4 ─────────────────────────────────────────────────────────────
     {
       id: "casa4",
+      zone: "san-isidro",
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 900000, currency: "ARS" },
+      salePrice: { amount: 350000000, currency: "ARS" },
+      ambientes: 5,
+      m2: 200,
       kuulaEmbedUrl:
         "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
@@ -524,6 +556,11 @@ const config: ClientConfig = {
     // ─── 5. Casa5 ─────────────────────────────────────────────────────────────
     {
       id: "casa5",
+      zone: "palermo",
+      operationType: ["venta"],
+      salePrice: { amount: 650000, currency: "USD" },
+      ambientes: 4,
+      m2: 280,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Barrio+Parque+Buenos+Aires&output=embed",
       hero: {
@@ -619,6 +656,11 @@ const config: ClientConfig = {
     // ─── 6. Casa6 ─────────────────────────────────────────────────────────────
     {
       id: "casa6",
+      zone: "nordelta",
+      operationType: ["venta"],
+      salePrice: { amount: 850000, currency: "USD" },
+      ambientes: 5,
+      m2: 350,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Nordelta+Tigre+Buenos+Aires&output=embed",
       hero: {
@@ -714,6 +756,11 @@ const config: ClientConfig = {
     // ─── 7. Casa7 ─────────────────────────────────────────────────────────────
     {
       id: "casa7",
+      zone: "pilar",
+      operationType: ["venta"],
+      salePrice: { amount: 420000000, currency: "ARS" },
+      ambientes: 5,
+      m2: 260,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Pilar+Buenos+Aires&output=embed",
       hero: {
@@ -809,6 +856,11 @@ const config: ClientConfig = {
     // ─── 8. Casa8 ─────────────────────────────────────────────────────────────
     {
       id: "casa8",
+      zone: "tigre",
+      operationType: ["venta"],
+      salePrice: { amount: 750000, currency: "USD" },
+      ambientes: 4,
+      m2: 310,
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Venice+Tigre+Buenos+Aires&output=embed",
       hero: {

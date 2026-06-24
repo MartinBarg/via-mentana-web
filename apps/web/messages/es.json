@@ -41,6 +41,24 @@
     "guestsLabel": "Huéspedes",
     "guestsFilteredBadge": "Tours filtrados por huéspedes",
     "select": "Seleccionar",
-    "selected": "Seleccionado"
+    "selected": "Seleccionado",
+    "reFilters": "Filtros",
+    "reRental": "Alquiler",
+    "rePurchase": "Compra",
+    "rePrice": "Precio",
+    "reMonthlyPrice": "Precio mensual",
+    "reTotalPrice": "Precio total",
+    "reRooms": "Ambientes",
+    "reZone": "Zona",
+    "reM2": "m²",
+    "reClearFilters": "Limpiar",
+    "reAllZones": "Todas las zonas",
+    "reSelectOpFirst": "Seleccioná Alquiler o Compra",
+    "reCurrency": "Moneda",
+    "reCurrencyARS": "Pesos $",
+    "reCurrencyUSD": "Dólares US$",
+    "reFiltered": "propiedades",
+    "reNoProps": "Sin resultados",
+    "reAppliedFilters": "Filtros aplicados"
   }
 }
