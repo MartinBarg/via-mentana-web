@@ -426,6 +426,218 @@ function FilterChip({
   );
 }
 
+// ─── RealEstateMobileFilterPanel ─────────────────────────────────────────────
+// Full panel shown on mobile: all filters stacked, scrollable, with X + Limpiar.
+
+export interface RealEstateMobileFilterPanelProps {
+  api: RealEstateFilterAPI;
+  allZones: HeroZone[];
+  locale: string;
+  accent: string;
+  labels: RealEstateInlineFiltersProps["labels"];
+  onClose: () => void;
+}
+
+export function RealEstateMobileFilterPanel({
+  api, allZones, locale, accent, labels, onClose,
+}: RealEstateMobileFilterPanelProps) {
+  const { state, available, isFiltered } = api;
+  const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
+
+  const hasPriceData = opType !== null && available.priceMax > 0;
+  const hasM2Data = available.m2Max > 0;
+
+  const pMin = priceRange ? priceRange[0] : available.priceMin;
+  const pMax = priceRange ? priceRange[1] : available.priceMax;
+  const pStep = currency ? priceStep(currency, available.priceMax - available.priceMin) : 1;
+  const mMin = m2Range ? m2Range[0] : available.m2Min;
+  const mMax = m2Range ? m2Range[1] : available.m2Max;
+
+  const panelBtnActive: React.CSSProperties = { backgroundColor: accent, borderColor: accent, color: "#fff" };
+  const panelBtnIdle: React.CSSProperties = { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#1C1C1A" };
+  const sectionClass = "p-4 border-b border-charcoal/[0.06]";
+  const sectionTitle = "text-[11px] font-semibold text-warm-gray uppercase tracking-wider mb-3";
+
+  return (
+    <div
+      className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+      style={{ border: "1px solid rgba(0,0,0,0.08)", maxHeight: "55svh" }}
+    >
+      {/* Sticky header: Limpiar + X */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-charcoal/10 bg-ivory flex-shrink-0">
+        <button
+          onClick={api.clearAll}
+          className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
+          style={isFiltered ? panelBtnActive : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#9B9490" }}
+        >
+          {labels.clearFilters}
+        </button>
+        <button onClick={onClose} className="p-1 text-charcoal/50 hover:text-charcoal transition-colors">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="overflow-y-auto flex-1">
+        {/* Tipo de operación */}
+        <div className={sectionClass}>
+          <p className={sectionTitle}>{labels.rental} / {labels.purchase}</p>
+          <div className="flex gap-2">
+            {(["alquiler", "venta"] as OpType[]).map((v) => (
+              <button
+                key={v}
+                onClick={() => api.setOpType(opType === v ? null : v)}
+                className="px-4 py-2 text-sm rounded-xl font-medium border transition-colors flex-1 text-center"
+                style={opType === v ? panelBtnActive : panelBtnIdle}
+              >
+                {v === "alquiler" ? labels.rental : labels.purchase}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Precio */}
+        <div className={sectionClass}>
+          <p className={sectionTitle}>{labels.price}</p>
+          {opType === null ? (
+            <>
+              <p className="text-xs text-warm-gray mb-3">{labels.selectOpFirst}</p>
+              <div className="flex gap-2">
+                {(["alquiler", "venta"] as OpType[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => api.setOpType(v)}
+                    className="px-3 py-1.5 text-xs rounded-lg font-medium border transition-colors flex-1 text-center"
+                    style={panelBtnIdle}
+                  >
+                    {v === "alquiler" ? labels.rental : labels.purchase}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-xs text-warm-gray mb-2">
+                {opType === "alquiler" ? labels.monthlyPrice : labels.totalPrice}
+              </p>
+              {available.currencies.length > 1 && (
+                <div className="flex gap-1.5 mb-3">
+                  {available.currencies.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => api.setCurrency(c)}
+                      className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
+                      style={currency === c ? panelBtnActive : panelBtnIdle}
+                    >
+                      {c === "ARS" ? labels.currencyARS : labels.currencyUSD}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {hasPriceData && currency ? (
+                <DualRangeSlider
+                  min={available.priceMin}
+                  max={available.priceMax}
+                  valueMin={pMin}
+                  valueMax={pMax}
+                  onChangeMin={(v) => api.setPriceRange([v, pMax])}
+                  onChangeMax={(v) => api.setPriceRange([pMin, v])}
+                  formatValue={(v) => formatPrice(v, currency)}
+                  accent={accent}
+                  step={pStep}
+                />
+              ) : (
+                <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Ambientes */}
+        <div className={sectionClass}>
+          <p className={sectionTitle}>{labels.rooms}</p>
+          {available.ambientes.length === 0 ? (
+            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {available.ambientes.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => api.toggleAmbiente(n)}
+                  className="w-10 h-10 rounded-xl text-sm font-medium border transition-colors"
+                  style={ambientes.includes(n) ? panelBtnActive : panelBtnIdle}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Zona */}
+        <div className={sectionClass}>
+          <p className={sectionTitle}>{labels.zone}</p>
+          {available.zones.length === 0 && selectedZones.length === 0 ? (
+            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+          ) : (
+            <div className="space-y-1">
+              {allZones.map((zone) => {
+                const checked = selectedZones.includes(zone.id);
+                const isAvail = available.zones.includes(zone.id);
+                if (!checked && !isAvail) return null;
+                return (
+                  <button
+                    key={zone.id}
+                    onClick={() => api.toggleZone(zone.id)}
+                    className="w-full flex items-center gap-3 py-1.5 text-sm text-charcoal hover:text-charcoal/70 transition-colors text-left"
+                  >
+                    <span
+                      className="w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors"
+                      style={checked
+                        ? { backgroundColor: accent, borderColor: accent }
+                        : { backgroundColor: "transparent", borderColor: "#9B9490" }
+                      }
+                    >
+                      {checked && (
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </span>
+                    {loc(zone.label, locale)}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* m² */}
+        <div className="p-4">
+          <p className={sectionTitle}>m²</p>
+          {hasM2Data ? (
+            <DualRangeSlider
+              min={available.m2Min}
+              max={available.m2Max}
+              valueMin={mMin}
+              valueMax={mMax}
+              onChangeMin={(v) => api.setM2Range([v, mMax])}
+              onChangeMax={(v) => api.setM2Range([mMin, v])}
+              formatValue={(v) => `${v} m²`}
+              accent={accent}
+              step={5}
+            />
+          ) : (
+            <p className="text-xs text-warm-gray italic">{labels.noProps}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function RealEstateInlineFilters({
   api, allZones, locale, accent, labels,
 }: RealEstateInlineFiltersProps) {
