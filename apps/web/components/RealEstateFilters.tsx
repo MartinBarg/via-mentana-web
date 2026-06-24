@@ -387,6 +387,8 @@ export interface RealEstateInlineFiltersProps {
     clearFilters: string;
     selectOpFirst: string;
     noProps: string;
+    currencyARS: string;
+    currencyUSD: string;
   };
 }
 
@@ -548,7 +550,7 @@ export function RealEstateInlineFilters({
                           className="px-2.5 py-1 text-xs rounded-lg border font-medium transition-colors"
                           style={currency === c ? panelBtnActive : panelBtnIdle}
                         >
-                          {c === "ARS" ? "Pesos $" : "Dólares US$"}
+                          {c === "ARS" ? labels.currencyARS : labels.currencyUSD}
                         </button>
                       ))}
                     </div>

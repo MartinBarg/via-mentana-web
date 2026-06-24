@@ -281,6 +281,8 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     clearFilters: t("reClearFilters"),
     selectOpFirst: t("reSelectOpFirst"),
     noProps: t("reNoProps"),
+    currencyARS: t("reCurrencyARS"),
+    currencyUSD: t("reCurrencyUSD"),
   };
 
   // Non-RE filter dropdown (zone checkboxes or guest picker)

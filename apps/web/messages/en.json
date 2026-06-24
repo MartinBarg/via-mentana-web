@@ -55,6 +55,8 @@
     "reAllZones": "All zones",
     "reSelectOpFirst": "Select Rental or Purchase",
     "reCurrency": "Currency",
+    "reCurrencyARS": "Pesos $",
+    "reCurrencyUSD": "US Dollars",
     "reFiltered": "properties",
     "reNoProps": "No results",
     "reAppliedFilters": "Filters applied"
