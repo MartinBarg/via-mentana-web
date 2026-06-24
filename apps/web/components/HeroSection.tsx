@@ -132,6 +132,17 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollHijack, handleScroll]);
 
+  // When scroll-hijack is off, sync translateX from the container's native scrollLeft
+  // so the desktop scrollbar thumb stays accurate during drag and overflow-x-auto scroll.
+  useEffect(() => {
+    if (scrollHijack) return;
+    const el = toursContainerRef.current;
+    if (!el) return;
+    const update = () => setTranslateX(el.scrollLeft);
+    el.addEventListener("scroll", update, { passive: true });
+    return () => el.removeEventListener("scroll", update);
+  }, [scrollHijack]);
+
   useEffect(() => {
     if (!filterOpen) return;
     const handler = (e: MouseEvent) => {
@@ -243,28 +254,40 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   function handleDesktopScrollbarPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     const track = desktopScrollbarTrackRef.current;
-    if (!track || !wrapperRef.current) return;
+    if (!track) return;
     e.preventDefault();
     const rect = track.getBoundingClientRect();
     const ratio = (e.clientX - rect.left) / rect.width;
-    const desiredTranslateX = Math.max(0, Math.min(maxScrollOffset, ratio * maxScrollOffset));
-    window.scrollTo({ top: wrapperRef.current.offsetTop + desiredTranslateX });
+    const desired = Math.max(0, Math.min(maxScrollOffset, ratio * maxScrollOffset));
+    if (scrollHijack) {
+      if (!wrapperRef.current) return;
+      window.scrollTo({ top: wrapperRef.current.offsetTop + desired });
+    } else {
+      if (!toursContainerRef.current) return;
+      toursContainerRef.current.scrollLeft = desired;
+    }
     setIsDraggingDesktopScrollbar(true);
     dragStartDesktopScrollbarX.current = e.clientX;
-    dragStartDesktopTranslateX.current = desiredTranslateX;
+    dragStartDesktopTranslateX.current = desired;
     track.setPointerCapture(e.pointerId);
   }
 
   function handleDesktopScrollbarPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (!isDraggingDesktopScrollbar) return;
     const track = desktopScrollbarTrackRef.current;
-    if (!track || !wrapperRef.current || !trackRef.current) return;
+    if (!track || !trackRef.current) return;
     const dx = e.clientX - dragStartDesktopScrollbarX.current;
     const totalContentWidth = trackRef.current.scrollWidth;
-    const newTranslateX = Math.max(0, Math.min(maxScrollOffset,
+    const newPos = Math.max(0, Math.min(maxScrollOffset,
       dragStartDesktopTranslateX.current + (dx / track.clientWidth) * totalContentWidth
     ));
-    window.scrollTo({ top: wrapperRef.current.offsetTop + newTranslateX });
+    if (scrollHijack) {
+      if (!wrapperRef.current) return;
+      window.scrollTo({ top: wrapperRef.current.offsetTop + newPos });
+    } else {
+      if (!toursContainerRef.current) return;
+      toursContainerRef.current.scrollLeft = newPos;
+    }
   }
 
   function handleDesktopScrollbarPointerUp() {
@@ -481,14 +504,14 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
           )}
 
           {/* RE: "Filtros aplicados" + scrollbar row */}
-          {isRealEstate && (isFiltered || scrollHijack) && (
+          {isRealEstate && (
             <div className="flex items-center gap-3 mb-3 flex-shrink-0">
               {isFiltered && (
                 <span className="text-ivory/55 text-xs flex-shrink-0 whitespace-nowrap">
                   {t("reAppliedFilters")}
                 </span>
               )}
-              {scrollHijack && desktopScrollbar}
+              {desktopScrollbar}
             </div>
           )}
 
