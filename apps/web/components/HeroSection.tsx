@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import type { PropertyConfig, ClientHeroConfig } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
-import { useRealEstateFilters, RealEstateInlineFilters } from "@/components/RealEstateFilters";
+import { useRealEstateFilters, RealEstateInlineFilters, RealEstateMobileFilterPanel } from "@/components/RealEstateFilters";
 
 interface HeroSectionProps {
   properties: PropertyConfig[];
@@ -56,6 +56,9 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   // Mobile scrollbar state
   const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 100 });
   const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
+  const [mobileREFilterOpen, setMobileREFilterOpen] = useState(false);
+  const [chipBottomPx, setChipBottomPx] = useState(0);
+  const mobileFilterChipRef = useRef<HTMLButtonElement>(null);
 
   // Desktop scrollbar state
   const [isDraggingDesktopScrollbar, setIsDraggingDesktopScrollbar] = useState(false);
@@ -137,6 +140,29 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [filterOpen]);
+
+  useEffect(() => {
+    if (mobileREFilterOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileREFilterOpen]);
+
+  useEffect(() => {
+    if (!mobileREFilterOpen) return;
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e instanceof TouchEvent ? e.touches[0]?.target : (e as MouseEvent).target;
+      if (!filterMobileRef.current?.contains(target as Node)) {
+        setMobileREFilterOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler as EventListener);
+    document.addEventListener("touchstart", handler as EventListener, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handler as EventListener);
+      document.removeEventListener("touchstart", handler as EventListener);
+    };
+  }, [mobileREFilterOpen]);
 
   useEffect(() => {
     const el = mobileCarouselRef.current;
@@ -490,19 +516,54 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         {/* Right column — mobile */}
         <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 px-4 overflow-hidden">
 
-          {/* RE: inline filters */}
-          {isRealEstate && (
-            <RealEstateInlineFilters
-              api={reFilters}
-              allZones={hero?.zones ?? []}
-              locale={locale}
-              accent="var(--color-terracotta)"
-              labels={reLabels}
-            />
-          )}
-
-          {/* Scrollbar row (non-RE has filter button here too) */}
+          {/* Scrollbar row */}
           <div ref={filterMobileRef} className="relative flex items-center gap-3 mb-3 flex-shrink-0">
+            {/* RE: single "Filtros" chip */}
+            {isRealEstate && (
+              <button
+                ref={mobileFilterChipRef}
+                onClick={() => {
+                  const bottom = mobileFilterChipRef.current?.getBoundingClientRect().bottom ?? 0;
+                  setChipBottomPx(bottom + 4);
+                  setMobileREFilterOpen((o) => !o);
+                }}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors flex-shrink-0"
+                style={isFiltered || mobileREFilterOpen
+                  ? { backgroundColor: "var(--color-terracotta)", borderColor: "var(--color-terracotta)", color: "#fff" }
+                  : { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }
+                }
+              >
+                {t("reFilters")}
+                <svg
+                  className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${mobileREFilterOpen ? "rotate-180" : ""}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+            {/* RE: "Limpiar" en la barra — solo visible cuando hay filtros activos y el panel está cerrado */}
+            {isRealEstate && isFiltered && !mobileREFilterOpen && (
+              <button
+                onClick={() => reFilters.clearAll()}
+                className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors flex-shrink-0"
+                style={{ backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}
+              >
+                {reLabels.clearFilters}
+              </button>
+            )}
+            {/* RE: panel — fixed so escapes overflow-hidden del hero */}
+            {isRealEstate && mobileREFilterOpen && (
+              <RealEstateMobileFilterPanel
+                api={reFilters}
+                allZones={hero?.zones ?? []}
+                locale={locale}
+                accent="var(--color-terracotta)"
+                labels={reLabels}
+                topPx={chipBottomPx}
+                onClose={() => setMobileREFilterOpen(false)}
+              />
+            )}
             {/* Non-RE filter button */}
             {!isRealEstate && (zones.length > 0 || hero?.guestFilter) && (
               <button
@@ -521,12 +582,6 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
             {isFiltered && !isRealEstate && (
               <span className="text-ivory/60 text-xs flex-shrink-0">
                 {hero?.guestFilter ? t("guestsFilteredBadge") : t("filteredBadge")}
-              </span>
-            )}
-            {/* RE: "Filtros aplicados" badge */}
-            {isRealEstate && isFiltered && (
-              <span className="text-ivory/55 text-xs flex-shrink-0 whitespace-nowrap">
-                {t("reAppliedFilters")}
               </span>
             )}
             {filterOpen && !isRealEstate && filterDropdown("w-52")}
