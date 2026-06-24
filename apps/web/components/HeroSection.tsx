@@ -42,6 +42,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const t = useTranslations("hero");
 
   const isRealEstate = hero?.realEstateFilters === true;
+  const scrollHijack = !(hero?.disableScrollHijack ?? false);
 
   // Real estate filter hook (always called — hook rules)
   const reFilters = useRealEstateFilters(properties);
@@ -113,6 +114,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   }, []);
 
   const handleScroll = useCallback(() => {
+    if (!scrollHijack) return;
     if (!wrapperRef.current || !trackRef.current || !toursContainerRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const scrolledIn = -rect.top;
@@ -122,12 +124,24 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     }
     const max = Math.max(0, trackRef.current.scrollWidth - toursContainerRef.current.clientWidth);
     setTranslateX(Math.min(scrolledIn, max));
-  }, []);
+  }, [scrollHijack]);
 
   useEffect(() => {
+    if (!scrollHijack) return;
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+  }, [scrollHijack, handleScroll]);
+
+  // When scroll-hijack is off, sync translateX from the container's native scrollLeft
+  // so the desktop scrollbar thumb stays accurate during drag and overflow-x-auto scroll.
+  useEffect(() => {
+    if (scrollHijack) return;
+    const el = toursContainerRef.current;
+    if (!el) return;
+    const update = () => setTranslateX(el.scrollLeft);
+    el.addEventListener("scroll", update, { passive: true });
+    return () => el.removeEventListener("scroll", update);
+  }, [scrollHijack]);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -240,28 +254,40 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   function handleDesktopScrollbarPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     const track = desktopScrollbarTrackRef.current;
-    if (!track || !wrapperRef.current) return;
+    if (!track) return;
     e.preventDefault();
     const rect = track.getBoundingClientRect();
     const ratio = (e.clientX - rect.left) / rect.width;
-    const desiredTranslateX = Math.max(0, Math.min(maxScrollOffset, ratio * maxScrollOffset));
-    window.scrollTo({ top: wrapperRef.current.offsetTop + desiredTranslateX });
+    const desired = Math.max(0, Math.min(maxScrollOffset, ratio * maxScrollOffset));
+    if (scrollHijack) {
+      if (!wrapperRef.current) return;
+      window.scrollTo({ top: wrapperRef.current.offsetTop + desired });
+    } else {
+      if (!toursContainerRef.current) return;
+      toursContainerRef.current.scrollLeft = desired;
+    }
     setIsDraggingDesktopScrollbar(true);
     dragStartDesktopScrollbarX.current = e.clientX;
-    dragStartDesktopTranslateX.current = desiredTranslateX;
+    dragStartDesktopTranslateX.current = desired;
     track.setPointerCapture(e.pointerId);
   }
 
   function handleDesktopScrollbarPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (!isDraggingDesktopScrollbar) return;
     const track = desktopScrollbarTrackRef.current;
-    if (!track || !wrapperRef.current || !trackRef.current) return;
+    if (!track || !trackRef.current) return;
     const dx = e.clientX - dragStartDesktopScrollbarX.current;
     const totalContentWidth = trackRef.current.scrollWidth;
-    const newTranslateX = Math.max(0, Math.min(maxScrollOffset,
+    const newPos = Math.max(0, Math.min(maxScrollOffset,
       dragStartDesktopTranslateX.current + (dx / track.clientWidth) * totalContentWidth
     ));
-    window.scrollTo({ top: wrapperRef.current.offsetTop + newTranslateX });
+    if (scrollHijack) {
+      if (!wrapperRef.current) return;
+      window.scrollTo({ top: wrapperRef.current.offsetTop + newPos });
+    } else {
+      if (!toursContainerRef.current) return;
+      toursContainerRef.current.scrollLeft = newPos;
+    }
   }
 
   function handleDesktopScrollbarPointerUp() {
@@ -398,11 +424,11 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     <div
       id="hero"
       ref={wrapperRef}
-      style={{ height: `calc(100vh + ${maxScrollOffset}px)` }}
+      style={scrollHijack ? { height: `calc(100vh + ${maxScrollOffset}px)` } : undefined}
       className="relative"
     >
       <section
-        className={`sticky top-0 h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row ${backgroundImageUrl ? "bg-transparent" : "bg-charcoal"}`}
+        className={`${scrollHijack ? "sticky top-0" : ""} h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row ${backgroundImageUrl ? "bg-transparent" : "bg-charcoal"}`}
         style={{ paddingTop: "4rem" }}
       >
         {backgroundImageUrl && !noOverlay && (
@@ -490,11 +516,11 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
           )}
 
           {/* Tour cards track */}
-          <div ref={toursContainerRef} className="flex-1 overflow-hidden relative">
+          <div ref={toursContainerRef} className={`flex-1 relative ${scrollHijack ? "overflow-hidden" : "overflow-x-auto [&::-webkit-scrollbar]:hidden"}`}>
             <div
               ref={trackRef}
               className="flex gap-4 h-full"
-              style={{ transform: `translateX(-${translateX}px)` }}
+              style={scrollHijack ? { transform: `translateX(-${translateX}px)` } : undefined}
             >
               {filteredProperties.map((property) => (
                 <TourCard

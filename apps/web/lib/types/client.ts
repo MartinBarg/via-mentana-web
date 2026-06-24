@@ -92,6 +92,7 @@ export interface ClientHeroConfig {
   guestFilter?: boolean;
   realEstateFilters?: boolean;
   ctaSingle?: { url: string };
+  disableScrollHijack?: boolean;
 }
 
 export interface ClientTheme {

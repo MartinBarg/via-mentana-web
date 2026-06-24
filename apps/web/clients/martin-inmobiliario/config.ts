@@ -40,6 +40,7 @@ const config: ClientConfig = {
       de: "Kontakt",
     },
     realEstateFilters: true,
+    disableScrollHijack: true,
     zones: [
       { id: "palermo", label: { es: "Palermo", en: "Palermo", it: "Palermo", de: "Palermo" } },
       { id: "belgrano", label: { es: "Belgrano / Núñez", en: "Belgrano / Núñez", it: "Belgrano / Núñez", de: "Belgrano / Núñez" } },
