@@ -42,6 +42,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const t = useTranslations("hero");
 
   const isRealEstate = hero?.realEstateFilters === true;
+  const scrollHijack = !(hero?.disableScrollHijack ?? false);
 
   // Real estate filter hook (always called — hook rules)
   const reFilters = useRealEstateFilters(properties);
@@ -113,6 +114,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   }, []);
 
   const handleScroll = useCallback(() => {
+    if (!scrollHijack) return;
     if (!wrapperRef.current || !trackRef.current || !toursContainerRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const scrolledIn = -rect.top;
@@ -122,12 +124,13 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     }
     const max = Math.max(0, trackRef.current.scrollWidth - toursContainerRef.current.clientWidth);
     setTranslateX(Math.min(scrolledIn, max));
-  }, []);
+  }, [scrollHijack]);
 
   useEffect(() => {
+    if (!scrollHijack) return;
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+  }, [scrollHijack, handleScroll]);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -398,11 +401,11 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
     <div
       id="hero"
       ref={wrapperRef}
-      style={{ height: `calc(100vh + ${maxScrollOffset}px)` }}
+      style={scrollHijack ? { height: `calc(100vh + ${maxScrollOffset}px)` } : undefined}
       className="relative"
     >
       <section
-        className={`sticky top-0 h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row ${backgroundImageUrl ? "bg-transparent" : "bg-charcoal"}`}
+        className={`${scrollHijack ? "sticky top-0" : ""} h-[100svh] md:h-screen overflow-hidden flex flex-col md:flex-row ${backgroundImageUrl ? "bg-transparent" : "bg-charcoal"}`}
         style={{ paddingTop: "4rem" }}
       >
         {backgroundImageUrl && !noOverlay && (
@@ -478,23 +481,23 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
           )}
 
           {/* RE: "Filtros aplicados" + scrollbar row */}
-          {isRealEstate && (
+          {isRealEstate && (isFiltered || scrollHijack) && (
             <div className="flex items-center gap-3 mb-3 flex-shrink-0">
               {isFiltered && (
                 <span className="text-ivory/55 text-xs flex-shrink-0 whitespace-nowrap">
                   {t("reAppliedFilters")}
                 </span>
               )}
-              {desktopScrollbar}
+              {scrollHijack && desktopScrollbar}
             </div>
           )}
 
           {/* Tour cards track */}
-          <div ref={toursContainerRef} className="flex-1 overflow-hidden relative">
+          <div ref={toursContainerRef} className={`flex-1 relative ${scrollHijack ? "overflow-hidden" : "overflow-x-auto [&::-webkit-scrollbar]:hidden"}`}>
             <div
               ref={trackRef}
               className="flex gap-4 h-full"
-              style={{ transform: `translateX(-${translateX}px)` }}
+              style={scrollHijack ? { transform: `translateX(-${translateX}px)` } : undefined}
             >
               {filteredProperties.map((property) => (
                 <TourCard
