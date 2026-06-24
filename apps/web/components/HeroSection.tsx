@@ -57,6 +57,8 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 100 });
   const [isDraggingScrollbar, setIsDraggingScrollbar] = useState(false);
   const [mobileREFilterOpen, setMobileREFilterOpen] = useState(false);
+  const [chipBottomPx, setChipBottomPx] = useState(0);
+  const mobileFilterChipRef = useRef<HTMLButtonElement>(null);
 
   // Desktop scrollbar state
   const [isDraggingDesktopScrollbar, setIsDraggingDesktopScrollbar] = useState(false);
@@ -141,13 +143,18 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
 
   useEffect(() => {
     if (!mobileREFilterOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (!filterMobileRef.current?.contains(e.target as Node)) {
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e instanceof TouchEvent ? e.touches[0]?.target : (e as MouseEvent).target;
+      if (!filterMobileRef.current?.contains(target as Node)) {
         setMobileREFilterOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", handler as EventListener);
+    document.addEventListener("touchstart", handler as EventListener, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handler as EventListener);
+      document.removeEventListener("touchstart", handler as EventListener);
+    };
   }, [mobileREFilterOpen]);
 
   useEffect(() => {
@@ -507,14 +514,19 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
             {/* RE: single "Filtros" chip */}
             {isRealEstate && (
               <button
-                onClick={() => setMobileREFilterOpen((o) => !o)}
+                ref={mobileFilterChipRef}
+                onClick={() => {
+                  const bottom = mobileFilterChipRef.current?.getBoundingClientRect().bottom ?? 0;
+                  setChipBottomPx(bottom + 4);
+                  setMobileREFilterOpen((o) => !o);
+                }}
                 className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors flex-shrink-0"
                 style={isFiltered || mobileREFilterOpen
                   ? { backgroundColor: "var(--color-terracotta)", borderColor: "var(--color-terracotta)", color: "#fff" }
                   : { backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }
                 }
               >
-                {t("filterLabel")}
+                {t("reFilters")}
                 <svg
                   className={`w-3 h-3 flex-shrink-0 transition-transform duration-150 ${mobileREFilterOpen ? "rotate-180" : ""}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
@@ -523,7 +535,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 </svg>
               </button>
             )}
-            {/* RE: panel */}
+            {/* RE: panel — fixed so escapes overflow-hidden del hero */}
             {isRealEstate && mobileREFilterOpen && (
               <RealEstateMobileFilterPanel
                 api={reFilters}
@@ -531,6 +543,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
                 locale={locale}
                 accent="var(--color-terracotta)"
                 labels={reLabels}
+                topPx={chipBottomPx}
                 onClose={() => setMobileREFilterOpen(false)}
               />
             )}

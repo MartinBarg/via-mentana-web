@@ -435,11 +435,12 @@ export interface RealEstateMobileFilterPanelProps {
   locale: string;
   accent: string;
   labels: RealEstateInlineFiltersProps["labels"];
+  topPx?: number;
   onClose: () => void;
 }
 
 export function RealEstateMobileFilterPanel({
-  api, allZones, locale, accent, labels, onClose,
+  api, allZones, locale, accent, labels, topPx = 0, onClose,
 }: RealEstateMobileFilterPanelProps) {
   const { state, available, isFiltered } = api;
   const { opType, zones: selectedZones, ambientes, currency, priceRange, m2Range } = state;
@@ -460,8 +461,8 @@ export function RealEstateMobileFilterPanel({
 
   return (
     <div
-      className="absolute left-0 right-0 top-full mt-1 bg-ivory rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
-      style={{ border: "1px solid rgba(0,0,0,0.08)", maxHeight: "55svh" }}
+      className="fixed bg-ivory rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+      style={{ border: "1px solid rgba(0,0,0,0.08)", top: topPx, left: 16, right: 16, maxHeight: `calc(100svh - ${topPx + 8}px)` }}
     >
       {/* Sticky header: Limpiar + X */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-charcoal/10 bg-ivory flex-shrink-0">
@@ -480,7 +481,7 @@ export function RealEstateMobileFilterPanel({
       </div>
 
       {/* Scrollable content */}
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto flex-1 pb-4">
         {/* Tipo de operación */}
         <div className={sectionClass}>
           <p className={sectionTitle}>{labels.rental} / {labels.purchase}</p>
