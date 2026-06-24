@@ -142,6 +142,13 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
   }, [filterOpen]);
 
   useEffect(() => {
+    if (mobileREFilterOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileREFilterOpen]);
+
+  useEffect(() => {
     if (!mobileREFilterOpen) return;
     const handler = (e: MouseEvent | TouchEvent) => {
       const target = e instanceof TouchEvent ? e.touches[0]?.target : (e as MouseEvent).target;

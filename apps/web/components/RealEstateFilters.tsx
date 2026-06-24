@@ -628,7 +628,7 @@ export interface RealEstateMobileFilterPanelProps {
 export function RealEstateMobileFilterPanel({
   api, allZones, locale, accent, labels, topPx = 0, onClose,
 }: RealEstateMobileFilterPanelProps) {
-  const { isFiltered } = api;
+  const { isFiltered, activeCount } = api;
   const sectionClass = "p-4 border-b border-charcoal/[0.06]";
 
   return (
@@ -636,15 +636,26 @@ export function RealEstateMobileFilterPanel({
       className="fixed bg-ivory rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
       style={{ border: "1px solid rgba(0,0,0,0.08)", top: topPx, left: 16, right: 16, maxHeight: `calc(100svh - ${topPx + 8}px)` }}
     >
-      {/* Sticky header: Limpiar + X */}
+      {/* Sticky header: Limpiar + badge activos + X */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-charcoal/10 bg-ivory flex-shrink-0">
-        <button
-          onClick={api.clearAll}
-          className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
-          style={isFiltered ? panelBtnActive(accent) : { backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#9B9490" }}
-        >
-          {labels.clearFilters}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={api.clearAll}
+            className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
+            style={{ backgroundColor: "transparent", borderColor: "#d1cdc9", color: "#9B9490" }}
+          >
+            {labels.clearFilters}
+          </button>
+          {isFiltered && (
+            <button
+              onClick={api.clearAll}
+              className="text-xs font-medium px-2.5 py-1 rounded-full border transition-colors"
+              style={{ backgroundColor: "transparent", borderColor: "rgba(0,0,0,0.12)", color: "#6B6560" }}
+            >
+              {activeCount}
+            </button>
+          )}
+        </div>
         <button onClick={onClose} className="p-1 text-charcoal/50 hover:text-charcoal transition-colors">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
