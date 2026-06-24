@@ -207,8 +207,8 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     opType !== null,
     zonesRaw.length > 0,
     ambientesRaw.length > 0,
-    priceFilterRaw !== null,
-    m2FilterRaw !== null,
+    priceRange !== null,
+    m2Range !== null,
   ].filter(Boolean).length;
 
   return {

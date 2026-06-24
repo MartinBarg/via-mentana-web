@@ -486,7 +486,7 @@ export default function HeroSection({ properties, hero, locale, selectedProperty
         </div>
 
         {/* Right column — mobile */}
-        <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 pr-4 overflow-hidden">
+        <div className="flex md:hidden flex-col flex-1 min-w-0 py-4 px-4 overflow-hidden">
 
           {/* RE: inline filters */}
           {isRealEstate && (
