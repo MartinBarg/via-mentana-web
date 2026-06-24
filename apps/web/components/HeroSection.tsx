@@ -713,20 +713,28 @@ function TourCard({
           {loc(property.hero.title, locale)}
         </p>
         {showSelectButton && (
-          <button
-            onClick={onSelect}
-            className={`pointer-events-auto ` + (isSelected
-              ? "mt-2 flex items-center gap-1.5 bg-terracotta text-ivory text-xs font-medium px-3 py-1 rounded-full"
-              : "mt-2 text-ivory border border-white/40 text-xs font-medium px-3 py-1 rounded-full hover:border-white/70 transition-colors"
+          <div className="mt-2 flex items-center gap-2">
+            <button
+              onClick={onSelect}
+              className={`pointer-events-auto ` + (isSelected
+                ? "flex items-center gap-1.5 bg-terracotta text-ivory text-xs font-medium px-3 py-1 rounded-full"
+                : "text-ivory border border-white/40 text-xs font-medium px-3 py-1 rounded-full hover:border-white/70 transition-colors"
+              )}
+            >
+              {isSelected && (
+                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+              {isSelected ? selectedLabel : selectLabel}
+            </button>
+            {property.m2 !== undefined && (
+              <span className="text-ivory text-xs font-medium">{property.m2} m²</span>
             )}
-          >
-            {isSelected && (
-              <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
+            {property.ambientes !== undefined && (
+              <span className="text-ivory text-xs font-medium">{property.ambientes} amb.</span>
             )}
-            {isSelected ? selectedLabel : selectLabel}
-          </button>
+          </div>
         )}
       </div>
     </div>
