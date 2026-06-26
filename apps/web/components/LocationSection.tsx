@@ -109,6 +109,8 @@ export default function LocationSection({ property, locale }: LocationSectionPro
                   src={property.aerialVideoUrl}
                   className="w-full h-full object-cover"
                   controls={isPlaying}
+                  controlsList="nofullscreen nodownload"
+                  disablePictureInPicture
                   playsInline
                   onEnded={() => setIsPlaying(false)}
                 />
