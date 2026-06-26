@@ -36,8 +36,8 @@ export interface PropertyConfig {
   zone?: string;
   guests?: number;
   operationType?: ("alquiler" | "venta")[];
-  rentalPrice?: PropertyPrice;
-  salePrice?: PropertyPrice;
+  rentalPrice?: PropertyPrice[];
+  salePrice?: PropertyPrice[];
   ambientes?: number;
   m2?: number;
   imageUrl?: string;
