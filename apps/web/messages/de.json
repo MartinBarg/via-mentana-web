@@ -16,7 +16,13 @@
       "linens": "Handtücher & Bettwäsche",
       "oven": "Elektrischer Backofen",
       "iron": "Bügeleisen",
-      "tv": "Flachbildfernseher"
+      "tv": "Flachbildfernseher",
+      "pool": "Schwimmbad",
+      "sum": "Gemeinschaftsraum",
+      "gym": "Fitnessstudio",
+      "laundry": "Waschraum",
+      "parking": "Kostenparkplatz",
+      "security": "Privater Sicherheitsdienst"
     }
   },
   "location": {

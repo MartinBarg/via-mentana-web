@@ -16,7 +16,13 @@
       "linens": "Toallas & sábanas",
       "oven": "Horno eléctrico",
       "iron": "Plancha",
-      "tv": "Televisión de pantalla plana"
+      "tv": "Televisión de pantalla plana",
+      "pool": "Pileta",
+      "sum": "SUM",
+      "gym": "Gimnasio",
+      "laundry": "Lavadería",
+      "parking": "Estacionamiento de cortesía",
+      "security": "Seguridad Privada"
     }
   },
   "location": {
