@@ -172,7 +172,7 @@ const config: ClientConfig = {
           es: "Elegante unidad en el exclusivo edificio Le Parc, sobre Av. Figueroa Alcorta. Vistas panorámicas al parque, acabados de alta gama y espacios de diseño. Amenities: pool, gimnasio, SUM y cochera.",
           de: "Elegante Einheit im exklusiven Le Parc-Gebäude an der Av. Figueroa Alcorta. Panoramablick auf den Park, hochwertige Ausstattung und Designräume. Ausstattung: Pool, Fitnessstudio, Gemeinschaftsraum und Parkplatz.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: {
@@ -287,7 +287,7 @@ const config: ClientConfig = {
           es: "Unidad de alto perfil en el icónico edificio Chateaux, sobre Av. del Libertador. Interiores clásicos con materiales nobles, excelente luminosidad y vistas privilegiadas. Edificio con portería 24 h, piscina y amplios espacios comunes.",
           de: "Hochkarätiges Objekt im ikonischen Chateaux-Gebäude an der Av. del Libertador. Klassische Innenräume mit edlen Materialien, ausgezeichnetem Lichteinfall und bevorzugten Ausblicken. Gebäude mit 24-h-Pforte, Pool und großzügigen Gemeinschaftsbereichen.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -390,7 +390,7 @@ const config: ClientConfig = {
           es: "Residencial Alrio ofrece unidades espaciosas con terminaciones de calidad superior en el corazón de Vicente López. Acceso rápido a Capital Federal y al aeropuerto internacional, con la tranquilidad y el verde del norte del GBA.",
           de: "Residencial Alrio bietet geräumige Einheiten mit hochwertiger Ausstattung im Herzen von Vicente López. Schneller Zugang zur Capital Federal und zum internationalen Flughafen, mit der Ruhe und dem Grün des nördlichen GBA.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -493,7 +493,7 @@ const config: ClientConfig = {
           es: "Casa4 propone una vivienda con carácter en el corazón de San Isidro, uno de los barrios más buscados del norte del GBA. Jardín privado, espacios generosos y terminaciones cuidadas. A minutos del centro histórico y del río.",
           de: "Casa4 bietet ein charaktervolles Zuhause im Herzen von San Isidro, einem der begehrtesten Viertel im Norden des GBA. Privatgarten, großzügige Räume und sorgfältige Ausstattung. Minuten vom historischen Zentrum und dem Fluss entfernt.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -593,7 +593,7 @@ const config: ClientConfig = {
           es: "Barrio Parque es uno de los sectores más exclusivos y silenciosos de Palermo. Casa5 ofrece una vivienda con acceso directo al parque, rodeada de vegetación y con la privacidad que una propiedad de lujo requiere.",
           de: "Barrio Parque ist einer der exklusivsten und ruhigsten Bereiche von Palermo. Casa5 bietet ein Zuhause mit direktem Parkzugang, umgeben von Vegetation und mit der Privatsphäre, die eine Luxusimmobilie erfordert.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -693,7 +693,7 @@ const config: ClientConfig = {
           es: "Casa6 se encuentra en la reconocida Nordelta, el mega-desarrollo urbano en el Delta del Paraná. Acceso a lagos artificiales, club náutico, colegios bilingües, shopping y gastronomía. Vida privada con todos los servicios urbanos.",
           de: "Casa6 befindet sich im renommierten Nordelta, der urbanen Mega-Entwicklung im Paraná-Delta. Zugang zu Kunstseen, Nautikclub, zweisprachigen Schulen, Shopping und Gastronomie. Privates Leben mit allen städtischen Diensten.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -793,7 +793,7 @@ const config: ClientConfig = {
           es: "Casa7 en Pilar ofrece una casa espaciosa en barrio cerrado, con amplios jardines, acceso a clubhouse y una comunidad de alto nivel. Ideal para familias que buscan calidad de vida sin renunciar al acceso a la ciudad.",
           de: "Casa7 in Pilar bietet ein geräumiges Haus in einer Wohnanlage, mit großen Gärten, Clubhaus-Zugang und einer anspruchsvollen Gemeinschaft. Ideal für Familien, die Lebensqualität suchen, ohne den Stadtzugang aufzugeben.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },
@@ -893,7 +893,7 @@ const config: ClientConfig = {
           es: "Casa8 en Venice Tigre propone una residencia única con vista a los canales del Delta del Paraná. Acceso privado al agua, amarradero propio, inmensa naturaleza y la distancia justa de la ciudad para vivir de forma privilegiada.",
           de: "Casa8 in Venice Tigre bietet eine einzigartige Residenz mit Blick auf die Kanäle des Paraná-Deltas. Privater Wasserzugang, eigener Liegeplatz, immense Natur und der richtige Abstand zur Stadt für einen privilegierten Lebensstil.",
         },
-        amenityKeys: ["fridge", "kitchen", "bathroom", "wifi", "cleaning", "linens"],
+        amenityKeys: ["pool", "sum", "gym", "laundry", "parking", "security"],
       },
       location: {
         title: { it: "La Posizione", en: "Location", es: "Ubicación", de: "Lage" },

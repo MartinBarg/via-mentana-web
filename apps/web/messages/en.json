@@ -16,7 +16,13 @@
       "linens": "Towels & linens",
       "oven": "Electric oven",
       "iron": "Iron",
-      "tv": "Flat-screen TV"
+      "tv": "Flat-screen TV",
+      "pool": "Swimming Pool",
+      "sum": "Common Room",
+      "gym": "Gym",
+      "laundry": "Laundry Room",
+      "parking": "Courtesy Parking",
+      "security": "Private Security"
     }
   },
   "location": {

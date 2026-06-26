@@ -16,7 +16,13 @@
       "linens": "Asciugamani & lenzuola",
       "oven": "Forno elettrico",
       "iron": "Ferro da stiro",
-      "tv": "TV a schermo piatto"
+      "tv": "TV a schermo piatto",
+      "pool": "Piscina",
+      "sum": "Sala Comune",
+      "gym": "Palestra",
+      "laundry": "Lavanderia",
+      "parking": "Parcheggio incluso",
+      "security": "Sicurezza Privata"
     }
   },
   "location": {
