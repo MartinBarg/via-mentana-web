@@ -250,8 +250,9 @@ const config: ClientConfig = {
     {
       id: "chateaux",
       zone: "belgrano",
-      operationType: ["alquiler"],
-      rentalPrice: { amount: 1800, currency: "USD" },
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 2100, currency: "USD" },
+      salePrice: { amount: 240000, currency: "USD" },
       ambientes: 2,
       m2: 85,
       kuulaEmbedUrl:
@@ -353,7 +354,8 @@ const config: ClientConfig = {
     {
       id: "alrio",
       zone: "vicente-lopez",
-      operationType: ["venta"],
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 3200, currency: "USD" },
       salePrice: { amount: 380000, currency: "USD" },
       ambientes: 4,
       m2: 145,
@@ -456,8 +458,8 @@ const config: ClientConfig = {
       id: "casa4",
       zone: "san-isidro",
       operationType: ["alquiler", "venta"],
-      rentalPrice: { amount: 900000, currency: "ARS" },
-      salePrice: { amount: 350000000, currency: "ARS" },
+      rentalPrice: { amount: 3500000, currency: "ARS" },
+      salePrice: { amount: 520000, currency: "USD" },
       ambientes: 5,
       m2: 200,
       kuulaEmbedUrl:
@@ -558,7 +560,8 @@ const config: ClientConfig = {
     {
       id: "casa5",
       zone: "palermo",
-      operationType: ["venta"],
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 5500, currency: "USD" },
       salePrice: { amount: 650000, currency: "USD" },
       ambientes: 4,
       m2: 280,
@@ -658,7 +661,8 @@ const config: ClientConfig = {
     {
       id: "casa6",
       zone: "nordelta",
-      operationType: ["venta"],
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 6500, currency: "USD" },
       salePrice: { amount: 850000, currency: "USD" },
       ambientes: 5,
       m2: 350,
@@ -758,8 +762,9 @@ const config: ClientConfig = {
     {
       id: "casa7",
       zone: "pilar",
-      operationType: ["venta"],
-      salePrice: { amount: 420000000, currency: "ARS" },
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 4800000, currency: "ARS" },
+      salePrice: { amount: 480000, currency: "USD" },
       ambientes: 5,
       m2: 260,
       googleMapsEmbedUrl:
@@ -858,7 +863,8 @@ const config: ClientConfig = {
     {
       id: "casa8",
       zone: "tigre",
-      operationType: ["venta"],
+      operationType: ["alquiler", "venta"],
+      rentalPrice: { amount: 5800, currency: "USD" },
       salePrice: { amount: 750000, currency: "USD" },
       ambientes: 4,
       m2: 310,
