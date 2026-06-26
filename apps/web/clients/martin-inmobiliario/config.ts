@@ -140,7 +140,7 @@ const config: ClientConfig = {
       ambientes: 3,
       m2: 110,
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Le+Parc+Av+Figueroa+Alcorta+Buenos+Aires&output=embed",
       hero: {
@@ -256,7 +256,7 @@ const config: ClientConfig = {
       ambientes: 2,
       m2: 85,
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Chateaux+Av+Libertador+Buenos+Aires&output=embed",
       hero: {
@@ -360,7 +360,7 @@ const config: ClientConfig = {
       ambientes: 4,
       m2: 145,
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7TNK4?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Alrio+Vicente+Lopez+Buenos+Aires&output=embed",
       hero: {
@@ -463,7 +463,7 @@ const config: ClientConfig = {
       ambientes: 5,
       m2: 200,
       kuulaEmbedUrl:
-        "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
+        "https://kuula.co/share/collection/7TNK4?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=San+Isidro+Buenos+Aires&output=embed",
       hero: {
