@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { PropertyConfig } from "@/lib/types/client";
 import { loc } from "@/lib/utils";
@@ -14,6 +14,7 @@ export default function LocationSection({ property, locale }: LocationSectionPro
   const t = useTranslations("location");
   const [activeTab, setActiveTab] = useState<"map" | "aerial">("map");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   if (!property.location) return null;
@@ -22,17 +23,32 @@ export default function LocationSection({ property, locale }: LocationSectionPro
   const hasAerial = !!property.aerialVideoUrl;
 
   function handlePlay() {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
+    videoRef.current?.play();
+    setIsPlaying(true);
+  }
+
+  function handlePause() {
+    videoRef.current?.pause();
+    setIsPlaying(false);
   }
 
   function handleTabChange(tab: "map" | "aerial") {
     setActiveTab(tab);
-    if (tab === "map") {
-      setIsPlaying(false);
-      videoRef.current?.pause();
+    setIsPlaying(false);
+    setProgress(0);
+    videoRef.current?.pause();
+  }
+
+  function handleTimeUpdate() {
+    const v = videoRef.current;
+    if (v && v.duration) setProgress(v.currentTime / v.duration);
+  }
+
+  function handleSeek(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = videoRef.current;
+    if (v && v.duration) {
+      v.currentTime = Number(e.target.value) * v.duration;
+      setProgress(Number(e.target.value));
     }
   }
 
@@ -98,40 +114,63 @@ export default function LocationSection({ property, locale }: LocationSectionPro
               </div>
             )}
 
-            {/* Aerial video */}
+            {/* Aerial video — controles custom para evitar botón fullscreen/PiP en mobile */}
             {activeTab === "aerial" && property.aerialVideoUrl && (
-              <div
-                className="relative rounded-2xl overflow-hidden border border-white/10 bg-black"
-                style={{ height: 300 }}
-              >
-                <video
-                  ref={videoRef}
-                  src={property.aerialVideoUrl}
-                  className="w-full h-full object-cover"
-                  controls={isPlaying}
-                  controlsList="nofullscreen nodownload"
-                  disablePictureInPicture
-                  playsInline
-                  onEnded={() => setIsPlaying(false)}
-                />
-                {!isPlaying && (
-                  <button
-                    onClick={handlePlay}
-                    className="absolute inset-0 flex items-center justify-center group"
-                    aria-label="Reproducir video"
-                  >
-                    <span className="absolute inset-0 bg-black/30" />
-                    <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-terracotta/90 group-hover:bg-terracotta transition-colors shadow-2xl">
-                      <svg
-                        className="w-8 h-8 text-ivory ml-1"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </span>
-                  </button>
-                )}
+              <div className="rounded-2xl overflow-hidden border border-white/10 bg-black" style={{ height: 300 }}>
+                <div className="relative w-full h-full flex flex-col">
+                  {/* Video sin controles nativos */}
+                  <video
+                    ref={videoRef}
+                    src={property.aerialVideoUrl}
+                    className="w-full flex-1 object-cover"
+                    playsInline
+                    disablePictureInPicture
+                    onTimeUpdate={handleTimeUpdate}
+                    onEnded={() => { setIsPlaying(false); setProgress(0); }}
+                  />
+
+                  {/* Overlay play — solo cuando está pausado */}
+                  {!isPlaying && (
+                    <button
+                      onClick={handlePlay}
+                      className="absolute inset-0 flex items-center justify-center group"
+                      aria-label="Reproducir video"
+                    >
+                      <span className="absolute inset-0 bg-black/30" />
+                      <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-terracotta/90 group-hover:bg-terracotta transition-colors shadow-2xl">
+                        <svg className="w-8 h-8 text-ivory ml-1" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </span>
+                    </button>
+                  )}
+
+                  {/* Barra de controles custom — solo cuando está reproduciendo */}
+                  {isPlaying && (
+                    <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 px-4 py-3 bg-gradient-to-t from-black/70 to-transparent">
+                      {/* Botón pausa */}
+                      <button onClick={handlePause} aria-label="Pausar" className="shrink-0 text-ivory hover:text-terracotta transition-colors">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                      </button>
+                      {/* Barra de progreso */}
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.001}
+                        value={progress}
+                        onChange={handleSeek}
+                        className="flex-1 h-1 appearance-none rounded-full cursor-pointer"
+                        style={{
+                          background: `linear-gradient(to right, var(--color-terracotta) ${progress * 100}%, rgba(255,255,255,0.3) ${progress * 100}%)`,
+                        }}
+                        aria-label="Progreso del video"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
