@@ -116,13 +116,12 @@ export default function LocationSection({ property, locale }: LocationSectionPro
 
             {/* Aerial video — controles custom para evitar botón fullscreen/PiP en mobile */}
             {activeTab === "aerial" && property.aerialVideoUrl && (
-              <div className="rounded-2xl overflow-hidden border border-white/10 bg-black" style={{ height: 300 }}>
-                <div className="relative w-full h-full flex flex-col">
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black" style={{ height: 300 }}>
                   {/* Video sin controles nativos */}
                   <video
                     ref={videoRef}
                     src={property.aerialVideoUrl}
-                    className="w-full flex-1 object-cover"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
                     playsInline
                     disablePictureInPicture
                     onTimeUpdate={handleTimeUpdate}
@@ -170,7 +169,6 @@ export default function LocationSection({ property, locale }: LocationSectionPro
                       />
                     </div>
                   )}
-                </div>
               </div>
             )}
           </div>
