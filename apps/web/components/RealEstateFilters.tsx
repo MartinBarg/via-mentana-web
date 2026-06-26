@@ -40,6 +40,16 @@ export interface RealEstateFilterAPI {
   clearAll: () => void;
 }
 
+// ─── Price helpers ────────────────────────────────────────────────────────────
+
+function priceFor(prices: import("@/lib/types/client").PropertyPrice[] | undefined, currency: Currency) {
+  return prices?.find((p) => p.currency === currency);
+}
+
+function allCurrenciesIn(prices: import("@/lib/types/client").PropertyPrice[] | undefined): Currency[] {
+  return (prices ?? []).map((p) => p.currency as Currency);
+}
+
 // ─── Cross-reactive helper ────────────────────────────────────────────────────
 // Applies all raw filters EXCEPT the one named in `exclude`.
 
@@ -61,8 +71,8 @@ function applyExcept(
   if (exclude !== "price" && priceFilterRaw && opType && currency) {
     const [lo, hi] = priceFilterRaw;
     r = r.filter((p) => {
-      const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-      if (!price || price.currency !== currency) return true;
+      const price = priceFor(opType === "alquiler" ? p.rentalPrice : p.salePrice, currency);
+      if (!price) return true;
       return price.amount >= lo && price.amount <= hi;
     });
   }
@@ -102,8 +112,7 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     if (!opType) return [];
     const set = new Set<Currency>();
     forCurrencyBase.forEach((p) => {
-      const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-      if (price) set.add(price.currency);
+      allCurrenciesIn(opType === "alquiler" ? p.rentalPrice : p.salePrice).forEach((c) => set.add(c));
     });
     return Array.from(set) as Currency[];
   }, [forCurrencyBase, opType]);
@@ -146,11 +155,9 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
   const availablePriceRange = useMemo((): [number, number] => {
     if (!opType || !currency) return [0, 0];
     const amounts = forCurrencyBase
-      .filter((p) => {
-        const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-        return price?.currency === currency;
-      })
-      .map((p) => (opType === "alquiler" ? p.rentalPrice! : p.salePrice!).amount);
+      .map((p) => priceFor(opType === "alquiler" ? p.rentalPrice : p.salePrice, currency))
+      .filter((pp): pp is NonNullable<typeof pp> => pp !== undefined)
+      .map((pp) => pp.amount);
     if (amounts.length === 0) return [0, 0];
     return [Math.min(...amounts), Math.max(...amounts)];
   }, [forCurrencyBase, opType, currency]);
@@ -191,8 +198,8 @@ export function useRealEstateFilters(properties: PropertyConfig[]): RealEstateFi
     if (priceRange && opType && currency) {
       const [pMin, pMax] = priceRange;
       r = r.filter((p) => {
-        const price = opType === "alquiler" ? p.rentalPrice : p.salePrice;
-        if (!price || price.currency !== currency) return true;
+        const price = priceFor(opType === "alquiler" ? p.rentalPrice : p.salePrice, currency);
+        if (!price) return true;
         return price.amount >= pMin && price.amount <= pMax;
       });
     }
