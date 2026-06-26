@@ -44,6 +44,7 @@ export interface PropertyConfig {
   airbnbUrl?: string;
   kuulaEmbedUrl?: string;
   googleMapsEmbedUrl?: string;
+  aerialVideoUrl?: string;
   hero: {
     title: LocalizedString;
     subtitle: LocalizedString;

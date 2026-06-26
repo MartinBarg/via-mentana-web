@@ -143,6 +143,7 @@ const config: ClientConfig = {
         "https://kuula.co/share/collection/7Tmvp?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Le+Parc+Av+Figueroa+Alcorta+Buenos+Aires&output=embed",
+      aerialVideoUrl: "/videos/le-parc.mp4",
       hero: {
         title: {
           it: "Le Parc · Figueroa Alcorta",
@@ -259,6 +260,7 @@ const config: ClientConfig = {
         "https://kuula.co/share/collection/7MBmV?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Chateaux+Av+Libertador+Buenos+Aires&output=embed",
+      aerialVideoUrl: "/videos/chateaux.mp4",
       hero: {
         title: {
           it: "Chateaux · Av. Libertador",
@@ -363,6 +365,7 @@ const config: ClientConfig = {
         "https://kuula.co/share/collection/7TpZS?logo=-1&info=0&fs=1&vr=0&sd=1&gyro=0&thumbs=-1&alpha=0.60&inst=0&keys=0",
       googleMapsEmbedUrl:
         "https://maps.google.com/maps?q=Alrio+Vicente+Lopez+Buenos+Aires&output=embed",
+      aerialVideoUrl: "/videos/alrio.mp4",
       hero: {
         title: {
           it: "Alrio · Vicente López",
